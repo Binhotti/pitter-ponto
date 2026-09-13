@@ -20,10 +20,23 @@ $next = (new DateTimeImmutable($month . '-01'))->modify('+1 month')->format('Y-m
             $worked = $day['summary']['worked'];
             $hasExtra = ($day['summary']['overtime50'] + $day['summary']['overtime100']) > 0;
             $class = $worked > 0 ? 'worked-day' : '';
+
             if ($hasExtra) $class .= ' extra-day';
+            if ($day['summary']['absence']) $class .= ' absence-day';
+            if (!empty($day['holiday'])) $class .= ' holiday-cell';
+            if (!empty($day['dayOff'])) $class .= ' dayoff-cell';
         ?>
             <div class="calendar-cell <?= e(trim($class)) ?>">
                 <strong><?= (int)$day['day'] ?></strong>
+
+                <?php if (!empty($day['holiday'])): ?>
+                    <span class="calendar-tag holiday-tag"><?= e($day['holiday']['name']) ?></span>
+                <?php elseif (!empty($day['dayOff'])): ?>
+                    <span class="calendar-tag dayoff-tag"><?= e(ucfirst(str_replace('_', ' ', $day['dayOff']['type']))) ?></span>
+                <?php elseif ($day['summary']['absence']): ?>
+                    <span class="calendar-tag absence-tag">Ausência</span>
+                <?php endif; ?>
+
                 <?php if ($worked > 0): ?>
                     <small><?= intdiv($worked, 60) ?>h <?= str_pad((string)($worked % 60), 2, '0', STR_PAD_LEFT) ?>min</small>
                     <i></i>

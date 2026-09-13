@@ -82,8 +82,7 @@ class TimeEntry
 
     public function currentStatus(int $userId): array
     {
-        $today = date('Y-m-d');
-        $entries = $this->entriesForDate($userId, $today);
+        $entries = $this->entriesForDate($userId, date('Y-m-d'));
 
         if ($entries === []) {
             return [
@@ -94,9 +93,8 @@ class TimeEntry
         }
 
         $last = end($entries);
-        $type = $last['entry_type'];
 
-        return match ($type) {
+        return match ($last['entry_type']) {
             'clock_in' => [
                 'key' => 'working',
                 'label' => 'Você está no trabalho',
@@ -148,10 +146,7 @@ class TimeEntry
                 $map['lunch_end'],
                 $map['clock_out']
             );
-        } elseif (
-            isset($map['lunch_end'])
-            && $date === date('Y-m-d')
-        ) {
+        } elseif (isset($map['lunch_end']) && $date === date('Y-m-d')) {
             $minutes += $this->diffMinutes(
                 $map['lunch_end'],
                 date('Y-m-d H:i:s')
@@ -174,16 +169,21 @@ class TimeEntry
         int $userId,
         string $date,
         int $dailyMinutes,
-        int $toleranceMinutes = 5
+        int $toleranceMinutes = 5,
+        ?array $holiday = null,
+        ?array $dayOff = null
     ): array {
         $entries = $this->entriesForDate($userId, $date);
-
         $worked = $this->workedMinutesForDate($userId, $date);
 
-        $weekday = (int) (new DateTimeImmutable($date))->format('N');
+        $dateObject = new DateTimeImmutable($date);
+        $weekday = (int) $dateObject->format('N');
+
         $isSaturday = $weekday === 6;
         $isSunday = $weekday === 7;
         $isWeekend = $isSaturday || $isSunday;
+        $isHoliday = $holiday !== null;
+        $isExcused = $dayOff !== null;
 
         $hasEntries = $entries !== [];
         $completed = false;
@@ -195,32 +195,42 @@ class TimeEntry
             }
         }
 
-        $expected = $isWeekend ? 0 : $dailyMinutes;
+        $expected = (!$isWeekend && !$isHoliday && !$isExcused)
+            ? $dailyMinutes
+            : 0;
 
-        $regular = $isWeekend
-            ? 0
-            : min($worked, $dailyMinutes);
+        $regular = $expected > 0
+            ? min($worked, $dailyMinutes)
+            : 0;
 
         $overtime50 = 0;
         $overtime100 = 0;
         $deficit = 0;
         $bankBalance = 0;
+        $absence = false;
 
-        /*
-         * O banco de horas só é consolidado quando o expediente foi finalizado.
-         * Assim, enquanto o usuário ainda está trabalhando, o painel não cria
-         * um saldo negativo temporário.
-         */
+        $today = new DateTimeImmutable('today');
+        $isPast = $dateObject < $today;
+
+        if (
+            $isPast
+            && !$hasEntries
+            && $expected > 0
+        ) {
+            $absence = true;
+            $deficit = $dailyMinutes;
+            $bankBalance = -$dailyMinutes;
+        }
+
         if ($completed) {
-            if ($isWeekend) {
-                // Sábado e domingo: toda hora trabalhada é extra 100%
-                // e também entra positivamente no banco de horas.
+            if ($isWeekend || $isHoliday) {
                 $overtime100 = $worked;
+                $bankBalance = $worked;
+            } elseif ($isExcused) {
                 $bankBalance = $worked;
             } else {
                 $difference = $worked - $expected;
 
-                // Diferenças dentro da tolerância são desconsideradas.
                 if (abs($difference) <= $toleranceMinutes) {
                     $difference = 0;
                 }
@@ -245,8 +255,12 @@ class TimeEntry
             'bankBalance' => $bankBalance,
             'hasEntries' => $hasEntries,
             'completed' => $completed,
+            'absence' => $absence,
             'isSaturday' => $isSaturday,
             'isSunday' => $isSunday,
+            'isHoliday' => $isHoliday,
+            'holiday' => $holiday,
+            'dayOff' => $dayOff,
         ];
     }
 

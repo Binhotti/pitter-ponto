@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\TimeEntry;
+use App\Models\Holiday;
+use App\Models\DayOff;
 use App\Models\User;
 use App\Models\WorkSettings;
 use DateInterval;
@@ -20,7 +22,10 @@ class PageController extends Controller
         $user = (new User())->find((int)authUser()['id']);
         $entryModel = new TimeEntry();
         $settings = (new WorkSettings())->all();
+        $holidayModel = new Holiday();
+        $dayOffModel = new DayOff();
         $toleranceMinutes = (int)($settings['tolerance_minutes'] ?? 5);
+        $holidayModel->ensureYear((int)date('Y'));
 
         $from = $_GET['from'] ?? date('Y-m-01');
         $to = $_GET['to'] ?? date('Y-m-t');
@@ -37,7 +42,9 @@ class PageController extends Controller
                 (int)$user['id'],
                 $date,
                 (int)$user['daily_minutes'],
-                $toleranceMinutes
+                $toleranceMinutes,
+                $holidayModel->findByDate($date),
+                $dayOffModel->findForDate((int)$user['id'], $date)
             );
         }
 
@@ -58,6 +65,9 @@ class PageController extends Controller
         $user = (new User())->find((int)authUser()['id']);
         $entryModel = new TimeEntry();
         $settings = (new WorkSettings())->all();
+        $holidayModel = new Holiday();
+        $dayOffModel = new DayOff();
+
         $toleranceMinutes = (int)($settings['tolerance_minutes'] ?? 5);
 
         $month = preg_match('/^\d{4}-\d{2}$/', (string)($_GET['month'] ?? ''))
@@ -66,18 +76,29 @@ class PageController extends Controller
 
         $first = new DateTimeImmutable($month . '-01');
         $last = $first->modify('last day of this month');
+
+        $holidayModel->ensureYear((int)$first->format('Y'));
+
         $calendar = [];
 
         for ($date = $first; $date <= $last; $date = $date->modify('+1 day')) {
+            $dateString = $date->format('Y-m-d');
+            $holiday = $holidayModel->findByDate($dateString);
+            $dayOff = $dayOffModel->findForDate((int)$user['id'], $dateString);
+
             $calendar[] = [
-                'date' => $date->format('Y-m-d'),
+                'date' => $dateString,
                 'day' => (int)$date->format('j'),
                 'weekday' => (int)$date->format('N'),
+                'holiday' => $holiday,
+                'dayOff' => $dayOff,
                 'summary' => $entryModel->summarizeDay(
                     (int)$user['id'],
-                    $date->format('Y-m-d'),
+                    $dateString,
                     (int)$user['daily_minutes'],
-                    $toleranceMinutes
+                    $toleranceMinutes,
+                    $holiday,
+                    $dayOff
                 ),
             ];
         }

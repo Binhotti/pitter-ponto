@@ -159,3 +159,13 @@ Exemplos:
 - 09h18 trabalhadas → banco `+0h30` e 30 min de extra 50%.
 - 08h18 trabalhadas → banco `-0h30`.
 - 04h00 em um sábado → banco `+4h00` e 4h de extra 100%.
+
+
+## Feriados e ausências — v1.3
+
+- Feriados nacionais brasileiros são adicionados automaticamente ao banco/calendário.
+- Trabalho em sábado, domingo ou feriado é classificado como 100%.
+- Dia útil passado sem ponto, sem feriado e sem justificativa gera ausência e débito de 8h48.
+- A tabela `day_offs` prepara folga, férias, falta justificada, atestado e compensação.
+- Feriados estaduais e municipais continuam preparados para cadastro manual futuro.
+- Se o banco já existe, importe `database/patch_002_feriados_ausencias.sql`.

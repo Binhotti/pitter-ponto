@@ -465,3 +465,112 @@ th { color: #6a7ba2; font-size: 10px; text-transform: uppercase; letter-spacing:
     bottom: 0;
     background: var(--red);
 }
+
+
+/* ===== Pitter Ponto v1.3 - feriados, ausências e folgas ===== */
+.special-day-banner {
+    margin: 0 0 16px;
+    padding: 13px 16px;
+    border-radius: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border: 1px solid var(--line);
+}
+
+.special-day-banner > svg {
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+}
+
+.special-day-banner > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.special-day-banner strong {
+    font-size: 12px;
+}
+
+.special-day-banner span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.holiday-banner {
+    background: #fff9db;
+    border-color: #f5df78;
+    color: #9b7100;
+}
+
+.dayoff-banner {
+    background: #eef6ff;
+    border-color: #ccdef8;
+    color: var(--blue);
+}
+
+.mini-day.holiday-day {
+    background: #fff4bf;
+    color: #8b6900;
+    font-weight: 700;
+}
+
+.mini-day.dayoff-day {
+    background: #e9f2ff;
+    color: #2d62ad;
+}
+
+.mini-day.marker-absence::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    bottom: 0;
+    background: var(--red);
+}
+
+.legend.holiday {
+    background: #d4a900;
+}
+
+.calendar-cell.holiday-cell {
+    background: #fffaf0;
+}
+
+.calendar-cell.dayoff-cell {
+    background: #f3f8ff;
+}
+
+.calendar-cell.absence-day {
+    background: #fff7f7;
+}
+
+.calendar-tag {
+    width: fit-content;
+    max-width: 100%;
+    padding: 4px 7px;
+    border-radius: 999px;
+    font-size: 9px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.holiday-tag {
+    background: #fff0ac;
+    color: #896500;
+}
+
+.dayoff-tag {
+    background: #deebff;
+    color: #315e9e;
+}
+
+.absence-tag {
+    background: #ffe0e3;
+    color: #b51e2b;
+}

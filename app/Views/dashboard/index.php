@@ -73,6 +73,24 @@ $monthNames = [
     <div class="alert error"><?= e($error) ?></div>
 <?php endif; ?>
 
+<?php if (!empty($todayHoliday)): ?>
+    <div class="special-day-banner holiday-banner">
+        <i data-lucide="calendar-heart"></i>
+        <div>
+            <strong>Hoje é feriado</strong>
+            <span><?= e($todayHoliday['name']) ?> • trabalho realizado hoje será considerado 100%</span>
+        </div>
+    </div>
+<?php elseif (!empty($todayDayOff)): ?>
+    <div class="special-day-banner dayoff-banner">
+        <i data-lucide="calendar-check-2"></i>
+        <div>
+            <strong>Hoje não possui jornada prevista</strong>
+            <span><?= e(ucfirst(str_replace('_', ' ', $todayDayOff['type']))) ?></span>
+        </div>
+    </div>
+<?php endif; ?>
+
 <div class="stats-grid">
     <article class="stat-card">
         <span class="stat-icon blue"><i data-lucide="clock-3"></i></span>
@@ -259,7 +277,17 @@ $monthNames = [
                     $classes[] = 'today';
                 }
 
-                if ($dayData['worked'] > 0) {
+                if (!empty($dayData['holiday'])) {
+                    $classes[] = 'holiday-day';
+                }
+
+                if (!empty($dayData['dayOff'])) {
+                    $classes[] = 'dayoff-day';
+                }
+
+                if (!empty($dayData['absence'])) {
+                    $classes[] = 'marker-absence';
+                } elseif ($dayData['worked'] > 0) {
                     if ($dayData['deficit']) {
                         $classes[] = 'marker-deficit';
                     } else {
@@ -267,7 +295,10 @@ $monthNames = [
                     }
                 }
             ?>
-                <span class="<?= e(implode(' ', $classes)) ?>"><?= $day ?></span>
+                <span
+                    class="<?= e(implode(' ', $classes)) ?>"
+                    title="<?= !empty($dayData['holiday']) ? e($dayData['holiday']['name']) : (!empty($dayData['dayOff']) ? e($dayData['dayOff']['type']) : '') ?>"
+                ><?= $day ?></span>
             <?php endfor; ?>
         </div>
 
@@ -275,6 +306,7 @@ $monthNames = [
             <span><i class="legend worked"></i>Dia trabalhado</span>
             <span><i class="legend extra"></i>Horas extras</span>
             <span><i class="legend absent"></i>Ausência</span>
+            <span><i class="legend holiday"></i>Feriado</span>
         </div>
     </section>
 </div>

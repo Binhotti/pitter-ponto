@@ -13,6 +13,7 @@ USE pitter_ponto;
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS time_adjustments;
+DROP TABLE IF EXISTS day_offs;
 DROP TABLE IF EXISTS time_entries;
 DROP TABLE IF EXISTS holidays;
 DROP TABLE IF EXISTS work_settings;
@@ -77,6 +78,27 @@ CREATE TABLE holidays (
     name VARCHAR(120) NOT NULL,
     overtime_percent SMALLINT UNSIGNED NOT NULL DEFAULT 100,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE day_offs (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    type ENUM(
+        'folga',
+        'ferias',
+        'falta_justificada',
+        'atestado',
+        'compensacao'
+    ) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    note VARCHAR(255) NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_day_offs_user_dates (user_id, start_date, end_date),
+    CONSTRAINT fk_day_offs_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
 );
 
 INSERT INTO work_settings (setting_key, setting_value) VALUES
