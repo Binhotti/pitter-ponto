@@ -26,6 +26,10 @@ $statusLabels = [
     <div class="alert error"><?= e($message) ?></div>
 <?php endif; ?>
 
+<?php if ($message = flash('success')): ?>
+    <div class="alert success"><?= e($message) ?></div>
+<?php endif; ?>
+
 <section class="panel admin-users-panel">
     <div class="admin-users-table-wrap">
         <table class="admin-users-table">
@@ -77,9 +81,43 @@ $statusLabels = [
                         </td>
                         <td><?= date('d/m/Y', strtotime($item['created_at'])) ?></td>
                         <td class="admin-table-action">
-                            <a href="<?= url('admin-user') . '&id=' . (int)$item['id'] ?>">
-                                Ver detalhes <i data-lucide="arrow-right"></i>
-                            </a>
+                            <div class="admin-user-row-actions">
+                                <a
+                                    class="admin-action-link details"
+                                    href="<?= url('admin-user') . '&id=' . (int)$item['id'] ?>"
+                                >
+                                    <i data-lucide="eye"></i>
+                                    Detalhes
+                                </a>
+
+                                <a
+                                    class="admin-action-link edit"
+                                    href="<?= url('admin-user-edit') . '&id=' . (int)$item['id'] ?>"
+                                >
+                                    <i data-lucide="pencil"></i>
+                                    Editar
+                                </a>
+
+                                <?php if ((int)$item['id'] !== (int)authUser()['id']): ?>
+                                    <form
+                                        method="post"
+                                        action="<?= url('admin-user-delete') ?>"
+                                        class="admin-inline-delete-form"
+                                        onsubmit="return confirm('Tem certeza que deseja excluir a conta de <?= e(addslashes($item['name'])) ?>?');"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="user_id"
+                                            value="<?= (int)$item['id'] ?>"
+                                        >
+
+                                        <button type="submit" class="admin-action-link delete">
+                                            <i data-lucide="trash-2"></i>
+                                            Excluir
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>

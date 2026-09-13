@@ -19,6 +19,7 @@ return [
         'admin' => [AdminController::class, 'dashboard'],
         'admin-users' => [AdminController::class, 'users'],
         'admin-user' => [AdminController::class, 'user'],
+        'admin-user-edit' => [AdminController::class, 'editUser'],
         'login' => [AuthController::class, 'showLogin'],
         'register' => [AuthController::class, 'showRegister'],
         'history' => [PageController::class, 'history'],
@@ -34,6 +35,8 @@ return [
     'POST' => [
         'login' => [AuthController::class, 'login'],
         'register' => [AuthController::class, 'register'],
+        'admin-user-update' => [AdminController::class, 'updateUser'],
+        'admin-user-delete' => [AdminController::class, 'deleteUser'],
         'clock' => [TimeEntryController::class, 'store'],
         'profile' => [PageController::class, 'updateProfile'],
         'settings' => [PageController::class, 'updateSettings'],

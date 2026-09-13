@@ -14,6 +14,7 @@ use App\Services\InconsistencyService;
 use DateInterval;
 use DatePeriod;
 use DateTimeImmutable;
+use PDOException;
 
 class AdminController extends Controller
 {
@@ -287,6 +288,205 @@ class AdminController extends Controller
             'dayOffs' => $dayOffModel->allForUser((int)$selectedUser['id']),
             'issues' => (new InconsistencyService())->forUser($selectedUser, 30),
         ]);
+    }
+
+    public function editUser(): void
+    {
+        $this->requireAdmin();
+
+        $userId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+        if (!$userId) {
+            flash('error', 'Usuário inválido.');
+            redirect('admin-users');
+        }
+
+        $userModel = new User();
+        $currentUser = $userModel->find((int)authUser()['id']);
+        $selectedUser = $userModel->find((int)$userId);
+
+        if (!$selectedUser) {
+            flash('error', 'Usuário não encontrado.');
+            redirect('admin-users');
+        }
+
+        $this->view('admin/edit-user', [
+            'title' => 'Editar usuário',
+            'active' => 'admin',
+            'user' => $currentUser,
+            'selectedUser' => $selectedUser,
+            'error' => flash('error'),
+            'success' => flash('success'),
+            'warning' => flash('warning'),
+        ]);
+    }
+
+    public function updateUser(): void
+    {
+        $this->requireAdmin();
+
+        $userId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
+
+        if (!$userId) {
+            flash('error', 'Usuário inválido.');
+            redirect('admin-users');
+        }
+
+        $userModel = new User();
+        $selectedUser = $userModel->find((int)$userId);
+
+        if (!$selectedUser) {
+            flash('error', 'Usuário não encontrado.');
+            redirect('admin-users');
+        }
+
+        $name = preg_replace(
+            '/\s+/u',
+            ' ',
+            trim((string)($_POST['name'] ?? ''))
+        ) ?: '';
+
+        $email = mb_strtolower(
+            trim((string)($_POST['email'] ?? ''))
+        );
+
+        $role = (string)($_POST['role'] ?? 'employee');
+        $isActive = isset($_POST['is_active']) ? 1 : 0;
+        $password = (string)($_POST['password'] ?? '');
+
+        if (mb_strlen($name) < 3 || mb_strlen($name) > 120) {
+            flash('error', 'Informe um nome válido entre 3 e 120 caracteres.');
+            redirect('admin-user-edit&id=' . (int)$userId);
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            flash('error', 'Informe um e-mail válido.');
+            redirect('admin-user-edit&id=' . (int)$userId);
+        }
+
+        if (!in_array($role, ['admin', 'employee'], true)) {
+            flash('error', 'Perfil de usuário inválido.');
+            redirect('admin-user-edit&id=' . (int)$userId);
+        }
+
+        if ($userModel->emailExistsForOtherUser($email, (int)$userId)) {
+            flash('error', 'Este e-mail já está sendo usado por outra conta.');
+            redirect('admin-user-edit&id=' . (int)$userId);
+        }
+
+        if ($password !== '') {
+            if (mb_strlen($password) < 8 || mb_strlen($password) > 128) {
+                flash('error', 'A nova senha deve ter entre 8 e 128 caracteres.');
+                redirect('admin-user-edit&id=' . (int)$userId);
+            }
+
+            if (!preg_match('/\p{L}/u', $password) || !preg_match('/\d/', $password)) {
+                flash('error', 'A nova senha precisa conter pelo menos uma letra e um número.');
+                redirect('admin-user-edit&id=' . (int)$userId);
+            }
+        }
+
+        /*
+         * Evita que o último administrador ativo seja rebaixado
+         * ou desativado sem querer.
+         */
+        $wouldRemoveAdmin =
+            $selectedUser['role'] === 'admin'
+            && (int)$selectedUser['is_active'] === 1
+            && ($role !== 'admin' || $isActive !== 1);
+
+        if ($wouldRemoveAdmin && $userModel->countAdmins() <= 1) {
+            flash(
+                'error',
+                'Não é possível remover ou desativar o último administrador ativo.'
+            );
+            redirect('admin-user-edit&id=' . (int)$userId);
+        }
+
+        try {
+            $userModel->updateByAdmin((int)$userId, [
+                'name' => $name,
+                'email' => $email,
+                'role' => $role,
+                'is_active' => $isActive,
+                'password' => $password,
+            ]);
+        } catch (PDOException $exception) {
+            if ($exception->getCode() === '23000') {
+                flash('error', 'Este e-mail já está sendo usado por outra conta.');
+                redirect('admin-user-edit&id=' . (int)$userId);
+            }
+
+            throw $exception;
+        }
+
+        if ($userModel->nameExists($name, (int)$userId)) {
+            flash(
+                'warning',
+                'Alterações salvas. Existe outra conta com o mesmo nome.'
+            );
+        } else {
+            flash('success', 'Conta atualizada com sucesso.');
+        }
+
+        redirect('admin-user-edit&id=' . (int)$userId);
+    }
+
+    public function deleteUser(): void
+    {
+        $this->requireAdmin();
+
+        $userId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
+
+        if (!$userId) {
+            flash('error', 'Usuário inválido.');
+            redirect('admin-users');
+        }
+
+        if ((int)$userId === (int)authUser()['id']) {
+            flash(
+                'error',
+                'Você não pode excluir a própria conta enquanto está conectado.'
+            );
+            redirect('admin-users');
+        }
+
+        $userModel = new User();
+        $selectedUser = $userModel->find((int)$userId);
+
+        if (!$selectedUser) {
+            flash('error', 'Usuário não encontrado.');
+            redirect('admin-users');
+        }
+
+        if (
+            $selectedUser['role'] === 'admin'
+            && (int)$selectedUser['is_active'] === 1
+            && $userModel->countAdmins() <= 1
+        ) {
+            flash(
+                'error',
+                'Não é possível excluir o último administrador ativo.'
+            );
+            redirect('admin-users');
+        }
+
+        try {
+            $userModel->delete((int)$userId);
+        } catch (PDOException $exception) {
+            flash(
+                'error',
+                'Esta conta possui registros protegidos pelo histórico do sistema e não pôde ser excluída. Você pode desativá-la pela opção Editar.'
+            );
+            redirect('admin-users');
+        }
+
+        flash(
+            'success',
+            'Conta de ' . $selectedUser['name'] . ' excluída com sucesso.'
+        );
+
+        redirect('admin-users');
     }
 
     private function loginChart(array $rows): array

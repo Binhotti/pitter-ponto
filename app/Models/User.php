@@ -180,6 +180,57 @@ class User
         )->fetchColumn();
     }
 
+    public function countAdmins(): int
+    {
+        return (int)$this->db->query(
+            'SELECT COUNT(*)
+             FROM users
+             WHERE role = "admin"
+               AND is_active = 1'
+        )->fetchColumn();
+    }
+
+    public function updateByAdmin(int $id, array $data): void
+    {
+        $sql = '
+            UPDATE users
+            SET name = :name,
+                email = :email,
+                role = :role,
+                is_active = :is_active
+        ';
+
+        $params = [
+            'id' => $id,
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'role' => $data['role'],
+            'is_active' => $data['is_active'],
+        ];
+
+        if (!empty($data['password'])) {
+            $sql .= ', password = :password';
+            $params['password'] = password_hash(
+                (string)$data['password'],
+                PASSWORD_DEFAULT
+            );
+        }
+
+        $sql .= ' WHERE id = :id';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+    }
+
+    public function delete(int $id): void
+    {
+        $stmt = $this->db->prepare(
+            'DELETE FROM users WHERE id = :id'
+        );
+
+        $stmt->execute(['id' => $id]);
+    }
+
     public function updateProfile(int $id, array $data): void
     {
         $stmt = $this->db->prepare(

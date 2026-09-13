@@ -5266,3 +5266,312 @@ body.theme-dark .password-visibility-toggle:hover {
     background: #1d2a43;
     color: #a9c7ff;
 }
+
+
+/* ===== Pitter Ponto v4.2 - gestão administrativa de contas ===== */
+.admin-user-row-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.admin-inline-delete-form {
+    margin: 0;
+}
+
+.admin-action-link {
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 8px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.admin-action-link svg {
+    width: 12px;
+    height: 12px;
+}
+
+.admin-action-link.details:hover {
+    border-color: #9bb9ed;
+    color: var(--blue);
+    background: #f4f8ff;
+}
+
+.admin-action-link.edit {
+    color: var(--blue);
+}
+
+.admin-action-link.edit:hover {
+    background: #edf4ff;
+}
+
+.admin-action-link.delete {
+    color: var(--red);
+}
+
+.admin-action-link.delete:hover {
+    border-color: #f0adb4;
+    background: #fff3f4;
+}
+
+.admin-user-heading-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-detail-edit-button {
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+.admin-detail-edit-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.admin-edit-user-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+    gap: 14px;
+    align-items: start;
+}
+
+.admin-edit-user-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.admin-edit-user-form > label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #465b8c;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.admin-edit-user-form input,
+.admin-edit-user-form select {
+    width: 100%;
+    min-height: 44px;
+}
+
+.admin-form-help {
+    color: var(--muted);
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.admin-active-toggle {
+    grid-column: 1 / -1;
+    min-height: 66px;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 10px !important;
+    padding: 11px 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #f8fafe;
+}
+
+.admin-active-toggle input {
+    width: 18px;
+    height: 18px;
+    min-height: 0;
+    flex: 0 0 auto;
+}
+
+.admin-active-toggle > span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-active-toggle strong {
+    color: var(--text);
+    font-size: 10px;
+}
+
+.admin-active-toggle small {
+    color: var(--muted);
+    font-size: 8px;
+    font-weight: 500;
+}
+
+.admin-edit-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.admin-edit-actions .primary-button,
+.admin-edit-actions .secondary-button {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.admin-edit-actions svg {
+    width: 14px;
+    height: 14px;
+}
+
+.admin-danger-zone {
+    border-color: #efc7cb;
+}
+
+.admin-danger-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: #ffe8ea;
+    color: var(--red);
+}
+
+.admin-danger-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.admin-danger-zone h3 {
+    margin: 0 0 5px;
+    font-size: 14px;
+}
+
+.admin-danger-zone p {
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 1.55;
+}
+
+.admin-delete-button {
+    min-height: 40px;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid #efb4ba;
+    border-radius: 10px;
+    background: #fff2f3;
+    color: var(--red);
+    font: inherit;
+    font-size: 9px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.admin-delete-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.admin-delete-disabled {
+    padding: 10px;
+    border-radius: 9px;
+    background: #f2f4f8;
+    color: var(--muted);
+    font-size: 8px;
+    line-height: 1.45;
+}
+
+body.theme-dark .admin-action-link.details:hover,
+body.theme-dark .admin-action-link.edit:hover {
+    background: #192a46;
+}
+
+body.theme-dark .admin-action-link.delete:hover {
+    background: #3b2228;
+}
+
+body.theme-dark .admin-active-toggle {
+    background: #111b2f;
+}
+
+body.theme-dark .admin-edit-user-form > label {
+    color: #b8c7e6;
+}
+
+body.theme-dark .admin-danger-zone {
+    border-color: #5b343b;
+}
+
+body.theme-dark .admin-danger-icon {
+    background: #42242b;
+}
+
+body.theme-dark .admin-delete-button {
+    border-color: #61363d;
+    background: #3b2228;
+    color: #ff9ca7;
+}
+
+body.theme-dark .admin-delete-disabled {
+    background: #1b2639;
+}
+
+@media (max-width: 900px) {
+    .admin-edit-user-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 680px) {
+    .admin-user-heading-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .admin-edit-user-form {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-active-toggle,
+    .admin-edit-actions {
+        grid-column: auto;
+    }
+
+    .admin-edit-actions {
+        flex-direction: column-reverse;
+    }
+
+    .admin-edit-actions .primary-button,
+    .admin-edit-actions .secondary-button {
+        width: 100%;
+    }
+
+    .admin-user-row-actions {
+        justify-content: flex-start;
+    }
+}

@@ -27,9 +27,19 @@ $statusMeta = $statusLabels[$status['key']] ?? $statusLabels['not_started'];
         <p>Visão administrativa da jornada e dos acessos deste usuário.</p>
     </div>
 
-    <span class="admin-status-pill <?= e($statusMeta[1]) ?>">
-        <?= e($statusMeta[0]) ?>
-    </span>
+    <div class="admin-user-heading-actions">
+        <span class="admin-status-pill <?= e($statusMeta[1]) ?>">
+            <?= e($statusMeta[0]) ?>
+        </span>
+
+        <a
+            href="<?= url('admin-user-edit') . '&id=' . (int)$selectedUser['id'] ?>"
+            class="secondary-button admin-detail-edit-button"
+        >
+            <i data-lucide="pencil"></i>
+            Editar conta
+        </a>
+    </div>
 </div>
 
 <section class="panel admin-user-hero">

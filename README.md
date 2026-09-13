@@ -704,3 +704,25 @@ Para tornar uma conta admin, use diretamente no banco:
 SQL:
 - `database/patch_006_area_administrativa_local.sql`
 - `database/patch_006_area_administrativa_infinityfree.sql`
+
+
+## Gestão administrativa de contas — v4.2
+
+Na página Administração > Usuários, administradores agora podem:
+- abrir os detalhes;
+- editar nome;
+- editar e-mail;
+- alterar perfil entre Colaborador e Administrador;
+- ativar/desativar a conta;
+- definir uma nova senha opcional;
+- excluir contas.
+
+Proteções:
+- um admin não pode excluir a própria conta enquanto está conectado;
+- o último administrador ativo não pode ser rebaixado, desativado ou excluído;
+- e-mails duplicados continuam bloqueados;
+- nova senha continua exigindo 8+ caracteres, letra e número;
+- se o banco impedir a exclusão por existir histórico protegido,
+  o sistema orienta a desativar a conta em vez de quebrar a integridade dos dados.
+
+Não há alteração de estrutura no banco nesta versão.
