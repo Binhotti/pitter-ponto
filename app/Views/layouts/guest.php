@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="<?= config('app.url') ?>/assets/images/pitterpan-logo.png">
     <title><?= e($title ?? 'Pitter Ponto') ?> • Pitter Pan</title>
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
 </head>
+
 <body class="guest-body">
     <main class="guest-shell">
         <section class="guest-brand">
@@ -22,4 +25,5 @@
         </section>
     </main>
 </body>
+
 </html>
