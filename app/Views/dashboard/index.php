@@ -96,6 +96,29 @@ $monthNames = [
     </div>
 <?php endif; ?>
 
+
+<?php if (!empty($smartNotifications)): ?>
+    <div class="smart-notification-stack">
+        <?php foreach ($smartNotifications as $notification): ?>
+            <a
+                href="<?= e($notification['action']) ?>"
+                class="smart-notification-card <?= e($notification['type']) ?>"
+            >
+                <span class="smart-notification-icon">
+                    <i data-lucide="<?= e($notification['icon']) ?>"></i>
+                </span>
+
+                <span class="smart-notification-copy">
+                    <strong><?= e($notification['title']) ?></strong>
+                    <small><?= e($notification['message']) ?></small>
+                </span>
+
+                <i data-lucide="arrow-right" class="smart-notification-arrow"></i>
+            </a>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
 <div class="stats-grid">
     <article class="stat-card">
         <span class="stat-icon blue"><i data-lucide="clock-3"></i></span>

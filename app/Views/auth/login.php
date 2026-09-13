@@ -26,4 +26,5 @@
     <button class="primary-button" type="submit">Entrar</button>
 </form>
 
+
 <p class="auth-switch">Ainda não tem conta? <a href="<?= url('register') ?>">Criar conta</a></p>

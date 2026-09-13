@@ -26,6 +26,74 @@
 
 
 
+
+    const notificationCenter = document.querySelector('.notification-center');
+    const notificationToggle = document.querySelector('.notification-toggle');
+    const notificationDropdown = document.querySelector('.notification-dropdown');
+
+    if (notificationCenter && notificationToggle && notificationDropdown) {
+        const closeNotificationDropdown = () => {
+            notificationCenter.classList.remove('open');
+            notificationToggle.setAttribute('aria-expanded', 'false');
+            notificationDropdown.setAttribute('aria-hidden', 'true');
+        };
+
+        notificationToggle.addEventListener('click', (event) => {
+            event.stopPropagation();
+
+            const willOpen = !notificationCenter.classList.contains('open');
+
+            notificationCenter.classList.toggle('open', willOpen);
+            notificationToggle.setAttribute(
+                'aria-expanded',
+                willOpen ? 'true' : 'false'
+            );
+            notificationDropdown.setAttribute(
+                'aria-hidden',
+                willOpen ? 'false' : 'true'
+            );
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!notificationCenter.contains(event.target)) {
+                closeNotificationDropdown();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeNotificationDropdown();
+            }
+        });
+
+        const browserEnabled =
+            notificationToggle.dataset.browserNotificationsEnabled === '1';
+
+        if (
+            browserEnabled
+            && 'Notification' in window
+            && Notification.permission === 'granted'
+        ) {
+            document.querySelectorAll('[data-smart-notification]')
+                .forEach((item) => {
+                    const key = item.dataset.notificationKey || '';
+                    const title = item.dataset.notificationTitle || 'Pitter Ponto';
+                    const message = item.dataset.notificationMessage || '';
+
+                    const storageKey = 'pitter-ponto-notification-' + key;
+
+                    if (key && !sessionStorage.getItem(storageKey)) {
+                        new Notification(title, {
+                            body: message,
+                        });
+
+                        sessionStorage.setItem(storageKey, 'shown');
+                    }
+                });
+        }
+    }
+
+
     const browserNotifications = document.getElementById('browser-notifications');
 
     if (browserNotifications) {

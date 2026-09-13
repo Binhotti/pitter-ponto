@@ -51,7 +51,7 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
                 <i data-lucide="calendar-off" class="nav-icon"></i><span>Ausências e Justificativas</span>
             </a>
 
-            <a class="nav-item" href="<?= url('history') ?>">
+            <a class="nav-item <?= ($active ?? '') === 'reports' ? 'active' : '' ?>" href="<?= url('reports') ?>">
                 <i data-lucide="chart-no-axes-column-increasing" class="nav-icon"></i><span>Relatórios</span>
             </a>
 
@@ -102,15 +102,58 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
             </div>
 
             <div class="topbar-right">
-                <button
-                    class="icon-button"
-                    type="button"
-                    title="Notificações"
-                    aria-label="Notificações"
-                    data-notifications-enabled="<?= (int)($viewUser['notifications_enabled'] ?? 1) ?>"
-                >
-                    <i data-lucide="bell"></i>
-                </button>
+                <div class="notification-center">
+                    <button
+                        class="icon-button notification-toggle"
+                        type="button"
+                        title="Notificações"
+                        aria-label="Notificações"
+                        aria-expanded="false"
+                        data-notifications-enabled="<?= (int)($viewUser['notifications_enabled'] ?? 1) ?>"
+                        data-browser-notifications-enabled="<?= (int)($viewUser['browser_notifications'] ?? 0) ?>"
+                    >
+                        <i data-lucide="bell"></i>
+
+                        <?php if (!empty($smartNotifications)): ?>
+                            <span class="notification-count"><?= count($smartNotifications) ?></span>
+                        <?php endif; ?>
+                    </button>
+
+                    <div class="notification-dropdown" aria-hidden="true">
+                        <div class="notification-dropdown-head">
+                            <strong>Notificações</strong>
+                            <small><?= !empty($smartNotifications) ? count($smartNotifications) . ' pendente(s)' : 'Tudo em dia' ?></small>
+                        </div>
+
+                        <?php if (!empty($smartNotifications)): ?>
+                            <div class="notification-dropdown-list">
+                                <?php foreach ($smartNotifications as $notification): ?>
+                                    <a
+                                        href="<?= e($notification['action']) ?>"
+                                        class="notification-dropdown-item"
+                                        data-smart-notification
+                                        data-notification-key="<?= e($notification['key']) ?>"
+                                        data-notification-title="<?= e($notification['title']) ?>"
+                                        data-notification-message="<?= e($notification['message']) ?>"
+                                    >
+                                        <span class="notification-dropdown-icon <?= e($notification['type']) ?>">
+                                            <i data-lucide="<?= e($notification['icon']) ?>"></i>
+                                        </span>
+                                        <span>
+                                            <strong><?= e($notification['title']) ?></strong>
+                                            <small><?= e($notification['message']) ?></small>
+                                        </span>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="notification-empty">
+                                <i data-lucide="circle-check-big"></i>
+                                <span>Nenhum lembrete pendente.</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
                 <div class="company-name">
                     <strong>Pitter Pan Festas</strong>

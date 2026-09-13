@@ -7,6 +7,7 @@ use App\Controllers\AdjustmentController;
 use App\Controllers\AbsenceController;
 use App\Controllers\DashboardController;
 use App\Controllers\PageController;
+use App\Controllers\ReportsController;
 use App\Controllers\TimeEntryController;
 
 return [
@@ -17,6 +18,7 @@ return [
         'register' => [AuthController::class, 'showRegister'],
         'history' => [PageController::class, 'history'],
         'calendar' => [PageController::class, 'calendar'],
+        'reports' => [ReportsController::class, 'index'],
         'absences' => [AbsenceController::class, 'index'],
         'profile' => [PageController::class, 'profile'],
         'employees' => [PageController::class, 'employees'],

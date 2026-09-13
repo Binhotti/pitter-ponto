@@ -323,3 +323,37 @@ Ao selecionar outro período:
 - as datas exibidas abaixo das barras mudam automaticamente.
 
 Não é necessário importar SQL novo.
+
+
+## Relatórios e notificações inteligentes — v2.4
+
+### Relatórios
+A aba Relatórios agora é funcional e possui:
+- seleção de mês;
+- total de horas trabalhadas;
+- horas extras 50% e 100%;
+- banco de horas;
+- valor estimado das horas extras;
+- média de horas por dia trabalhado;
+- ausências, justificativas, feriados e dias finalizados;
+- gráfico diário do mês;
+- tabela detalhada por dia.
+
+### Notificações inteligentes
+O Dashboard passa a criar lembretes automáticos quando:
+- a entrada não foi registrada depois do horário padrão + tolerância;
+- o intervalo de almoço passou da duração configurada e a volta ainda não foi registrada;
+- o horário padrão de saída passou e o expediente ainda não foi finalizado.
+
+Os lembretes aparecem:
+- no Dashboard;
+- no sino de notificações;
+- como notificação do navegador quando essa opção estiver habilitada e autorizada.
+
+Cada notificação do navegador é exibida apenas uma vez por sessão para evitar repetição excessiva.
+
+### Ajustes preservados
+- removido o bloco "Acesso de demonstração" da tela de login;
+- mantido o alinhamento corrigido dos botões "Adicionar marcação" e "Filtrar" no Histórico.
+
+Não é necessário importar SQL novo.
