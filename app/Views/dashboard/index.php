@@ -47,6 +47,8 @@ $typeLabels = [
 $workdayStart = substr((string)($user['workday_start'] ?? '08:00:00'), 0, 5);
 $workdayEnd = substr((string)($user['workday_end'] ?? '17:48:00'), 0, 5);
 $lunchMinutes = (int) ($user['lunch_minutes'] ?? 60);
+$learnedLunch = (new \App\Models\TimeEntry())
+    ->averageLunchStartTime((int)$user['id'], 10, 3);
 
 $monthNames = [
     1 => 'Janeiro',

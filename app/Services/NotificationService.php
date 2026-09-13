@@ -39,6 +39,19 @@ class NotificationService
         $status = $entryModel->currentStatus($userId);
         $entries = $entryModel->entriesForDate($userId, $today);
 
+        /*
+         * Se o expediente já foi finalizado, não há mais nenhuma
+         * notificação operacional a gerar naquele dia.
+         *
+         * Isso evita avisos incorretos como:
+         * - lembrar de iniciar o almoço após a pessoa já ter saído;
+         * - lembrar de voltar do almoço após o expediente ter acabado;
+         * - lembrar da saída depois do clock_out.
+         */
+        if ($status['key'] === 'finished') {
+            return [];
+        }
+
         $types = [];
         foreach ($entries as $entry) {
             $types[$entry['entry_type']] = $entry;
@@ -50,7 +63,7 @@ class NotificationService
 
         $workdayStart = substr((string)($user['workday_start'] ?? '08:00:00'), 0, 5);
         $workdayEnd = substr((string)($user['workday_end'] ?? '17:48:00'), 0, 5);
-        $lunchStart = substr((string)($user['lunch_start_time'] ?? '12:00:00'), 0, 5);
+        $learnedLunch = $entryModel->averageLunchStartTime($userId, 10, 3);
         $lunchMinutes = (int)($user['lunch_minutes'] ?? 60);
 
         $notifications = [];
@@ -84,21 +97,29 @@ class NotificationService
             }
         }
 
-        // Início do almoço: só avisa se o usuário já entrou e ainda não iniciou o almoço.
+        /*
+         * Início do almoço:
+         * o sistema aprende o horário com o histórico do próprio usuário.
+         * Só começa a avisar depois de pelo menos 3 dias úteis com almoço
+         * registrado, evitando inventar um horário padrão.
+         */
         if (
             isset($types['clock_in'])
             && !isset($types['lunch_start'])
+            && !isset($types['clock_out'])
             && (int)($user['notify_lunch_start_enabled'] ?? 1) === 1
+            && $learnedLunch !== null
         ) {
-            $target = new DateTimeImmutable($today . ' ' . $lunchStart);
+            $learnedLunchTime = $learnedLunch['time'];
+            $target = new DateTimeImmutable($today . ' ' . $learnedLunchTime);
 
             if ($now >= $target->modify("-{$before} minutes") && $now < $target) {
                 $notifications[] = $this->notification(
                     'lunch-start-upcoming-' . $today,
                     'info',
                     'utensils',
-                    'Horário de almoço se aproximando',
-                    "Seu almoço está previsto para {$lunchStart}.",
+                    'Seu horário habitual de almoço está chegando',
+                    "Pelo seu histórico, você costuma almoçar por volta de {$learnedLunchTime}.",
                     'dashboard'
                 );
             } elseif (
@@ -110,8 +131,8 @@ class NotificationService
                     'lunch-start-late-' . $today,
                     'warning',
                     'utensils',
-                    'Início do almoço pendente',
-                    "Seu horário de almoço ({$lunchStart}) já passou.",
+                    'Almoço ainda não registrado',
+                    "Pelo seu histórico, você costuma iniciar o almoço por volta de {$learnedLunchTime}.",
                     'dashboard'
                 );
             }

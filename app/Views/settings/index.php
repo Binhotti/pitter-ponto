@@ -1,7 +1,6 @@
 <?php
 $workdayStart = substr((string)($user['workday_start'] ?? '08:00:00'), 0, 5);
 $workdayEnd = substr((string)($user['workday_end'] ?? '17:48:00'), 0, 5);
-$lunchStartTime = substr((string)($user['lunch_start_time'] ?? '12:00:00'), 0, 5);
 $lunchMinutes = (int)($user['lunch_minutes'] ?? 60);
 $theme = $user['theme'] ?? 'light';
 $avatarPath = $user['avatar_path'] ?? null;
@@ -46,7 +45,7 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
             </div>
         </div>
 
-        <div class="settings-grid four">
+        <div class="settings-grid three">
             <label>
                 Horário padrão de entrada
                 <input type="time" name="workday_start" value="<?= e($workdayStart) ?>" required>
@@ -55,11 +54,6 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
             <label>
                 Horário padrão de saída
                 <input type="time" name="workday_end" value="<?= e($workdayEnd) ?>" required>
-            </label>
-
-            <label>
-                Início padrão do almoço
-                <input type="time" name="lunch_start_time" value="<?= e($lunchStartTime) ?>" required>
             </label>
 
             <label>
@@ -87,6 +81,35 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
                     <?= str_pad((string)((int)$user['daily_minutes'] % 60), 2, '0', STR_PAD_LEFT) ?>min
                 </strong>
             </span>
+        </div>
+
+
+        <?php
+        $learnedLunch = (new \App\Models\TimeEntry())
+            ->averageLunchStartTime((int)$user['id'], 10, 3);
+        ?>
+
+        <div class="learned-lunch-card <?= $learnedLunch ? 'ready' : 'learning' ?>">
+            <span class="learned-lunch-icon">
+                <i data-lucide="<?= $learnedLunch ? 'sparkles' : 'brain' ?>"></i>
+            </span>
+
+            <div>
+                <strong>Horário de almoço aprendido automaticamente</strong>
+
+                <?php if ($learnedLunch): ?>
+                    <p>
+                        Com base nos últimos registros, você costuma iniciar o almoço por volta de
+                        <b><?= e($learnedLunch['time']) ?></b>.
+                        Usamos <?= (int)$learnedLunch['samples'] ?> dia(s) recentes para aprender esse padrão.
+                    </p>
+                <?php else: ?>
+                    <p>
+                        Ainda estamos aprendendo seu padrão. Depois de pelo menos 3 dias úteis com
+                        início de almoço registrado, o Pitter Ponto começa a estimar seu horário habitual.
+                    </p>
+                <?php endif; ?>
+            </div>
         </div>
     </section>
 

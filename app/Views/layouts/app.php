@@ -26,48 +26,51 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
 <body class="<?= $theme === 'dark' ? 'theme-dark' : 'theme-light' ?>">
 <div class="app-shell">
     <aside class="sidebar" id="sidebar">
+        <button class="sidebar-collapse-button" id="desktop-sidebar-toggle" type="button" aria-label="Recolher menu" title="Recolher menu">
+            <i data-lucide="panel-left-close"></i>
+        </button>
         <a href="<?= url('dashboard') ?>" class="brand">
             <img src="<?= asset('images/pitterpan-logo.png') ?>" alt="Pitter Pan Festas">
         </a>
 
         <nav class="nav-menu">
-            <a class="nav-item <?= ($active ?? '') === 'dashboard' ? 'active' : '' ?>" href="<?= url('dashboard') ?>">
+            <a class="nav-item <?= ($active ?? '') === 'dashboard' ? 'active' : '' ?>" data-tooltip="Dashboard" href="<?= url('dashboard') ?>">
                 <i data-lucide="house" class="nav-icon"></i><span>Dashboard</span>
             </a>
 
-            <a class="nav-item <?= ($active ?? '') === 'point' ? 'active' : '' ?>" href="<?= url('dashboard') ?>#meu-ponto">
+            <a class="nav-item <?= ($active ?? '') === 'point' ? 'active' : '' ?>" data-tooltip="Meu Ponto" href="<?= url('dashboard') ?>#meu-ponto">
                 <i data-lucide="clock-3" class="nav-icon"></i><span>Meu Ponto</span>
             </a>
 
-            <a class="nav-item <?= ($active ?? '') === 'history' ? 'active' : '' ?>" href="<?= url('history') ?>">
+            <a class="nav-item <?= ($active ?? '') === 'history' ? 'active' : '' ?>" data-tooltip="Histórico" href="<?= url('history') ?>">
                 <i data-lucide="notebook-tabs" class="nav-icon"></i><span>Histórico</span>
             </a>
 
-            <a class="nav-item <?= ($active ?? '') === 'calendar' ? 'active' : '' ?>" href="<?= url('calendar') ?>">
+            <a class="nav-item <?= ($active ?? '') === 'calendar' ? 'active' : '' ?>" data-tooltip="Calendário" href="<?= url('calendar') ?>">
                 <i data-lucide="calendar-days" class="nav-icon"></i><span>Calendário</span>
             </a>
 
-            <a class="nav-item <?= ($active ?? '') === 'absences' ? 'active' : '' ?>" href="<?= url('absences') ?>">
+            <a class="nav-item <?= ($active ?? '') === 'absences' ? 'active' : '' ?>" data-tooltip="Ausências e Justificativas" href="<?= url('absences') ?>">
                 <i data-lucide="calendar-off" class="nav-icon"></i><span>Ausências e Justificativas</span>
             </a>
 
-            <a class="nav-item <?= ($active ?? '') === 'reports' ? 'active' : '' ?>" href="<?= url('reports') ?>">
+            <a class="nav-item <?= ($active ?? '') === 'reports' ? 'active' : '' ?>" data-tooltip="Relatórios" href="<?= url('reports') ?>">
                 <i data-lucide="chart-no-axes-column-increasing" class="nav-icon"></i><span>Relatórios</span>
             </a>
 
 
-            <a class="nav-item <?= ($active ?? '') === 'profile' ? 'active' : '' ?>" href="<?= url('profile') ?>">
+            <a class="nav-item <?= ($active ?? '') === 'profile' ? 'active' : '' ?>" data-tooltip="Perfil" href="<?= url('profile') ?>">
                 <i data-lucide="user-round" class="nav-icon"></i><span>Perfil</span>
             </a>
 
-            <a class="nav-item <?= ($active ?? '') === 'settings' ? 'active' : '' ?>" href="<?= url('settings') ?>">
+            <a class="nav-item <?= ($active ?? '') === 'settings' ? 'active' : '' ?>" data-tooltip="Configurações" href="<?= url('settings') ?>">
                 <i data-lucide="settings" class="nav-icon"></i><span>Configurações</span>
             </a>
 
         </nav>
 
         <div class="sidebar-footer">
-            <a href="<?= url('profile') ?>" class="mini-profile">
+            <a href="<?= url('profile') ?>" class="mini-profile" data-tooltip="Perfil">
                 <?php if ($avatarPath): ?>
                     <img
                         src="<?= config('app.url') . '/' . e($avatarPath) ?>"
@@ -84,7 +87,7 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
                 <i data-lucide="chevron-right" class="profile-chevron"></i>
             </a>
 
-            <a class="logout-link" href="<?= url('logout') ?>">
+            <a class="logout-link" data-tooltip="Sair" href="<?= url('logout') ?>">
                 <i data-lucide="log-out"></i><span>Sair</span>
             </a>
         </div>

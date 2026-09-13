@@ -3258,3 +3258,317 @@ body.theme-dark .financial-overview-grid .financial-highlight {
         justify-content: flex-end;
     }
 }
+
+
+/* ===== Pitter Ponto v2.7 - horário de almoço aprendido ===== */
+.learned-lunch-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 12px 13px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #f8fbff;
+}
+
+.learned-lunch-card.ready {
+    background: #f2f8ff;
+    border-color: #d6e5fb;
+}
+
+.learned-lunch-card.learning {
+    background: #fafbfe;
+}
+
+.learned-lunch-icon {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #e9f1ff;
+    color: var(--blue);
+}
+
+.learned-lunch-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.learned-lunch-card > div {
+    min-width: 0;
+}
+
+.learned-lunch-card strong {
+    font-size: 11px;
+}
+
+.learned-lunch-card p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.learned-lunch-card b {
+    color: var(--text);
+}
+
+body.theme-dark .learned-lunch-card,
+body.theme-dark .learned-lunch-card.ready,
+body.theme-dark .learned-lunch-card.learning {
+    background: #111b2f;
+    border-color: var(--line);
+}
+
+@media (max-width: 680px) {
+    .learned-lunch-card {
+        padding: 11px;
+    }
+}
+
+
+/* ===== Pitter Ponto v3.0 - sidebar recolhível corrigida ===== */
+
+.sidebar,
+.main-content {
+    transition:
+        width .22s ease,
+        margin-left .22s ease,
+        padding .22s ease;
+}
+
+.sidebar-collapse-button {
+    position: absolute;
+    top: 86px;
+    right: -15px;
+    z-index: 60;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d9e4f5;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--navy);
+    box-shadow: 0 5px 16px rgba(12, 39, 96, .16);
+    cursor: pointer;
+    transition: .18s ease;
+}
+
+.sidebar-collapse-button:hover {
+    transform: scale(1.05);
+    background: #f4f8ff;
+}
+
+.sidebar-collapse-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Modo compacto */
+body.sidebar-collapsed .sidebar {
+    width: 82px;
+    padding: 22px 10px;
+}
+
+body.sidebar-collapsed .main-content {
+    margin-left: 82px;
+    width: calc(100% - 82px);
+}
+
+body.sidebar-collapsed .brand {
+    min-height: 82px;
+    margin-bottom: 14px;
+}
+
+body.sidebar-collapsed .brand img {
+    width: 58px;
+    max-height: 66px;
+}
+
+body.sidebar-collapsed .sidebar-collapse-button {
+    top: 76px;
+    right: -15px;
+}
+
+body.sidebar-collapsed .nav-menu {
+    gap: 8px;
+}
+
+body.sidebar-collapsed .nav-item {
+    min-height: 50px;
+    justify-content: center;
+    padding: 0;
+    gap: 0;
+    border-radius: 13px;
+}
+
+body.sidebar-collapsed .nav-item span {
+    display: none;
+}
+
+body.sidebar-collapsed .nav-icon {
+    width: 22px;
+    height: 22px;
+    margin: 0;
+}
+
+body.sidebar-collapsed .sidebar-footer {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    padding-top: 12px;
+}
+
+body.sidebar-collapsed .mini-profile {
+    width: 52px;
+    min-height: 52px;
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+    padding: 4px;
+    border-radius: 13px;
+}
+
+body.sidebar-collapsed .mini-profile .avatar {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+}
+
+body.sidebar-collapsed .mini-profile-text,
+body.sidebar-collapsed .profile-chevron {
+    display: none;
+}
+
+body.sidebar-collapsed .logout-link {
+    width: 52px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-radius: 13px;
+}
+
+body.sidebar-collapsed .logout-link span {
+    display: none;
+}
+
+body.sidebar-collapsed .logout-link svg {
+    margin: 0;
+}
+
+/* Tooltip somente no modo compacto */
+body.sidebar-collapsed .nav-item,
+body.sidebar-collapsed .mini-profile,
+body.sidebar-collapsed .logout-link {
+    position: relative;
+}
+
+body.sidebar-collapsed .nav-item:hover::after,
+body.sidebar-collapsed .mini-profile:hover::after,
+body.sidebar-collapsed .logout-link:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #0d2258;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(5, 25, 70, .22);
+    pointer-events: none;
+}
+
+body.sidebar-collapsed .nav-item:hover::before,
+body.sidebar-collapsed .mini-profile:hover::before,
+body.sidebar-collapsed .logout-link:hover::before {
+    content: '';
+    position: absolute;
+    left: calc(100% + 7px);
+    top: 50%;
+    z-index: 99;
+    width: 9px;
+    height: 9px;
+    background: #0d2258;
+    transform: translateY(-50%) rotate(45deg);
+    pointer-events: none;
+}
+
+/* Evita que o comportamento desktop interfira no mobile */
+@media (max-width: 860px) {
+    .sidebar-collapse-button {
+        display: none;
+    }
+
+    body.sidebar-collapsed .sidebar {
+        width: min(300px, 84vw);
+        padding: 18px 14px;
+    }
+
+    body.sidebar-collapsed .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    body.sidebar-collapsed .brand {
+        min-height: 88px;
+    }
+
+    body.sidebar-collapsed .brand img {
+        width: 132px;
+        max-height: 86px;
+    }
+
+    body.sidebar-collapsed .nav-item {
+        justify-content: flex-start;
+        padding: 12px 13px;
+        gap: 14px;
+    }
+
+    body.sidebar-collapsed .nav-item span,
+    body.sidebar-collapsed .mini-profile-text,
+    body.sidebar-collapsed .profile-chevron,
+    body.sidebar-collapsed .logout-link span {
+        display: initial;
+    }
+
+    body.sidebar-collapsed .sidebar-footer {
+        display: block;
+    }
+
+    body.sidebar-collapsed .mini-profile {
+        width: auto;
+        display: grid;
+        grid-template-columns: 44px 1fr auto;
+        gap: 11px;
+        justify-items: stretch;
+        padding: 8px 4px 16px;
+    }
+
+    body.sidebar-collapsed .logout-link {
+        width: auto;
+        height: auto;
+        display: flex;
+        justify-content: flex-start;
+        gap: 12px;
+        padding: 14px 10px;
+    }
+
+    body.sidebar-collapsed .nav-item::before,
+    body.sidebar-collapsed .nav-item::after,
+    body.sidebar-collapsed .mini-profile::before,
+    body.sidebar-collapsed .mini-profile::after,
+    body.sidebar-collapsed .logout-link::before,
+    body.sidebar-collapsed .logout-link::after {
+        display: none !important;
+    }
+}

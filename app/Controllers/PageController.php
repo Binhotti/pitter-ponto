@@ -255,7 +255,6 @@ class PageController extends Controller
 
         $workdayStart = trim((string) ($_POST['workday_start'] ?? '08:00'));
         $workdayEnd = trim((string) ($_POST['workday_end'] ?? '17:48'));
-        $lunchStartTime = trim((string)($_POST['lunch_start_time'] ?? '12:00'));
         $lunchMinutes = max(0, min(240, (int) ($_POST['lunch_minutes'] ?? 60)));
         $theme = (string) ($_POST['theme'] ?? 'light');
         $notificationsEnabled = isset($_POST['notifications_enabled']) ? 1 : 0;
@@ -270,7 +269,6 @@ class PageController extends Controller
         if (
             !preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $workdayStart)
             || !preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $workdayEnd)
-            || !preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $lunchStartTime)
         ) {
             flash('error', 'Informe horários válidos.');
             redirect('settings');
@@ -299,7 +297,6 @@ class PageController extends Controller
         $userModel->updatePersonalSettings($userId, [
             'workday_start' => $workdayStart . ':00',
             'workday_end' => $workdayEnd . ':00',
-            'lunch_start_time' => $lunchStartTime . ':00',
             'lunch_minutes' => $lunchMinutes,
             'daily_minutes' => $dailyMinutes,
             'theme' => $theme,

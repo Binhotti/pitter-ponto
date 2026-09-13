@@ -2,12 +2,85 @@
     const sidebar = document.getElementById('sidebar');
     const menuButton = document.getElementById('mobile-menu');
     const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+    const desktopSidebarToggle = document.getElementById('desktop-sidebar-toggle');
 
     const closeSidebar = () => {
         sidebar?.classList.remove('open');
         sidebarBackdrop?.classList.remove('open');
         document.body.classList.remove('sidebar-open');
     };
+
+    const applyDesktopSidebarState = (collapsed) => {
+        if (!sidebar || !desktopSidebarToggle) {
+            return;
+        }
+
+        sidebar.classList.toggle('collapsed', collapsed);
+        document.body.classList.toggle('sidebar-collapsed', collapsed);
+
+        desktopSidebarToggle.setAttribute(
+            'aria-label',
+            collapsed ? 'Expandir menu' : 'Recolher menu'
+        );
+
+        desktopSidebarToggle.setAttribute(
+            'title',
+            collapsed ? 'Expandir menu' : 'Recolher menu'
+        );
+
+        const icon = desktopSidebarToggle.querySelector('[data-lucide]');
+
+        if (icon) {
+            icon.setAttribute(
+                'data-lucide',
+                collapsed ? 'panel-left-open' : 'panel-left-close'
+            );
+        }
+
+        if (window.lucide) {
+            window.lucide.createIcons({
+                attrs: {
+                    'stroke-width': 2,
+                },
+            });
+        }
+    };
+
+    if (sidebar && desktopSidebarToggle) {
+        const isDesktopSidebar = () => window.innerWidth > 860;
+
+        const restoreSidebarState = () => {
+            if (!isDesktopSidebar()) {
+                sidebar.classList.remove('collapsed');
+                document.body.classList.remove('sidebar-collapsed');
+                return;
+            }
+
+            const collapsed =
+                window.localStorage.getItem('pitter-sidebar-collapsed') === '1';
+
+            applyDesktopSidebarState(collapsed);
+        };
+
+        restoreSidebarState();
+
+        desktopSidebarToggle.addEventListener('click', () => {
+            if (!isDesktopSidebar()) {
+                return;
+            }
+
+            const collapsed = !sidebar.classList.contains('collapsed');
+
+            applyDesktopSidebarState(collapsed);
+
+            window.localStorage.setItem(
+                'pitter-sidebar-collapsed',
+                collapsed ? '1' : '0'
+            );
+        });
+
+        window.addEventListener('resize', restoreSidebarState);
+    }
 
     if (sidebar && menuButton) {
         menuButton.addEventListener('click', () => {

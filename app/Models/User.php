@@ -132,7 +132,6 @@ class User
             'UPDATE users
              SET workday_start = :workday_start,
                  workday_end = :workday_end,
-                 lunch_start_time = :lunch_start_time,
                  lunch_minutes = :lunch_minutes,
                  daily_minutes = :daily_minutes,
                  theme = :theme,
@@ -151,7 +150,6 @@ class User
             'id' => $id,
             'workday_start' => $data['workday_start'],
             'workday_end' => $data['workday_end'],
-            'lunch_start_time' => $data['lunch_start_time'],
             'lunch_minutes' => $data['lunch_minutes'],
             'daily_minutes' => $data['daily_minutes'],
             'theme' => $data['theme'],

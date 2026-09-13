@@ -280,6 +280,75 @@ class TimeEntry
         return true;
     }
 
+    public function averageLunchStartTime(
+        int $userId,
+        int $limit = 10,
+        int $minimumSamples = 3
+    ): ?array {
+        $limit = max(3, min($limit, 30));
+        $minimumSamples = max(2, min($minimumSamples, $limit));
+
+        /*
+         * Usa somente dias úteis anteriores ao dia atual.
+         * Também limita o horário entre 10:00 e 15:00 para evitar
+         * registros claramente fora do padrão distorcendo a média.
+         */
+        $stmt = $this->db->prepare(
+            "SELECT recorded_at
+             FROM time_entries
+             WHERE user_id = :user_id
+               AND entry_type = 'lunch_start'
+               AND DATE(recorded_at) < CURDATE()
+               AND WEEKDAY(recorded_at) BETWEEN 0 AND 4
+               AND TIME(recorded_at) BETWEEN '10:00:00' AND '15:00:00'
+             ORDER BY recorded_at DESC
+             LIMIT {$limit}"
+        );
+
+        $stmt->execute(['user_id' => $userId]);
+        $rows = $stmt->fetchAll();
+
+        if (count($rows) < $minimumSamples) {
+            return null;
+        }
+
+        $minutes = [];
+
+        foreach ($rows as $row) {
+            $timestamp = strtotime((string)$row['recorded_at']);
+
+            $minutes[] =
+                ((int)date('H', $timestamp) * 60)
+                + (int)date('i', $timestamp);
+        }
+
+        /*
+         * Se já houver pelo menos 5 amostras, remove o menor e o maior
+         * horário antes de calcular a média. Isso reduz o efeito de um
+         * almoço excepcionalmente cedo/tarde sem abandonar a ideia de média.
+         */
+        sort($minutes);
+
+        if (count($minutes) >= 5) {
+            array_shift($minutes);
+            array_pop($minutes);
+        }
+
+        $averageMinutes = (int)round(
+            array_sum($minutes) / count($minutes)
+        );
+
+        $hours = intdiv($averageMinutes, 60);
+        $mins = $averageMinutes % 60;
+
+        return [
+            'time' => sprintf('%02d:%02d', $hours, $mins),
+            'minutes' => $averageMinutes,
+            'samples' => count($rows),
+            'used_samples' => count($minutes),
+        ];
+    }
+
     public function currentStatus(int $userId): array
     {
         $entries = $this->entriesForDate($userId, date('Y-m-d'));

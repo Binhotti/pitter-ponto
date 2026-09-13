@@ -425,3 +425,75 @@ No celular, a navegação de mês dos Relatórios agora fica em uma única linha
 - próximo mês à direita.
 
 O ajuste é responsivo e mantém o layout desktop inalterado.
+
+
+## Horário de almoço aprendido automaticamente — v2.7
+
+O usuário não precisa mais cadastrar um horário fixo para iniciar o almoço.
+
+O Pitter Ponto aprende o padrão usando os últimos registros de `lunch_start`:
+- considera somente dias úteis anteriores ao dia atual;
+- usa até os 10 registros mais recentes;
+- só começa a gerar lembretes depois de pelo menos 3 dias com almoço registrado;
+- considera apenas horários entre 10:00 e 15:00 para reduzir registros anormais;
+- com 5 ou mais amostras, o horário mais cedo e o mais tarde são removidos antes da média, reduzindo o efeito de exceções.
+
+Exemplo:
+- 11:58
+- 12:04
+- 12:01
+- 12:07
+- 12:00
+
+O sistema aprende aproximadamente `12:02` e usa esse horário para avisar conforme os minutos configurados em Configurações.
+
+A Configuração manual de "Início padrão do almoço" foi removida da interface.
+
+Nenhum novo SQL é necessário nesta versão. A coluna antiga pode permanecer no banco sem causar problemas.
+
+
+## Validação de expediente finalizado — v2.8
+
+As notificações operacionais do dia são encerradas assim que o usuário registra a saída (`clock_out`).
+
+Isso impede avisos indevidos depois do expediente, por exemplo:
+- "inicie o almoço" após a pessoa já ter saído;
+- "volte do almoço" depois do expediente;
+- "finalize o expediente" após a saída já ter sido registrada.
+
+Também foi reforçada a condição do lembrete de início do almoço para nunca ser exibido quando já existir uma saída naquele dia.
+
+Nenhum SQL novo é necessário.
+
+
+## Sidebar recolhível — v2.9
+
+No desktop, a sidebar agora pode ser recolhida para o modo compacto:
+- mostra apenas os ícones;
+- mantém tooltips ao passar o mouse;
+- reduz a largura da barra lateral;
+- desloca o conteúdo principal automaticamente;
+- salva a preferência no navegador com `localStorage`.
+
+No mobile, o comportamento continua igual ao menu lateral tradicional.
+
+
+## Correção da sidebar recolhível — v3.0
+
+Corrigido o problema da v2.9 que interrompia todo o JavaScript da aplicação.
+
+Causa:
+- `desktopSidebarToggle` estava declarado duas vezes com `const`, causando erro de sintaxe;
+- como o `app.js` não executava, os ícones Lucide também não eram renderizados;
+- seletores CSS da sidebar compacta não correspondiam a algumas classes reais do layout.
+
+Agora:
+- todos os ícones voltam a funcionar;
+- layout expandido mantém exatamente a largura original;
+- modo compacto usa 82px e mostra apenas os ícones;
+- conteúdo principal acompanha corretamente a largura;
+- foto do perfil e botão Sair ficam compactos;
+- tooltips aparecem ao passar o mouse;
+- o estado aberto/fechado continua salvo no navegador;
+- o botão de recolher fica na borda da sidebar e não cobre a logo;
+- mobile continua independente do modo compacto.
