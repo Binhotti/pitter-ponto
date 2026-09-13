@@ -1950,6 +1950,98 @@ body.theme-dark .point-edit-close:hover {
     }
 }
 
+
+/* ===== Pitter Ponto v2.2 - estimativa financeira de horas extras ===== */
+.extra-estimate {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    width: fit-content;
+    margin-top: 2px;
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.extra-estimate svg {
+    width: 13px;
+    height: 13px;
+}
+
+.extra-estimate.missing {
+    color: var(--blue);
+    text-decoration: none;
+}
+
+.extra-estimate.missing:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 620px) {
+    .extra-estimate {
+        white-space: normal;
+    }
+}
+
+
+/* ===== Pitter Ponto v2.3 - filtro funcional do gráfico semanal ===== */
+.week-filter-form {
+    margin: 0;
+}
+
+.week-filter-select {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.week-filter-select select {
+    appearance: none;
+    -webkit-appearance: none;
+    min-width: 138px;
+    height: 36px;
+    padding: 0 34px 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--card);
+    color: #465b8c;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+.week-filter-select select:hover {
+    border-color: #b9cae6;
+}
+
+.week-filter-select select:focus {
+    border-color: #7ea7ef;
+    box-shadow: 0 0 0 3px rgba(43, 102, 220, .08);
+}
+
+.week-filter-select svg {
+    position: absolute;
+    right: 10px;
+    width: 14px;
+    height: 14px;
+    color: var(--muted);
+    pointer-events: none;
+}
+
+body.theme-dark .week-filter-select select {
+    background: #111b2f;
+    border-color: var(--line);
+    color: var(--text);
+}
+
+
+.adjustment-create-form,
+.filter-row {
+    align-items: flex-end;
+}
+
 .adjustment-create-form input,
 .adjustment-create-form select,
 .filter-row input {
@@ -1959,10 +2051,12 @@ body.theme-dark .point-edit-close:hover {
 .adjustment-create-form .primary-button.compact,
 .filter-row .primary-button.compact {
     height: 42px;
-    display: flex;
+    min-height: 42px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    align-self: end;
-    margin: 0;
+    align-self: flex-end !important;
+    margin: 0 !important;
     padding: 0 16px;
+    white-space: nowrap;
 }

@@ -130,6 +130,23 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
                         disabled
                     >
                 </label>
+
+
+                <label>
+                    Valor estimado da hora
+                    <input
+                        type="text"
+                        value="<?php
+                            $profileSalary = (float)($user['salary'] ?? 0);
+                            $profileMonthlyHours = (int)($user['monthly_hours'] ?? 0);
+
+                            echo ($profileSalary > 0 && $profileMonthlyHours > 0)
+                                ? e('R$ ' . number_format($profileSalary / $profileMonthlyHours, 2, ',', '.'))
+                                : 'Informe o salário';
+                        ?>"
+                        disabled
+                    >
+                </label>
             </div>
         </div>
 

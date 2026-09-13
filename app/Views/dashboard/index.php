@@ -23,6 +23,11 @@ function formatSignedMinutes(int $minutes): string
         . 'min';
 }
 
+function formatCurrencyBr(float $value): string
+{
+    return 'R$ ' . number_format($value, 2, ',', '.');
+}
+
 $firstName = explode(' ', trim($user['name']))[0] ?? $user['name'];
 
 $statusClass = match ($status['key']) {
@@ -154,6 +159,18 @@ $monthNames = [
                     <em>Sem comparação com o mês passado</em>
                 </span>
             <?php endif; ?>
+
+            <?php if ($estimatedExtraTotalValue !== null): ?>
+                <span class="extra-estimate">
+                    <i data-lucide="wallet-cards"></i>
+                    <?= e(formatCurrencyBr($estimatedExtraTotalValue)) ?> estimados
+                </span>
+            <?php else: ?>
+                <a class="extra-estimate missing" href="<?= url('profile') ?>">
+                    <i data-lucide="wallet-cards"></i>
+                    Cadastre seu salário no perfil
+                </a>
+            <?php endif; ?>
         </div>
     </article>
 
@@ -239,9 +256,37 @@ $monthNames = [
                 <p>
                     Total de <?= formatMinutes($weekTotal) ?>
                     • Média de <?= formatMinutes((int) round($weekTotal / 7)) ?>/dia
+                    • <?= date('d/m', strtotime($weekStart)) ?> a <?= date('d/m', strtotime($weekEnd)) ?>
                 </p>
             </div>
-            <span class="soft-select">Esta semana <i data-lucide="chevron-down"></i></span>
+            <form method="GET" action="<?= config('app.url') ?>" class="week-filter-form">
+                <input type="hidden" name="route" value="dashboard">
+
+                <label class="week-filter-select">
+                    <select
+                        name="week_offset"
+                        aria-label="Período do gráfico semanal"
+                        onchange="this.form.submit()"
+                    >
+                        <option value="0" <?= $weekOffset === 0 ? 'selected' : '' ?>>
+                            Esta semana
+                        </option>
+                        <option value="-1" <?= $weekOffset === -1 ? 'selected' : '' ?>>
+                            Semana passada
+                        </option>
+                        <option value="-2" <?= $weekOffset === -2 ? 'selected' : '' ?>>
+                            Há 2 semanas
+                        </option>
+                        <option value="-3" <?= $weekOffset === -3 ? 'selected' : '' ?>>
+                            Há 3 semanas
+                        </option>
+                        <option value="-4" <?= $weekOffset === -4 ? 'selected' : '' ?>>
+                            Há 4 semanas
+                        </option>
+                    </select>
+                    <i data-lucide="chevron-down"></i>
+                </label>
+            </form>
         </div>
 
         <div class="bars">

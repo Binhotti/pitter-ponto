@@ -82,7 +82,28 @@ class DashboardController extends Controller
             ) * 100;
         }
 
-        $monday = (new DateTimeImmutable('monday this week'))->setTime(0, 0);
+        /*
+         * Navegação do gráfico semanal.
+         * 0 = semana atual
+         * -1 = semana passada
+         * 1 = próxima semana
+         */
+        $weekOffset = filter_input(
+            INPUT_GET,
+            'week_offset',
+            FILTER_VALIDATE_INT
+        );
+
+        $weekOffset = $weekOffset === false || $weekOffset === null
+            ? 0
+            : max(-52, min(52, $weekOffset));
+
+        $currentMonday = (new DateTimeImmutable('monday this week'))
+            ->setTime(0, 0, 0);
+
+        $monday = $currentMonday->modify(
+            ($weekOffset >= 0 ? '+' : '') . $weekOffset . ' weeks'
+        );
 
         $week = [];
         $weekTotal = 0;
@@ -110,7 +131,21 @@ class DashboardController extends Controller
                 'minutes' => $summary['worked'],
             ];
         }
-        
+
+        $weekEnd = $monday->modify('+6 days');
+
+        $weekPeriodLabel = $weekOffset === 0
+            ? 'Esta semana'
+            : (
+                $weekOffset === -1
+                    ? 'Semana passada'
+                    : (
+                        $weekOffset === 1
+                            ? 'Próxima semana'
+                            : $monday->format('d/m') . ' – ' . $weekEnd->format('d/m')
+                    )
+            );
+
         $monthStartDate = (new DateTimeImmutable('first day of this month'))
             ->setTime(0, 0, 0);
 
@@ -227,6 +262,34 @@ class DashboardController extends Controller
         }
 
         $currentMonthExtra = $monthExtra50 + $monthExtra100;
+
+        /*
+         * Estimativa financeira das horas extras.
+         * Valor hora = salário mensal / horas mensais.
+         * Extra 50% = valor hora × 1,5.
+         * Extra 100% = valor hora × 2.
+         */
+        $salary = (float) ($user['salary'] ?? 0);
+        $monthlyHours = (int) ($user['monthly_hours'] ?? 0);
+
+        $hourlyValue = null;
+        $estimatedExtra50Value = null;
+        $estimatedExtra100Value = null;
+        $estimatedExtraTotalValue = null;
+
+        if ($salary > 0 && $monthlyHours > 0) {
+            $hourlyValue = $salary / $monthlyHours;
+
+            $estimatedExtra50Value =
+                ($monthExtra50 / 60) * $hourlyValue * 1.5;
+
+            $estimatedExtra100Value =
+                ($monthExtra100 / 60) * $hourlyValue * 2;
+
+            $estimatedExtraTotalValue =
+                $estimatedExtra50Value + $estimatedExtra100Value;
+        }
+
         $extraMonthChangePercent = null;
 
         if ($previousMonthExtra > 0) {
@@ -258,11 +321,19 @@ class DashboardController extends Controller
             'todayDayOff' => $todayDayOff,
             'week' => $week,
             'weekTotal' => $weekTotal,
+            'weekOffset' => $weekOffset,
+            'weekPeriodLabel' => $weekPeriodLabel,
+            'weekStart' => $monday->format('Y-m-d'),
+            'weekEnd' => $weekEnd->format('Y-m-d'),
             'monthWorked' => $monthWorked,
             'monthExtra50' => $monthExtra50,
             'monthExtra100' => $monthExtra100,
             'previousMonthExtra' => $previousMonthExtra,
             'extraMonthChangePercent' => $extraMonthChangePercent,
+            'hourlyValue' => $hourlyValue,
+            'estimatedExtra50Value' => $estimatedExtra50Value,
+            'estimatedExtra100Value' => $estimatedExtra100Value,
+            'estimatedExtraTotalValue' => $estimatedExtraTotalValue,
             'monthDeficit' => $monthDeficit,
             'monthBankBalance' => $monthBankBalance,
             'monthAbsences' => $monthAbsences,

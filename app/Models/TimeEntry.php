@@ -234,7 +234,7 @@ class TimeEntry
         $normalized = [];
 
         foreach ($entries as $entry) {
-            if ($ignoreEntryId !== null && (int) $entry['id'] === $ignoreEntryId) {
+            if ($ignoreEntryId !== null && (int)$entry['id'] === $ignoreEntryId) {
                 continue;
             }
 
@@ -437,6 +437,7 @@ class TimeEntry
             $deficit = $dailyMinutes;
             $bankBalance = -$dailyMinutes;
         }
+
         if ($completed) {
             if ($isWeekend || $isHoliday) {
                 $difference = $worked - $dailyMinutes;

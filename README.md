@@ -286,3 +286,40 @@ Agora:
 - ao editar, é aberto um modal com horário e motivo da alteração;
 - o histórico continua preservando auditoria pela tabela `time_adjustments`;
 - o nome do dia da semana é exibido em português.
+
+
+## Valor estimado das horas extras — v2.2
+
+O dashboard agora mostra uma estimativa financeira das horas extras acumuladas no mês.
+
+Cálculo:
+- valor da hora = salário mensal / horas mensais;
+- hora extra 50% = valor da hora × 1,5;
+- hora extra 100% = valor da hora × 2;
+- total estimado = soma dos valores de extras 50% e 100%.
+
+O Perfil também mostra o valor estimado da hora.
+
+Quando o salário não estiver cadastrado, o dashboard oferece um atalho para o Perfil.
+
+Importante: o valor é apenas estimativo e não substitui o cálculo oficial da folha de pagamento.
+
+
+## Gráfico semanal navegável — v2.3
+
+O seletor do card "Minhas horas na semana" agora é funcional.
+
+Opções:
+- Esta semana
+- Semana passada
+- Há 2 semanas
+- Há 3 semanas
+- Há 4 semanas
+
+Ao selecionar outro período:
+- o Dashboard recarrega somente com o período semanal escolhido;
+- o gráfico usa os registros reais daquela semana;
+- total e média são recalculados;
+- as datas exibidas abaixo das barras mudam automaticamente.
+
+Não é necessário importar SQL novo.
