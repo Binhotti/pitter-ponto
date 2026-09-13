@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Controllers\AuthController;
 use App\Controllers\AdjustmentController;
+use App\Controllers\AbsenceController;
 use App\Controllers\DashboardController;
 use App\Controllers\PageController;
 use App\Controllers\TimeEntryController;
@@ -16,6 +17,7 @@ return [
         'register' => [AuthController::class, 'showRegister'],
         'history' => [PageController::class, 'history'],
         'calendar' => [PageController::class, 'calendar'],
+        'absences' => [AbsenceController::class, 'index'],
         'profile' => [PageController::class, 'profile'],
         'employees' => [PageController::class, 'employees'],
         'settings' => [PageController::class, 'settings'],
@@ -29,5 +31,8 @@ return [
         'settings' => [PageController::class, 'updateSettings'],
         'adjustment-update' => [AdjustmentController::class, 'update'],
         'adjustment-create' => [AdjustmentController::class, 'create'],
+        'absence-create' => [AbsenceController::class, 'create'],
+        'absence-update' => [AbsenceController::class, 'update'],
+        'absence-delete' => [AbsenceController::class, 'delete'],
     ],
 ];

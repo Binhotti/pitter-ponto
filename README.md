@@ -190,3 +190,24 @@ Exemplos:
 - O sistema valida a sequência: entrada → início do almoço → volta do almoço → saída.
 - Nesta versão, uma marcação existente pode ter o horário alterado, mas permanece no mesmo dia.
 - Não é necessário importar SQL novo: a tabela `time_adjustments` já existe no schema atual.
+
+
+## Ausências e Justificativas — v1.6
+
+Nova área pessoal disponível para todos os colaboradores.
+
+Tipos disponíveis:
+- Falta justificada
+- Atestado
+- Folga
+- Férias
+- Compensação
+
+Regras:
+- Faltas sem justificativa continuam sendo detectadas automaticamente em dias úteis sem ponto.
+- Um período cadastrado em Ausências e Justificativas deixa de gerar débito automático no banco de horas.
+- Cada usuário só visualiza, edita e exclui os próprios registros.
+- O sistema impede períodos sobrepostos.
+- Não é permitido criar ocorrências anteriores à criação da conta.
+- Os registros já aparecem automaticamente no calendário.
+- Não há necessidade de novo SQL se `patch_002_feriados_ausencias.sql` já foi importado.

@@ -686,3 +686,291 @@ select:focus {
         margin-left: auto;
     }
 }
+
+
+/* ===== Pitter Ponto v1.6 - Ausências e Justificativas ===== */
+.absence-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+    background: #f8fbff;
+}
+
+.absence-info > svg {
+    width: 20px;
+    height: 20px;
+    color: var(--blue);
+    flex: 0 0 auto;
+    margin-top: 1px;
+}
+
+.absence-info div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.absence-info strong {
+    font-size: 12px;
+}
+
+.absence-info p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.absence-create-panel {
+    margin-bottom: 22px;
+}
+
+.absence-create-form {
+    display: grid;
+    grid-template-columns: 190px 150px 150px minmax(260px, 1fr) auto;
+    gap: 12px;
+    align-items: end;
+    margin-top: 16px;
+}
+
+.absence-create-form label,
+.absence-edit-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #465b8c;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.absence-create-form input,
+.absence-create-form select,
+.absence-create-form .primary-button {
+    height: 42px;
+}
+
+.absence-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: end !important;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.absence-list-section {
+    display: grid;
+    gap: 14px;
+}
+
+.absence-list-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.absence-list-heading h2 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.absence-list-heading p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.absence-cards {
+    display: grid;
+    gap: 12px;
+}
+
+.absence-card {
+    position: relative;
+    display: grid;
+    gap: 16px;
+}
+
+.absence-card-summary {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.absence-type-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+}
+
+.absence-type-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.absence-type-icon.justified {
+    background: #eaf2ff;
+    color: var(--blue);
+}
+
+.absence-type-icon.medical {
+    background: #e8f8f0;
+    color: var(--green);
+}
+
+.absence-type-icon.day-off {
+    background: #fff5d4;
+    color: #c49300;
+}
+
+.absence-type-icon.vacation {
+    background: #f0ebff;
+    color: #7452bd;
+}
+
+.absence-type-icon.compensation {
+    background: #e8f4ff;
+    color: #3172b7;
+}
+
+.absence-card-main {
+    min-width: 0;
+}
+
+.absence-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.absence-card-title strong {
+    font-size: 13px;
+}
+
+.absence-period {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.absence-card-main p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.absence-edit-form {
+    display: grid;
+    grid-template-columns: 180px 145px 145px minmax(240px, 1fr) auto;
+    gap: 10px;
+    align-items: end;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+}
+
+.absence-edit-form input,
+.absence-edit-form select,
+.absence-save-button {
+    height: 40px;
+}
+
+.absence-save-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.absence-delete-form {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+}
+
+.absence-delete-button {
+    border: 0;
+    background: transparent;
+    color: #b54a54;
+    font-size: 10px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 8px;
+}
+
+.absence-delete-button:hover {
+    background: #fff0f1;
+}
+
+.absence-delete-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.absence-empty {
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.absence-empty svg {
+    width: 28px;
+    height: 28px;
+    color: var(--blue);
+}
+
+.absence-empty strong {
+    color: var(--text);
+    font-size: 13px;
+}
+
+.absence-empty span {
+    font-size: 11px;
+}
+
+@media (max-width: 1200px) {
+    .absence-create-form,
+    .absence-edit-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .absence-note-field,
+    .absence-edit-note {
+        grid-column: 1 / -1;
+    }
+
+    .absence-submit,
+    .absence-save-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .absence-create-form,
+    .absence-edit-form {
+        grid-template-columns: 1fr;
+    }
+
+    .absence-note-field,
+    .absence-edit-note {
+        grid-column: auto;
+    }
+
+    .absence-delete-form {
+        position: static;
+        display: flex;
+        justify-content: flex-end;
+    }
+}

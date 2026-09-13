@@ -44,25 +44,19 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
                 <i data-lucide="calendar-days" class="nav-icon"></i><span>Calendário</span>
             </a>
 
+            <a class="nav-item <?= ($active ?? '') === 'absences' ? 'active' : '' ?>" href="<?= url('absences') ?>">
+                <i data-lucide="calendar-off" class="nav-icon"></i><span>Ausências e Justificativas</span>
+            </a>
+
             <a class="nav-item" href="<?= url('history') ?>">
                 <i data-lucide="chart-no-axes-column-increasing" class="nav-icon"></i><span>Relatórios</span>
             </a>
 
-            <?php if (isAdmin()): ?>
-                <a class="nav-item <?= ($active ?? '') === 'employees' ? 'active' : '' ?>" href="<?= url('employees') ?>">
-                    <i data-lucide="users" class="nav-icon"></i><span>Funcionários</span>
-                </a>
-            <?php endif; ?>
 
             <a class="nav-item <?= ($active ?? '') === 'profile' ? 'active' : '' ?>" href="<?= url('profile') ?>">
                 <i data-lucide="user-round" class="nav-icon"></i><span>Perfil</span>
             </a>
 
-            <?php if (isAdmin()): ?>
-                <a class="nav-item <?= ($active ?? '') === 'settings' ? 'active' : '' ?>" href="<?= url('settings') ?>">
-                    <i data-lucide="settings" class="nav-icon"></i><span>Configurações</span>
-                </a>
-            <?php endif; ?>
         </nav>
 
         <div class="sidebar-footer">
@@ -70,7 +64,7 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
                 <span class="avatar"><?= e($initials ?: 'U') ?></span>
                 <span class="mini-profile-text">
                     <strong><?= e($currentUser['name'] ?? 'Usuário') ?></strong>
-                    <small><?= isAdmin() ? 'Administrador' : 'Colaborador' ?></small>
+                    <small>Colaborador</small>
                 </span>
                 <i data-lucide="chevron-right" class="profile-chevron"></i>
             </a>
