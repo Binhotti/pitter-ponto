@@ -169,3 +169,24 @@ Exemplos:
 - A tabela `day_offs` prepara folga, férias, falta justificada, atestado e compensação.
 - Feriados estaduais e municipais continuam preparados para cadastro manual futuro.
 - Se o banco já existe, importe `database/patch_002_feriados_ausencias.sql`.
+
+
+## Validação de ausência por data de cadastro — v1.4
+
+- O sistema não marca como ausência nenhum dia anterior à criação da conta.
+- O próprio dia em que a conta foi criada também não é convertido automaticamente em ausência.
+- As ausências automáticas só começam a valer a partir do dia seguinte ao cadastro, respeitando feriados, finais de semana e justificativas.
+- Nenhuma alteração no banco de dados é necessária para esta versão, pois a tabela `users` já possui `created_at`.
+
+
+## Edição e inclusão manual de pontos — v1.5
+
+- O colaborador pode alterar o horário de uma marcação já registrada.
+- Toda alteração exige um motivo.
+- Alterações são gravadas na tabela `time_adjustments`, preservando horário antigo, horário novo, usuário responsável e motivo.
+- O registro alterado passa a ter `source = manual`.
+- É possível adicionar uma marcação esquecida diretamente pelo Histórico.
+- O sistema impede duplicar o mesmo tipo de ponto no mesmo dia.
+- O sistema valida a sequência: entrada → início do almoço → volta do almoço → saída.
+- Nesta versão, uma marcação existente pode ter o horário alterado, mas permanece no mesmo dia.
+- Não é necessário importar SQL novo: a tabela `time_adjustments` já existe no schema atual.

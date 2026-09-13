@@ -80,6 +80,206 @@ class TimeEntry
         return $stmt->fetchAll();
     }
 
+    public function findOwned(int $id, int $userId): ?array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT * FROM time_entries
+             WHERE id = :id AND user_id = :user_id
+             LIMIT 1'
+        );
+
+        $stmt->execute([
+            'id' => $id,
+            'user_id' => $userId,
+        ]);
+
+        return $stmt->fetch() ?: null;
+    }
+
+    public function manualCreate(
+        int $userId,
+        string $type,
+        string $recordedAt,
+        string $reason
+    ): int {
+        $stmt = $this->db->prepare(
+            'INSERT INTO time_entries (
+                user_id,
+                entry_type,
+                recorded_at,
+                source,
+                note
+            )
+            VALUES (
+                :user_id,
+                :entry_type,
+                :recorded_at,
+                "manual",
+                :note
+            )'
+        );
+
+        $stmt->execute([
+            'user_id' => $userId,
+            'entry_type' => $type,
+            'recorded_at' => $recordedAt,
+            'note' => $reason,
+        ]);
+
+        return (int) $this->db->lastInsertId();
+    }
+
+    public function updateRecordedAt(
+        int $entryId,
+        int $userId,
+        string $newRecordedAt,
+        string $reason
+    ): void {
+        $entry = $this->findOwned($entryId, $userId);
+
+        if (!$entry) {
+            throw new \RuntimeException('Registro não encontrado.');
+        }
+
+        $this->db->beginTransaction();
+
+        try {
+            $stmt = $this->db->prepare(
+                'UPDATE time_entries
+                 SET recorded_at = :recorded_at,
+                     source = "manual",
+                     note = :note
+                 WHERE id = :id AND user_id = :user_id'
+            );
+
+            $stmt->execute([
+                'recorded_at' => $newRecordedAt,
+                'note' => $reason,
+                'id' => $entryId,
+                'user_id' => $userId,
+            ]);
+
+            $audit = $this->db->prepare(
+                'INSERT INTO time_adjustments (
+                    time_entry_id,
+                    changed_by,
+                    old_recorded_at,
+                    new_recorded_at,
+                    reason
+                )
+                VALUES (
+                    :time_entry_id,
+                    :changed_by,
+                    :old_recorded_at,
+                    :new_recorded_at,
+                    :reason
+                )'
+            );
+
+            $audit->execute([
+                'time_entry_id' => $entryId,
+                'changed_by' => $userId,
+                'old_recorded_at' => $entry['recorded_at'],
+                'new_recorded_at' => $newRecordedAt,
+                'reason' => $reason,
+            ]);
+
+            $this->db->commit();
+        } catch (\Throwable $exception) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+
+            throw $exception;
+        }
+    }
+
+    public function hasTypeForDate(
+        int $userId,
+        string $date,
+        string $type,
+        ?int $ignoreEntryId = null
+    ): bool {
+        $sql = 'SELECT COUNT(*)
+                FROM time_entries
+                WHERE user_id = :user_id
+                  AND DATE(recorded_at) = :date
+                  AND entry_type = :entry_type';
+
+        $params = [
+            'user_id' => $userId,
+            'date' => $date,
+            'entry_type' => $type,
+        ];
+
+        if ($ignoreEntryId !== null) {
+            $sql .= ' AND id <> :ignore_entry_id';
+            $params['ignore_entry_id'] = $ignoreEntryId;
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+    public function validateDaySequence(
+        int $userId,
+        string $date,
+        ?int $ignoreEntryId = null,
+        ?array $replacement = null
+    ): bool {
+        $entries = $this->entriesForDate($userId, $date);
+
+        $normalized = [];
+
+        foreach ($entries as $entry) {
+            if ($ignoreEntryId !== null && (int)$entry['id'] === $ignoreEntryId) {
+                continue;
+            }
+
+            $normalized[] = [
+                'type' => $entry['entry_type'],
+                'recorded_at' => $entry['recorded_at'],
+            ];
+        }
+
+        if ($replacement !== null) {
+            $normalized[] = $replacement;
+        }
+
+        usort(
+            $normalized,
+            fn(array $a, array $b): int =>
+                strcmp($a['recorded_at'], $b['recorded_at'])
+        );
+
+        $expected = [
+            'clock_in',
+            'lunch_start',
+            'lunch_end',
+            'clock_out',
+        ];
+
+        $seen = [];
+
+        foreach ($normalized as $index => $entry) {
+            $type = $entry['type'];
+
+            if (in_array($type, $seen, true)) {
+                return false;
+            }
+
+            $seen[] = $type;
+
+            if (!isset($expected[$index]) || $expected[$index] !== $type) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function currentStatus(int $userId): array
     {
         $entries = $this->entriesForDate($userId, date('Y-m-d'));
@@ -171,7 +371,8 @@ class TimeEntry
         int $dailyMinutes,
         int $toleranceMinutes = 5,
         ?array $holiday = null,
-        ?array $dayOff = null
+        ?array $dayOff = null,
+        ?string $accountCreatedAt = null
     ): array {
         $entries = $this->entriesForDate($userId, $date);
         $worked = $this->workedMinutesForDate($userId, $date);
@@ -212,8 +413,23 @@ class TimeEntry
         $today = new DateTimeImmutable('today');
         $isPast = $dateObject < $today;
 
+        /*
+         * Ausência só pode existir depois da criação da conta.
+         * O próprio dia do cadastro também não é marcado automaticamente
+         * como ausência, pois o usuário pode ter criado a conta no meio
+         * do expediente.
+         */
+        $accountCreatedDate = $accountCreatedAt
+            ? (new DateTimeImmutable($accountCreatedAt))->setTime(0, 0)
+            : null;
+
+        $isAfterAccountCreation = $accountCreatedDate === null
+            ? true
+            : $dateObject > $accountCreatedDate;
+
         if (
             $isPast
+            && $isAfterAccountCreation
             && !$hasEntries
             && $expected > 0
         ) {

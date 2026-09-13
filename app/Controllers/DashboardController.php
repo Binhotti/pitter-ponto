@@ -46,7 +46,8 @@ class DashboardController extends Controller
             $dailyMinutes,
             $toleranceMinutes,
             $todayHoliday,
-            $todayDayOff
+            $todayDayOff,
+            $user['created_at'] ?? null
         );
 
         $monday = (new DateTimeImmutable('monday this week'))->setTime(0, 0);
@@ -64,7 +65,8 @@ class DashboardController extends Controller
                 $dailyMinutes,
                 $toleranceMinutes,
                 $holidayModel->findByDate($dateString),
-                $dayOffModel->findForDate((int) $user['id'], $dateString)
+                $dayOffModel->findForDate((int) $user['id'], $dateString),
+                $user['created_at'] ?? null
             );
 
             $weekTotal += $summary['worked'];
@@ -110,7 +112,8 @@ class DashboardController extends Controller
                 $dailyMinutes,
                 $toleranceMinutes,
                 $holiday,
-                $dayOff
+                $dayOff,
+                $user['created_at'] ?? null
             );
 
             if ($date <= $todayDate) {

@@ -44,7 +44,8 @@ class PageController extends Controller
                 (int)$user['daily_minutes'],
                 $toleranceMinutes,
                 $holidayModel->findByDate($date),
-                $dayOffModel->findForDate((int)$user['id'], $date)
+                $dayOffModel->findForDate((int)$user['id'], $date),
+                $user['created_at'] ?? null
             );
         }
 
@@ -55,6 +56,8 @@ class PageController extends Controller
             'days' => $days,
             'from' => $from,
             'to' => $to,
+            'success' => flash('success'),
+            'error' => flash('error'),
         ]);
     }
 
@@ -98,7 +101,8 @@ class PageController extends Controller
                     (int)$user['daily_minutes'],
                     $toleranceMinutes,
                     $holiday,
-                    $dayOff
+                    $dayOff,
+                    $user['created_at'] ?? null
                 ),
             ];
         }

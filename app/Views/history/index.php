@@ -20,6 +20,61 @@ $labels = [
     <div><h1>Histórico</h1><p>Consulte seus registros e horas calculadas por dia.</p></div>
 </div>
 
+
+<?php if (!empty($success)): ?>
+    <div class="alert success"><?= e($success) ?></div>
+<?php endif; ?>
+
+<?php if (!empty($error)): ?>
+    <div class="alert error"><?= e($error) ?></div>
+<?php endif; ?>
+
+<section class="panel adjustment-create-panel">
+    <div class="panel-title-row">
+        <div>
+            <h3>Adicionar ponto esquecido</h3>
+            <p>Use somente quando alguma marcação não tiver sido registrada.</p>
+        </div>
+    </div>
+
+    <form method="POST" action="<?= url('adjustment-create') ?>" class="adjustment-create-form">
+        <label>
+            Data
+            <input type="date" name="date" value="<?= date('Y-m-d') ?>" required>
+        </label>
+
+        <label>
+            Tipo
+            <select name="type" required>
+                <option value="clock_in">Entrada</option>
+                <option value="lunch_start">Início do almoço</option>
+                <option value="lunch_end">Volta do almoço</option>
+                <option value="clock_out">Saída</option>
+            </select>
+        </label>
+
+        <label>
+            Horário
+            <input type="time" name="time" required>
+        </label>
+
+        <label class="adjustment-reason-field">
+            Motivo
+            <input
+                type="text"
+                name="reason"
+                placeholder="Ex.: esqueci de bater a volta do almoço"
+                minlength="3"
+                required
+            >
+        </label>
+
+        <button class="primary-button compact" type="submit">
+            Adicionar marcação
+        </button>
+    </form>
+</section>
+
 <section class="panel">
     <form class="filter-row" method="GET" action="<?= config('app.url') ?>">
         <input type="hidden" name="route" value="history">
@@ -46,7 +101,49 @@ $labels = [
                 </div>
                 <div class="history-events">
                     <?php foreach ($day['entries'] as $entry): ?>
-                        <div><span><?= e($labels[$entry['entry_type']] ?? 'Registro') ?></span><strong><?= date('H:i', strtotime($entry['recorded_at'])) ?></strong></div>
+                        <form
+                            method="POST"
+                            action="<?= url('adjustment-update') ?>"
+                            class="history-event-edit"
+                        >
+                            <input type="hidden" name="entry_id" value="<?= (int)$entry['id'] ?>">
+                            <input type="hidden" name="date" value="<?= e($date) ?>">
+
+                            <div class="history-event-main">
+                                <span><?= e($labels[$entry['entry_type']] ?? 'Registro') ?></span>
+                                <strong><?= date('H:i', strtotime($entry['recorded_at'])) ?></strong>
+                                <?php if (($entry['source'] ?? 'web') === 'manual'): ?>
+                                    <small class="manual-badge">Ajustado</small>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="history-event-editor">
+                                <label>
+                                    Novo horário
+                                    <input
+                                        type="time"
+                                        name="time"
+                                        value="<?= date('H:i', strtotime($entry['recorded_at'])) ?>"
+                                        required
+                                    >
+                                </label>
+
+                                <label>
+                                    Motivo
+                                    <input
+                                        type="text"
+                                        name="reason"
+                                        placeholder="Por que está alterando?"
+                                        minlength="3"
+                                        required
+                                    >
+                                </label>
+
+                                <button class="outline-button edit-point-button" type="submit">
+                                    Salvar
+                                </button>
+                            </div>
+                        </form>
                     <?php endforeach; ?>
                 </div>
             </article>

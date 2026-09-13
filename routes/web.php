@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controllers\AuthController;
+use App\Controllers\AdjustmentController;
 use App\Controllers\DashboardController;
 use App\Controllers\PageController;
 use App\Controllers\TimeEntryController;
@@ -26,5 +27,7 @@ return [
         'clock' => [TimeEntryController::class, 'store'],
         'profile' => [PageController::class, 'updateProfile'],
         'settings' => [PageController::class, 'updateSettings'],
+        'adjustment-update' => [AdjustmentController::class, 'update'],
+        'adjustment-create' => [AdjustmentController::class, 'create'],
     ],
 ];
