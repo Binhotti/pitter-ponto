@@ -259,3 +259,16 @@ Regras:
 - mesmo total: 0%;
 - se ontem tiver 0 minutos trabalhados, o sistema mostra "Sem comparação com ontem" para evitar divisão por zero.
 - A comparação usa horas realmente registradas, não a jornada prevista.
+
+
+## Comparação mensal de horas extras — v2.0
+
+O card "Horas extras" agora:
+- soma horas extras de 50% e 100%;
+- compara o total do mês atual com o mês anterior;
+- mostra variação positiva, negativa ou zero;
+- quando o mês anterior não possui horas extras, exibe "Sem comparação com o mês passado" para evitar divisão por zero.
+
+Fórmula:
+
+`((extras do mês atual - extras do mês anterior) / extras do mês anterior) × 100`

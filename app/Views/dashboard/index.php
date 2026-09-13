@@ -39,8 +39,8 @@ $typeLabels = [
     'clock_out' => ['Saída do expediente', 'exit', 'log-out'],
 ];
 
-$workdayStart = substr((string) ($user['workday_start'] ?? '08:00:00'), 0, 5);
-$workdayEnd = substr((string) ($user['workday_end'] ?? '17:48:00'), 0, 5);
+$workdayStart = substr((string)($user['workday_start'] ?? '08:00:00'), 0, 5);
+$workdayEnd = substr((string)($user['workday_end'] ?? '17:48:00'), 0, 5);
 $lunchMinutes = (int) ($user['lunch_minutes'] ?? 60);
 
 $monthNames = [
@@ -111,7 +111,7 @@ $monthNames = [
                 ?>
                 <span class="<?= e($changeClass) ?>">
                     <i data-lucide="<?= e($changeIcon) ?>"></i>
-                    <?= $changeRounded > 0 ? '+' : '' ?>    <?= $changeRounded ?>%
+                    <?= $changeRounded > 0 ? '+' : '' ?><?= $changeRounded ?>%
                     <em>em relação a ontem</em>
                 </span>
             <?php else: ?>
@@ -128,7 +128,32 @@ $monthNames = [
         <div>
             <small>Horas extras</small>
             <strong><?= formatMinutes($monthExtra50 + $monthExtra100) ?></strong>
-            <span class="muted">Neste mês</span>
+
+            <?php if ($extraMonthChangePercent !== null): ?>
+                <?php
+                $extraChangeRounded = (int) round($extraMonthChangePercent);
+
+                $extraChangeClass = $extraChangeRounded > 0
+                    ? 'daily-change positive'
+                    : ($extraChangeRounded < 0
+                        ? 'daily-change negative'
+                        : 'daily-change neutral');
+
+                $extraChangeIcon = $extraChangeRounded > 0
+                    ? 'arrow-up'
+                    : ($extraChangeRounded < 0 ? 'arrow-down' : 'minus');
+                ?>
+                <span class="<?= e($extraChangeClass) ?>">
+                    <i data-lucide="<?= e($extraChangeIcon) ?>"></i>
+                    <?= $extraChangeRounded > 0 ? '+' : '' ?><?= $extraChangeRounded ?>%
+                    <em>em relação ao mês passado</em>
+                </span>
+            <?php else: ?>
+                <span class="daily-change unavailable">
+                    <i data-lucide="minus"></i>
+                    <em>Sem comparação com o mês passado</em>
+                </span>
+            <?php endif; ?>
         </div>
     </article>
 
@@ -136,8 +161,7 @@ $monthNames = [
         <span class="stat-icon yellow"><i data-lucide="scale"></i></span>
         <div>
             <small>Banco de horas</small>
-            <strong
-                class="<?= $monthBankBalance > 0 ? 'balance-positive' : ($monthBankBalance < 0 ? 'balance-negative' : '') ?>">
+            <strong class="<?= $monthBankBalance > 0 ? 'balance-positive' : ($monthBankBalance < 0 ? 'balance-negative' : '') ?>">
                 <?= formatSignedMinutes($monthBankBalance) ?>
             </strong>
             <span class="muted">
@@ -163,7 +187,7 @@ $monthNames = [
             <p>
                 Jornada padrão: <?= e($workdayStart) ?> às <?= e($workdayEnd) ?>
                 • <?= $lunchMinutes ?> min de almoço
-                • tolerância de <?= (int) ($settings['tolerance_minutes'] ?? 5) ?> min
+                • tolerância de <?= (int)($settings['tolerance_minutes'] ?? 5) ?> min
             </p>
         </div>
 
@@ -191,10 +215,14 @@ $monthNames = [
 
         foreach ($actions as $key => [$label, $class, $icon]):
             $enabled = $status['next'] === $key;
-            ?>
+        ?>
             <form method="POST" action="<?= url('clock') ?>">
                 <input type="hidden" name="type" value="<?= e($key) ?>">
-                <button class="punch-button <?= e($class) ?>" type="submit" <?= !$enabled ? 'disabled' : '' ?>>
+                <button
+                    class="punch-button <?= e($class) ?>"
+                    type="submit"
+                    <?= !$enabled ? 'disabled' : '' ?>
+                >
                     <i data-lucide="<?= e($icon) ?>"></i>
                     <strong><?= e($label) ?></strong>
                 </button>
@@ -225,11 +253,14 @@ $monthNames = [
                 $height = $max > 0
                     ? max(2, (int) round(($minutes / $max) * 100))
                     : 0;
-                ?>
+            ?>
                 <div class="bar-col">
                     <span class="bar-value"><?= formatMinutes($minutes) ?></span>
                     <div class="bar-track">
-                        <div class="bar-fill <?= $minutes === 0 ? 'empty' : '' ?>" style="height: <?= $height ?>%"></div>
+                        <div
+                            class="bar-fill <?= $minutes === 0 ? 'empty' : '' ?>"
+                            style="height: <?= $height ?>%"
+                        ></div>
                     </div>
                     <strong><?= e($day['day']) ?></strong>
                     <small><?= e($day['label']) ?></small>
@@ -251,7 +282,7 @@ $monthNames = [
                 <?php foreach ($recent as $entry):
                     [$label, $iconClass, $iconName] = $typeLabels[$entry['entry_type']]
                         ?? ['Registro', 'entry', 'circle'];
-                    ?>
+                ?>
                     <div class="recent-item">
                         <span class="recent-icon <?= e($iconClass) ?>">
                             <i data-lucide="<?= e($iconName) ?>"></i>
@@ -310,9 +341,11 @@ $monthNames = [
                         $classes[] = $dayData['extra'] ? 'marker-extra' : 'marker-worked';
                     }
                 }
-                ?>
-                <span class="<?= e(implode(' ', $classes)) ?>"
-                    title="<?= !empty($dayData['holiday']) ? e($dayData['holiday']['name']) : (!empty($dayData['dayOff']) ? e($dayData['dayOff']['type']) : '') ?>"><?= $day ?></span>
+            ?>
+                <span
+                    class="<?= e(implode(' ', $classes)) ?>"
+                    title="<?= !empty($dayData['holiday']) ? e($dayData['holiday']['name']) : (!empty($dayData['dayOff']) ? e($dayData['dayOff']['type']) : '') ?>"
+                ><?= $day ?></span>
             <?php endfor; ?>
         </div>
 

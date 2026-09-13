@@ -182,6 +182,55 @@ class DashboardController extends Controller
             ];
         }
 
+
+        /*
+         * Comparação de horas extras com o mês anterior.
+         * Soma horas extras 50% + 100% em ambos os períodos.
+         */
+        $previousMonthStart = $monthStartDate->modify('-1 month');
+        $previousMonthEnd = $previousMonthStart->modify('last day of this month');
+
+        $holidayModel->ensureYear((int) $previousMonthStart->format('Y'));
+
+        $previousMonthPeriod = new DatePeriod(
+            $previousMonthStart,
+            new DateInterval('P1D'),
+            $previousMonthEnd->modify('+1 day')
+        );
+
+        $previousMonthExtra = 0;
+
+        foreach ($previousMonthPeriod as $date) {
+            $dateString = $date->format('Y-m-d');
+
+            $summary = $entryModel->summarizeDay(
+                (int) $user['id'],
+                $dateString,
+                $dailyMinutes,
+                $toleranceMinutes,
+                $holidayModel->findByDate($dateString),
+                $dayOffModel->findForDate(
+                    (int) $user['id'],
+                    $dateString
+                ),
+                $user['created_at'] ?? null
+            );
+
+            $previousMonthExtra +=
+                $summary['overtime50']
+                + $summary['overtime100'];
+        }
+
+        $currentMonthExtra = $monthExtra50 + $monthExtra100;
+        $extraMonthChangePercent = null;
+
+        if ($previousMonthExtra > 0) {
+            $extraMonthChangePercent = (
+                ($currentMonthExtra - $previousMonthExtra)
+                / $previousMonthExtra
+            ) * 100;
+        }
+
         $hour = (int) date('G');
 
         $greeting = match (true) {
@@ -207,6 +256,8 @@ class DashboardController extends Controller
             'monthWorked' => $monthWorked,
             'monthExtra50' => $monthExtra50,
             'monthExtra100' => $monthExtra100,
+            'previousMonthExtra' => $previousMonthExtra,
+            'extraMonthChangePercent' => $extraMonthChangePercent,
             'monthDeficit' => $monthDeficit,
             'monthBankBalance' => $monthBankBalance,
             'monthAbsences' => $monthAbsences,
