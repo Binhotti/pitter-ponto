@@ -571,3 +571,41 @@ O bloco de período do Histórico foi reorganizado para ficar mais consistente:
 - tema escuro preservado.
 
 Também foi mantida a correção do `PageController.php` sem a validação antiga de `$lunchStartTime`.
+
+
+## Extra 100% no fim de semana + revisão do tema escuro — v3.2
+
+### Regra de horas extras
+A jornada obrigatória é de segunda a sexta.
+
+Por isso, agora:
+- sábado: todo o período trabalhado é hora extra 100%;
+- domingo: todo o período trabalhado é hora extra 100%;
+- feriado: todo o período trabalhado é hora extra 100%;
+- esses dias não geram falta quando não há ponto.
+
+Exemplos:
+- sábado com 4h trabalhadas => 4h de extra 100%;
+- sábado com 9h09 trabalhadas => 9h09 de extra 100%.
+
+O banco de horas recebe positivamente o mesmo período trabalhado nesses dias.
+
+### Tema escuro
+Foi feita uma revisão mais ampla das telas:
+- Calendário;
+- Ausências e Justificativas;
+- Histórico;
+- Relatórios;
+- Configurações;
+- Perfil;
+- Busca;
+- notificações e pendências;
+- modais;
+- campos, selects e botões auxiliares.
+
+Foram removidos diversos fundos brancos e textos de baixo contraste que apareciam no modo escuro.
+
+### Correção preservada
+O `PageController.php` continua sem a validação antiga de `$lunchStartTime`.
+
+Nenhum SQL novo é necessário.

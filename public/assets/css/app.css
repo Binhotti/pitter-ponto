@@ -4351,3 +4351,415 @@ body.theme-dark .history-range-presets a:hover {
         grid-column: auto;
     }
 }
+
+
+/* ===== Pitter Ponto v3.2 - tema escuro revisado + extra 100% ===== */
+
+/*
+ * Base de contraste.
+ * Algumas telas mais antigas ainda tinham cores claras fixas;
+ * estas regras padronizam o modo escuro sem alterar o tema claro.
+ */
+body.theme-dark {
+    color-scheme: dark;
+}
+
+body.theme-dark .page-content,
+body.theme-dark .main-content {
+    background: var(--bg);
+}
+
+body.theme-dark .panel,
+body.theme-dark .punch-card,
+body.theme-dark .stat-card,
+body.theme-dark .evolution-card,
+body.theme-dark .calendar-detail-dialog,
+body.theme-dark .point-edit-dialog {
+    background: var(--card);
+    border-color: var(--line);
+    color: var(--text);
+}
+
+/* Textos/labels que antes usavam azul fixo pensado para fundo branco */
+body.theme-dark .filter-row label,
+body.theme-dark .settings-form label,
+body.theme-dark .auth-form label,
+body.theme-dark .adjustment-create-form label,
+body.theme-dark .history-event-editor label,
+body.theme-dark .absence-create-form label,
+body.theme-dark .absence-edit-form label,
+body.theme-dark .settings-grid label,
+body.theme-dark .profile-fields-grid label,
+body.theme-dark .point-edit-form label,
+body.theme-dark .history-range-custom label,
+body.theme-dark .notification-timing-grid label {
+    color: #b8c7e6;
+}
+
+/* Inputs */
+body.theme-dark input,
+body.theme-dark select,
+body.theme-dark textarea,
+body.theme-dark .search-page-form,
+body.theme-dark .input-with-suffix {
+    background: #101a2e;
+    border-color: #2b3855;
+    color: var(--text);
+}
+
+body.theme-dark input::placeholder,
+body.theme-dark textarea::placeholder {
+    color: #71809f;
+}
+
+body.theme-dark input:disabled {
+    background: #121c30;
+    color: #8f9dbb;
+    opacity: 1;
+}
+
+/* Cabeçalho/busca */
+body.theme-dark .search-box {
+    background: #18243a;
+    color: #99a8c7;
+}
+
+body.theme-dark .search-box input {
+    background: transparent;
+}
+
+body.theme-dark .icon-button {
+    color: #dce7ff;
+}
+
+/* Elementos auxiliares originalmente brancos */
+body.theme-dark .month-nav a,
+body.theme-dark .secondary-button,
+body.theme-dark .absence-save-button,
+body.theme-dark .edit-point-button,
+body.theme-dark .soft-select {
+    background: #111b2f;
+    border-color: var(--line);
+    color: #dbe6ff;
+}
+
+/* Calendário principal */
+body.theme-dark .interactive-calendar {
+    background: var(--card);
+}
+
+body.theme-dark .calendar-cell,
+body.theme-dark .calendar-day-button {
+    background: #151f34;
+    border-color: #31405f;
+    color: var(--text);
+}
+
+body.theme-dark .calendar-cell:hover,
+body.theme-dark .calendar-day-button:hover {
+    background: #192741;
+    border-color: #4d6aa2;
+}
+
+body.theme-dark .calendar-cell strong {
+    color: #eff5ff;
+}
+
+body.theme-dark .calendar-cell small {
+    color: #91a2c3;
+}
+
+body.theme-dark .muted-cell {
+    background: #111a2c;
+}
+
+body.theme-dark .full-weekdays span {
+    color: #879bc2;
+}
+
+body.theme-dark .calendar-cell.holiday-cell {
+    background: #332d17;
+    border-color: #564a21;
+}
+
+body.theme-dark .calendar-cell.dayoff-cell {
+    background: #172a43;
+    border-color: #294766;
+}
+
+body.theme-dark .calendar-cell.absence-day {
+    background: #352026;
+    border-color: #5a3039;
+}
+
+body.theme-dark .holiday-tag {
+    background: #5a4815;
+    color: #ffe687;
+}
+
+body.theme-dark .dayoff-tag {
+    background: #203b60;
+    color: #b9d7ff;
+}
+
+body.theme-dark .absence-tag {
+    background: #53232b;
+    color: #ffbac1;
+}
+
+/* Modal do calendário */
+body.theme-dark .calendar-detail-entry,
+body.theme-dark .calendar-detail-summary > div {
+    background: #111b2f;
+    border-color: var(--line);
+}
+
+body.theme-dark .calendar-detail-icon,
+body.theme-dark .calendar-detail-entry-icon {
+    background: #20385f;
+    color: #8eb8ff;
+}
+
+body.theme-dark .calendar-detail-money {
+    background: #153426;
+}
+
+body.theme-dark .calendar-detail-close:hover {
+    background: #202c45;
+}
+
+/* Ausências e Justificativas */
+body.theme-dark .absence-info {
+    background: #14223a;
+    border-color: #2a4165;
+}
+
+body.theme-dark .absence-info strong {
+    color: #eaf2ff;
+}
+
+body.theme-dark .absence-info p {
+    color: #a8b8d8;
+}
+
+body.theme-dark .absence-card {
+    background: var(--card);
+}
+
+body.theme-dark .absence-type-icon.justified {
+    background: #1c3457;
+    color: #87b5ff;
+}
+
+body.theme-dark .absence-type-icon.medical {
+    background: #17392b;
+    color: #62d79c;
+}
+
+body.theme-dark .absence-type-icon.day-off {
+    background: #3b3217;
+    color: #f4ca52;
+}
+
+body.theme-dark .absence-type-icon.vacation {
+    background: #2d2448;
+    color: #bea7ff;
+}
+
+body.theme-dark .absence-type-icon.compensation {
+    background: #193450;
+    color: #85c6ff;
+}
+
+body.theme-dark .absence-delete-button:hover {
+    background: #3a2027;
+}
+
+body.theme-dark .absence-empty {
+    color: var(--muted);
+}
+
+/* Histórico */
+body.theme-dark .history-point-card,
+body.theme-dark .history-event-edit {
+    background: #111b2f;
+    border-color: var(--line);
+}
+
+body.theme-dark .history-range-presets a {
+    background: #111b2f;
+    border-color: var(--line);
+    color: #9fb0d0;
+}
+
+body.theme-dark .history-range-presets a:hover {
+    background: #182944;
+    border-color: #4e6fae;
+    color: #d7e5ff;
+}
+
+body.theme-dark .history-range-presets a.active {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+}
+
+/* Relatórios */
+body.theme-dark .report-month-navigation,
+body.theme-dark .report-chart-panel,
+body.theme-dark .report-summary-panel,
+body.theme-dark .report-table-panel,
+body.theme-dark .financial-overview-panel {
+    background: var(--card);
+}
+
+body.theme-dark .financial-overview-grid > div {
+    background: #111b2f;
+    border-color: var(--line);
+}
+
+body.theme-dark .financial-overview-grid .financial-highlight {
+    background: #153327;
+    border-color: #28523f;
+}
+
+body.theme-dark .monthly-bar-track {
+    border-color: #31405f;
+}
+
+body.theme-dark .report-table th,
+body.theme-dark .report-table td {
+    border-color: var(--line);
+}
+
+/* Configurações e Perfil */
+body.theme-dark .theme-card {
+    background: #111b2f;
+}
+
+body.theme-dark .light-preview {
+    background: #202a3c;
+}
+
+body.theme-dark .settings-preview {
+    background: #111b2f;
+}
+
+body.theme-dark .settings-toggle-row {
+    border-color: var(--line);
+}
+
+body.theme-dark .profile-avatar-fallback,
+body.theme-dark .settings-avatar-fallback {
+    background: #203455;
+    color: #dce9ff;
+}
+
+body.theme-dark .avatar-upload-button {
+    border-color: #395073;
+    color: #9cc0ff;
+}
+
+/* Busca */
+body.theme-dark .search-shortcut-card,
+body.theme-dark .search-result-row {
+    border-color: var(--line);
+}
+
+body.theme-dark .search-shortcut-card {
+    background: #111b2f;
+}
+
+body.theme-dark .search-shortcut-card > span,
+body.theme-dark .search-result-icon {
+    background: #1d3559;
+    color: #8db8ff;
+}
+
+/* Notificações / pendências */
+body.theme-dark .smart-notification-card {
+    background: var(--card);
+}
+
+body.theme-dark .notification-dropdown {
+    background: var(--card);
+    border-color: var(--line);
+}
+
+body.theme-dark .notification-event-card {
+    background: #111b2f;
+    border-color: var(--line);
+}
+
+body.theme-dark .inconsistency-item {
+    background: #111b2f;
+}
+
+/* Mini calendário do dashboard */
+body.theme-dark .mini-weekdays {
+    color: #879bc2;
+}
+
+body.theme-dark .mini-day {
+    color: #b8c8e8;
+}
+
+body.theme-dark .mini-day.today {
+    color: #fff;
+}
+
+body.theme-dark .mini-day.holiday-day {
+    background: #4b3d16;
+    color: #ffe582;
+}
+
+body.theme-dark .mini-day.dayoff-day {
+    background: #1c3557;
+    color: #b9d5ff;
+}
+
+/* Banners e mensagens */
+body.theme-dark .info-note {
+    background: #14223a;
+    border-color: #2b4164;
+    color: #a9badb;
+}
+
+body.theme-dark .holiday-banner {
+    background: #352f18;
+    border-color: #5e5122;
+    color: #ffe68b;
+}
+
+body.theme-dark .dayoff-banner {
+    background: #172c48;
+    border-color: #2d4d72;
+    color: #a8ccff;
+}
+
+/* Alertas */
+body.theme-dark .alert.success {
+    background: #143326;
+    border-color: #27503e;
+    color: #8ee0b5;
+}
+
+body.theme-dark .alert.error {
+    background: #3a2027;
+    border-color: #62313b;
+    color: #ffb1b9;
+}
+
+/* Botões desabilitados continuam reconhecíveis no escuro */
+body.theme-dark .punch-button:disabled {
+    opacity: .28;
+    filter: saturate(.55) brightness(.72);
+}
+
+/* Evita flash de fundo branco em controles nativos */
+body.theme-dark input[type="date"],
+body.theme-dark input[type="time"],
+body.theme-dark input[type="month"],
+body.theme-dark input[type="number"] {
+    color-scheme: dark;
+}

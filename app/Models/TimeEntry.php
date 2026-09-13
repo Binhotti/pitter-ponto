@@ -572,16 +572,18 @@ class TimeEntry
         }
 
         if ($completed) {
+            /*
+             * Sábado, domingo e feriado não fazem parte da jornada
+             * obrigatória (segunda a sexta). Portanto, todo minuto
+             * efetivamente trabalhado nesses dias é hora extra 100%.
+             *
+             * Ex.:
+             * sábado 4h trabalhadas => 4h de extra 100%
+             * sábado 9h09 => 9h09 de extra 100%
+             */
             if ($isWeekend || $isHoliday) {
-                $difference = $worked - $dailyMinutes;
-
-                if ($difference > $toleranceMinutes) {
-                    $overtime100 = $difference;
-                    $bankBalance = $difference;
-                } else {
-                    $overtime100 = 0;
-                    $bankBalance = 0;
-                }
+                $overtime100 = $worked;
+                $bankBalance = $worked;
             } elseif ($isExcused) {
                 $bankBalance = 0;
             } else {
