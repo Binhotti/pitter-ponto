@@ -98,6 +98,72 @@
         });
     }
 
+
+    const mobileMoreToggle = document.getElementById('mobile-more-toggle');
+    const mobileMoreLayer = document.getElementById('mobile-more-layer');
+    const mobileMoreBackdrop = document.getElementById('mobile-more-backdrop');
+    const mobileMoreClose = document.getElementById('mobile-more-close');
+
+    const closeMobileMore = () => {
+        if (!mobileMoreLayer || !mobileMoreToggle) return;
+
+        mobileMoreLayer.classList.remove('open');
+        mobileMoreLayer.setAttribute('aria-hidden', 'true');
+        mobileMoreToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('mobile-more-open');
+    };
+
+    const openMobileMore = () => {
+        if (!mobileMoreLayer || !mobileMoreToggle) return;
+
+        mobileMoreLayer.classList.add('open');
+        mobileMoreLayer.setAttribute('aria-hidden', 'false');
+        mobileMoreToggle.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('mobile-more-open');
+
+        setTimeout(() => mobileMoreClose?.focus(), 120);
+    };
+
+    mobileMoreToggle?.addEventListener('click', () => {
+        mobileMoreLayer?.classList.contains('open')
+            ? closeMobileMore()
+            : openMobileMore();
+    });
+
+    mobileMoreBackdrop?.addEventListener('click', closeMobileMore);
+    mobileMoreClose?.addEventListener('click', closeMobileMore);
+
+    mobileMoreLayer?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', closeMobileMore);
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && mobileMoreLayer?.classList.contains('open')) {
+            closeMobileMore();
+        }
+    });
+
+    const syncMobileBottomNav = () => {
+        const homeItem = document.querySelector('[data-mobile-nav="dashboard"]');
+        const pointItem = document.querySelector('[data-mobile-nav="point"]');
+
+        if (!homeItem || !pointItem) return;
+
+        const isDashboardRoute =
+            window.location.search.includes('route=dashboard')
+            || !window.location.search.includes('route=');
+
+        if (!isDashboardRoute) return;
+
+        const isPoint = window.location.hash === '#meu-ponto';
+        homeItem.classList.toggle('active', !isPoint);
+        pointItem.classList.toggle('active', isPoint);
+    };
+
+    syncMobileBottomNav();
+    window.addEventListener('hashchange', syncMobileBottomNav);
+
+
     const clock = document.getElementById('live-clock');
 
     if (clock) {

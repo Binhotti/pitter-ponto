@@ -178,6 +178,76 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
             <?php require $viewFile; ?>
         </section>
     </main>
+
+    <nav class="mobile-bottom-nav" aria-label="Navegação principal no celular">
+        <a href="<?= url('dashboard') ?>" class="mobile-bottom-item <?= ($active ?? '') === 'dashboard' ? 'active' : '' ?>" data-mobile-nav="dashboard">
+            <i data-lucide="house"></i><span>Início</span>
+        </a>
+        <a href="<?= url('dashboard') ?>#meu-ponto" class="mobile-bottom-item" data-mobile-nav="point">
+            <i data-lucide="clock-3"></i><span>Meu Ponto</span>
+        </a>
+        <a href="<?= url('history') ?>" class="mobile-bottom-item <?= ($active ?? '') === 'history' ? 'active' : '' ?>" data-mobile-nav="history">
+            <i data-lucide="notebook-tabs"></i><span>Histórico</span>
+        </a>
+        <a href="<?= url('calendar') ?>" class="mobile-bottom-item <?= ($active ?? '') === 'calendar' ? 'active' : '' ?>" data-mobile-nav="calendar">
+            <i data-lucide="calendar-days"></i><span>Calendário</span>
+        </a>
+        <button type="button" class="mobile-bottom-item mobile-more-toggle <?= in_array(($active ?? ''), ['absences','reports','profile','settings','search'], true) ? 'active' : '' ?>" id="mobile-more-toggle" aria-label="Mais opções" aria-expanded="false">
+            <i data-lucide="ellipsis"></i><span>Mais</span>
+        </button>
+    </nav>
+
+    <div class="mobile-more-layer" id="mobile-more-layer" aria-hidden="true">
+        <button class="mobile-more-backdrop" id="mobile-more-backdrop" type="button" aria-label="Fechar mais opções"></button>
+
+        <section class="mobile-more-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-more-title">
+            <div class="mobile-more-handle" aria-hidden="true"></div>
+
+            <div class="mobile-more-head">
+                <div>
+                    <h2 id="mobile-more-title">Mais opções</h2>
+                    <p>Acesse as outras áreas do Pitter Ponto.</p>
+                </div>
+                <button type="button" class="mobile-more-close" id="mobile-more-close" aria-label="Fechar">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="mobile-more-profile">
+                <?php if ($avatarPath): ?>
+                    <img src="<?= config('app.url') . '/' . e($avatarPath) ?>" alt="Foto de perfil" class="mobile-more-avatar">
+                <?php else: ?>
+                    <span class="mobile-more-avatar mobile-more-avatar-fallback"><?= e($initials ?: 'U') ?></span>
+                <?php endif; ?>
+                <span>
+                    <strong><?= e($currentUser['name'] ?? 'Usuário') ?></strong>
+                    <small><?= e($currentUser['email'] ?? '') ?></small>
+                </span>
+            </div>
+
+            <div class="mobile-more-grid">
+                <a href="<?= url('absences') ?>" class="<?= ($active ?? '') === 'absences' ? 'active' : '' ?>">
+                    <span><i data-lucide="calendar-off"></i></span><strong>Ausências</strong><small>Justificativas, folgas e férias</small>
+                </a>
+                <a href="<?= url('reports') ?>" class="<?= ($active ?? '') === 'reports' ? 'active' : '' ?>">
+                    <span><i data-lucide="chart-no-axes-column-increasing"></i></span><strong>Relatórios</strong><small>Horas, banco e valores</small>
+                </a>
+                <a href="<?= url('profile') ?>" class="<?= ($active ?? '') === 'profile' ? 'active' : '' ?>">
+                    <span><i data-lucide="user-round"></i></span><strong>Perfil</strong><small>Dados pessoais e foto</small>
+                </a>
+                <a href="<?= url('settings') ?>" class="<?= ($active ?? '') === 'settings' ? 'active' : '' ?>">
+                    <span><i data-lucide="settings"></i></span><strong>Configurações</strong><small>Jornada, tema e notificações</small>
+                </a>
+                <a href="<?= url('search') ?>" class="<?= ($active ?? '') === 'search' ? 'active' : '' ?>">
+                    <span><i data-lucide="search"></i></span><strong>Busca</strong><small>Encontre telas e registros</small>
+                </a>
+                <a href="<?= url('logout') ?>" class="danger">
+                    <span><i data-lucide="log-out"></i></span><strong>Sair</strong><small>Encerrar sua sessão</small>
+                </a>
+            </div>
+        </section>
+    </div>
+
 </div>
 
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>

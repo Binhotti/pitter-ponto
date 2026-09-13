@@ -660,3 +660,25 @@ Para bancos existentes, importe:
 A ideia de confirmação real do e-mail por link ficou reservada para uma versão futura.
 
 A correção antiga do `$lunchStartTime` no `PageController.php` permanece preservada.
+
+
+## Navegação inferior no celular — v3.4
+
+Em telas de até 680px, a sidebar lateral é substituída por uma barra inferior fixa.
+
+Itens principais:
+- Início
+- Meu Ponto
+- Histórico
+- Calendário
+- Mais
+
+O botão Mais abre um bottom sheet com:
+- Ausências
+- Relatórios
+- Perfil
+- Configurações
+- Busca
+- Sair
+
+Desktop permanece com a sidebar lateral normal. Nenhum SQL novo é necessário.
