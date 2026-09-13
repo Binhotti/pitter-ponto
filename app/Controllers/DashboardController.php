@@ -1,0 +1,153 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controllers;
+
+use App\Models\TimeEntry;
+use App\Models\User;
+use App\Models\WorkSettings;
+use DateInterval;
+use DatePeriod;
+use DateTimeImmutable;
+
+class DashboardController extends Controller
+{
+    public function index(): void
+    {
+        $this->requireAuth();
+
+        $userModel = new User();
+        $entryModel = new TimeEntry();
+        $settingsModel = new WorkSettings();
+
+        $user = $userModel->find((int) authUser()['id']);
+        $settings = $settingsModel->all();
+
+        $today = date('Y-m-d');
+        $dailyMinutes = (int) ($user['daily_minutes'] ?? 528);
+        $toleranceMinutes = (int) ($settings['tolerance_minutes'] ?? 5);
+
+        $status = $entryModel->currentStatus((int) $user['id']);
+
+        $todaySummary = $entryModel->summarizeDay(
+            (int) $user['id'],
+            $today,
+            $dailyMinutes,
+            $toleranceMinutes
+        );
+
+        $monday = (new DateTimeImmutable('monday this week'))->setTime(0, 0);
+
+        $week = [];
+        $weekTotal = 0;
+
+        for ($i = 0; $i < 7; $i++) {
+            $date = $monday->modify("+{$i} days");
+
+            $summary = $entryModel->summarizeDay(
+                (int) $user['id'],
+                $date->format('Y-m-d'),
+                $dailyMinutes,
+                $toleranceMinutes
+            );
+
+            $weekTotal += $summary['worked'];
+
+            $week[] = [
+                'date' => $date->format('Y-m-d'),
+                'day' => ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'][$i],
+                'label' => $date->format('d/m'),
+                'minutes' => $summary['worked'],
+            ];
+        }
+
+        $monthStartDate = new DateTimeImmutable('first day of this month');
+        $monthEndDate = new DateTimeImmutable('last day of this month');
+        $todayDate = new DateTimeImmutable('today');
+
+        $period = new DatePeriod(
+            $monthStartDate,
+            new DateInterval('P1D'),
+            $monthEndDate->modify('+1 day')
+        );
+
+        $monthWorked = 0;
+        $monthExtra50 = 0;
+        $monthExtra100 = 0;
+        $monthDeficit = 0;
+        $monthBankBalance = 0;
+        $saturdaysWorked = 0;
+        $monthCalendar = [];
+
+        foreach ($period as $date) {
+            $dateString = $date->format('Y-m-d');
+
+            $summary = $entryModel->summarizeDay(
+                (int) $user['id'],
+                $dateString,
+                $dailyMinutes,
+                $toleranceMinutes
+            );
+
+            // Datas futuras não entram em nenhum cálculo.
+            if ($date <= $todayDate) {
+                $monthWorked += $summary['worked'];
+                $monthExtra50 += $summary['overtime50'];
+                $monthExtra100 += $summary['overtime100'];
+                $monthDeficit += $summary['deficit'];
+                $monthBankBalance += $summary['bankBalance'];
+
+                if (
+                    $summary['isSaturday']
+                    && $summary['completed']
+                    && $summary['worked'] > 0
+                ) {
+                    $saturdaysWorked++;
+                }
+            }
+
+            $monthCalendar[(int) $date->format('j')] = [
+                'worked' => $summary['worked'],
+                'extra' => (
+                    $summary['overtime50']
+                    + $summary['overtime100']
+                ) > 0,
+                'deficit' => $summary['deficit'] > 0,
+                'completed' => $summary['completed'],
+            ];
+        }
+
+        $hour = (int) date('G');
+
+        $greeting = match (true) {
+            $hour < 12 => 'Bom dia',
+            $hour < 18 => 'Boa tarde',
+            default => 'Boa noite',
+        };
+
+        $this->view('dashboard/index', [
+            'title' => 'Dashboard',
+            'active' => 'dashboard',
+            'user' => $user,
+            'settings' => $settings,
+            'greeting' => $greeting,
+            'status' => $status,
+            'todaySummary' => $todaySummary,
+            'week' => $week,
+            'weekTotal' => $weekTotal,
+            'monthWorked' => $monthWorked,
+            'monthExtra50' => $monthExtra50,
+            'monthExtra100' => $monthExtra100,
+            'monthDeficit' => $monthDeficit,
+            'monthBankBalance' => $monthBankBalance,
+            'saturdaysWorked' => $saturdaysWorked,
+            'monthCalendar' => $monthCalendar,
+            'monthFirstWeekday' => (int) $monthStartDate->format('w'),
+            'daysInMonth' => (int) $monthEndDate->format('j'),
+            'recent' => $entryModel->recent((int) $user['id'], 6),
+            'success' => flash('success'),
+            'error' => flash('error'),
+        ]);
+    }
+}

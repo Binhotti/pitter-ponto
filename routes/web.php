@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Controllers\AuthController;
+use App\Controllers\DashboardController;
+use App\Controllers\PageController;
+use App\Controllers\TimeEntryController;
+
+return [
+    'GET' => [
+        '' => [DashboardController::class, 'index'],
+        'dashboard' => [DashboardController::class, 'index'],
+        'login' => [AuthController::class, 'showLogin'],
+        'register' => [AuthController::class, 'showRegister'],
+        'history' => [PageController::class, 'history'],
+        'calendar' => [PageController::class, 'calendar'],
+        'profile' => [PageController::class, 'profile'],
+        'employees' => [PageController::class, 'employees'],
+        'settings' => [PageController::class, 'settings'],
+        'logout' => [AuthController::class, 'logout'],
+    ],
+    'POST' => [
+        'login' => [AuthController::class, 'login'],
+        'register' => [AuthController::class, 'register'],
+        'clock' => [TimeEntryController::class, 'store'],
+        'profile' => [PageController::class, 'updateProfile'],
+        'settings' => [PageController::class, 'updateSettings'],
+    ],
+];
