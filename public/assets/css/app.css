@@ -1629,3 +1629,340 @@ body.theme-dark .outline-button {
 .daily-change.unavailable {
     color: var(--muted);
 }
+
+
+/* ===== Pitter Ponto v2.1 - Histórico compacto ===== */
+.history-list-modern {
+    gap: 16px;
+}
+
+.history-day-modern {
+    padding: 0;
+    overflow: hidden;
+}
+
+.history-day-head.modern {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+}
+
+.history-date-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.history-date-block strong {
+    font-size: 15px;
+}
+
+.history-date-block small {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.modern-totals {
+    align-items: center;
+    gap: 28px;
+}
+
+.modern-totals span {
+    min-width: 72px;
+}
+
+.modern-totals small {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.modern-totals b {
+    font-size: 11px;
+}
+
+.history-events-compact {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    padding: 16px 20px 20px;
+}
+
+.history-point-card {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px;
+    background: #f8fafe;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.history-point-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.history-point-left > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.history-point-left small {
+    color: var(--muted);
+    font-size: 9px;
+    white-space: nowrap;
+}
+
+.history-point-left strong {
+    font-size: 15px;
+    color: var(--text);
+}
+
+.history-edit-trigger {
+    border: 0;
+    background: transparent;
+    color: var(--blue);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 7px 8px;
+    border-radius: 8px;
+    transition: .18s ease;
+    white-space: nowrap;
+}
+
+.history-edit-trigger:hover {
+    background: #eaf2ff;
+}
+
+.history-edit-trigger svg {
+    width: 14px;
+    height: 14px;
+}
+
+.point-edit-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.point-edit-modal.open {
+    display: flex;
+}
+
+.point-edit-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 24, 52, .45);
+    backdrop-filter: blur(3px);
+}
+
+.point-edit-dialog {
+    position: relative;
+    width: min(520px, 100%);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: 0 28px 80px rgba(8, 29, 72, .24);
+    padding: 22px;
+    z-index: 1;
+}
+
+.point-edit-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+}
+
+.point-edit-close:hover {
+    background: #f2f5fa;
+}
+
+.point-edit-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+.point-edit-head {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-right: 38px;
+}
+
+.point-edit-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: #eaf2ff;
+    color: var(--blue);
+}
+
+.point-edit-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.point-edit-head h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.point-edit-head p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.point-edit-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.point-edit-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #465b8c;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.point-edit-form textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 86px;
+    border: 1px solid #dfe7f4;
+    background: #fff;
+    border-radius: 10px;
+    padding: 11px 12px;
+    outline: none;
+    color: var(--text);
+    font: inherit;
+}
+
+.point-edit-form textarea:focus {
+    border-color: #8cb2f5;
+    box-shadow: 0 0 0 3px rgba(43,102,220,.08);
+}
+
+.point-edit-reason {
+    grid-column: 1 / -1;
+}
+
+.point-edit-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.point-edit-actions .primary-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.point-edit-actions .primary-button svg {
+    width: 15px;
+    height: 15px;
+}
+
+.secondary-button {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--text);
+    border-radius: 10px;
+    padding: 11px 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+body.theme-dark .history-point-card,
+body.theme-dark .point-edit-form textarea,
+body.theme-dark .secondary-button {
+    background: #111b2f;
+    border-color: var(--line);
+    color: var(--text);
+}
+
+body.theme-dark .history-edit-trigger:hover,
+body.theme-dark .point-edit-close:hover {
+    background: #1d2a45;
+}
+
+@media (max-width: 1180px) {
+    .history-events-compact {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .history-day-head.modern {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .modern-totals {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .history-events-compact {
+        grid-template-columns: 1fr;
+    }
+
+    .point-edit-form {
+        grid-template-columns: 1fr;
+    }
+
+    .point-edit-reason,
+    .point-edit-actions {
+        grid-column: auto;
+    }
+}
+
+.adjustment-create-form input,
+.adjustment-create-form select,
+.filter-row input {
+    height: 42px;
+}
+
+.adjustment-create-form .primary-button.compact,
+.filter-row .primary-button.compact {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: end;
+    margin: 0;
+    padding: 0 16px;
+}

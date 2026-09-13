@@ -110,10 +110,15 @@ class DashboardController extends Controller
                 'minutes' => $summary['worked'],
             ];
         }
+        
+        $monthStartDate = (new DateTimeImmutable('first day of this month'))
+            ->setTime(0, 0, 0);
 
-        $monthStartDate = new DateTimeImmutable('first day of this month');
-        $monthEndDate = new DateTimeImmutable('last day of this month');
-        $todayDate = new DateTimeImmutable('today');
+        $monthEndDate = (new DateTimeImmutable('last day of this month'))
+            ->setTime(0, 0, 0);
+
+        $todayDate = (new DateTimeImmutable('today'))
+            ->setTime(0, 0, 0);
 
         $period = new DatePeriod(
             $monthStartDate,

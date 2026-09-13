@@ -234,7 +234,7 @@ class TimeEntry
         $normalized = [];
 
         foreach ($entries as $entry) {
-            if ($ignoreEntryId !== null && (int)$entry['id'] === $ignoreEntryId) {
+            if ($ignoreEntryId !== null && (int) $entry['id'] === $ignoreEntryId) {
                 continue;
             }
 
@@ -437,13 +437,19 @@ class TimeEntry
             $deficit = $dailyMinutes;
             $bankBalance = -$dailyMinutes;
         }
-
         if ($completed) {
             if ($isWeekend || $isHoliday) {
-                $overtime100 = $worked;
-                $bankBalance = $worked;
+                $difference = $worked - $dailyMinutes;
+
+                if ($difference > $toleranceMinutes) {
+                    $overtime100 = $difference;
+                    $bankBalance = $difference;
+                } else {
+                    $overtime100 = 0;
+                    $bankBalance = 0;
+                }
             } elseif ($isExcused) {
-                $bankBalance = $worked;
+                $bankBalance = 0;
             } else {
                 $difference = $worked - $expected;
 

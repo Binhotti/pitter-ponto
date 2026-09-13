@@ -272,3 +272,17 @@ O card "Horas extras" agora:
 Fórmula:
 
 `((extras do mês atual - extras do mês anterior) / extras do mês anterior) × 100`
+
+
+## Histórico compacto — v2.1
+
+A tela de Histórico foi redesenhada para evitar formulários grandes ocupando espaço.
+
+Agora:
+- cada dia possui um cabeçalho com data, dia da semana e resumo de horas;
+- as quatro marcações aparecem em cards compactos;
+- o formulário de edição não fica mais aberto o tempo todo;
+- cada marcação possui um botão "Editar";
+- ao editar, é aberto um modal com horário e motivo da alteração;
+- o histórico continua preservando auditoria pela tabela `time_adjustments`;
+- o nome do dia da semana é exibido em português.

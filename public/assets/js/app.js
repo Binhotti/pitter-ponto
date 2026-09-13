@@ -48,6 +48,59 @@
         });
     }
 
+
+    const pointEditModal = document.getElementById('point-edit-modal');
+    const pointEditTriggers = document.querySelectorAll('[data-point-edit]');
+    const pointEditClosers = document.querySelectorAll('[data-point-edit-close]');
+
+    const closePointEditModal = () => {
+        if (!pointEditModal) return;
+
+        pointEditModal.classList.remove('open');
+        pointEditModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    };
+
+    if (pointEditModal) {
+        pointEditTriggers.forEach((button) => {
+            button.addEventListener('click', () => {
+                const entryId = button.dataset.entryId || '';
+                const date = button.dataset.date || '';
+                const label = button.dataset.label || '';
+                const time = button.dataset.time || '';
+
+                const entryIdInput = document.getElementById('edit-entry-id');
+                const dateInput = document.getElementById('edit-entry-date');
+                const labelInput = document.getElementById('edit-entry-label');
+                const timeInput = document.getElementById('edit-entry-time');
+
+                if (entryIdInput) entryIdInput.value = entryId;
+                if (dateInput) dateInput.value = date;
+                if (labelInput) labelInput.value = label;
+                if (timeInput) timeInput.value = time;
+
+                pointEditModal.classList.add('open');
+                pointEditModal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+
+                setTimeout(() => {
+                    timeInput?.focus();
+                }, 50);
+            });
+        });
+
+        pointEditClosers.forEach((button) => {
+            button.addEventListener('click', closePointEditModal);
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && pointEditModal.classList.contains('open')) {
+                closePointEditModal();
+            }
+        });
+    }
+
+
     if (window.lucide) {
         window.lucide.createIcons({
             attrs: {
