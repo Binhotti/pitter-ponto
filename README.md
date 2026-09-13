@@ -558,3 +558,16 @@ Agora cada comparação usa um placeholder próprio:
 - `:query_type`
 
 A correção foi aplicada em `TimeEntry::searchForUser()` e `DayOff::searchForUser()`.
+
+
+## Filtro do Histórico refinado — v3.1.2
+
+O bloco de período do Histórico foi reorganizado para ficar mais consistente:
+- atalhos Hoje / 3 dias / 5 dias / 7 dias melhor alinhados;
+- campos De e Até mantidos na mesma linha;
+- botão Aplicar período alinhado com os inputs;
+- texto de ajuda movido para baixo da linha principal;
+- comportamento mobile revisado;
+- tema escuro preservado.
+
+Também foi mantida a correção do `PageController.php` sem a validação antiga de `$lunchStartTime`.
