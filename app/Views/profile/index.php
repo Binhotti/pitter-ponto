@@ -5,6 +5,21 @@
 <?php if (!empty($success)): ?><div class="alert success"><?= e($success) ?></div><?php endif; ?>
 <?php if ($message = flash('error')): ?><div class="alert error"><?= e($message) ?></div><?php endif; ?>
 
+<section class="panel profile-summary-card">
+    <div class="profile-summary-avatar">
+        <?php if (!empty($user['avatar_path'])): ?>
+            <img src="<?= config('app.url') . '/' . e($user['avatar_path']) ?>" alt="Foto de perfil">
+        <?php else: ?>
+            <span><?= e(mb_strtoupper(mb_substr($user['name'], 0, 1))) ?></span>
+        <?php endif; ?>
+    </div>
+    <div>
+        <strong><?= e($user['name']) ?></strong>
+        <span><?= e($user['email']) ?></span>
+        <a href="<?= url('settings') ?>">Alterar foto e preferências →</a>
+    </div>
+</section>
+
 <section class="panel form-panel">
     <form method="POST" action="<?= url('profile') ?>" class="settings-form">
         <div class="form-grid">

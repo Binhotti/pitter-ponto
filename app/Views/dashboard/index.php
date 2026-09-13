@@ -39,9 +39,9 @@ $typeLabels = [
     'clock_out' => ['Saída do expediente', 'exit', 'log-out'],
 ];
 
-$workdayStart = $settings['workday_start'] ?? '08:00';
-$workdayEnd = $settings['workday_end'] ?? '17:48';
-$lunchMinutes = (int) ($settings['lunch_minutes'] ?? 60);
+$workdayStart = substr((string)($user['workday_start'] ?? '08:00:00'), 0, 5);
+$workdayEnd = substr((string)($user['workday_end'] ?? '17:48:00'), 0, 5);
+$lunchMinutes = (int) ($user['lunch_minutes'] ?? 60);
 
 $monthNames = [
     1 => 'Janeiro',

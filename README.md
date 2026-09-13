@@ -211,3 +211,27 @@ Regras:
 - Não é permitido criar ocorrências anteriores à criação da conta.
 - Os registros já aparecem automaticamente no calendário.
 - Não há necessidade de novo SQL se `patch_002_feriados_ausencias.sql` já foi importado.
+
+
+## Configurações pessoais — v1.7
+
+A tela de Configurações voltou ao menu e agora é pessoal para cada colaborador.
+
+Inclui:
+- horário padrão de entrada;
+- horário padrão de saída;
+- duração do almoço;
+- recálculo automático da jornada líquida diária;
+- tema claro/escuro;
+- preferência de avisos no sistema;
+- permissão para notificações do navegador;
+- edição de nome e e-mail;
+- foto de perfil JPG/PNG/WEBP de até 3 MB.
+
+Se o banco já existe, importe:
+
+`database/patch_003_configuracoes_pessoais.sql`
+
+As fotos são salvas em:
+
+`public/assets/uploads/avatars/`

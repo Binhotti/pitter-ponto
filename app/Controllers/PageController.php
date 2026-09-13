@@ -169,32 +169,173 @@ class PageController extends Controller
 
     public function settings(): void
     {
-        $this->requireAdmin();
+        $this->requireAuth();
 
         $this->view('settings/index', [
             'title' => 'Configurações',
             'active' => 'settings',
-            'user' => (new User())->find((int)authUser()['id']),
-            'settings' => (new WorkSettings())->all(),
+            'user' => (new User())->find((int) authUser()['id']),
             'success' => flash('success'),
+            'error' => flash('error'),
         ]);
     }
 
     public function updateSettings(): void
     {
-        $this->requireAdmin();
+        $this->requireAuth();
 
-        (new WorkSettings())->update([
-            'workday_start' => (string)($_POST['workday_start'] ?? '08:00'),
-            'workday_end' => (string)($_POST['workday_end'] ?? '17:48'),
-            'lunch_minutes' => max(0, (int)($_POST['lunch_minutes'] ?? 60)),
-            'overtime_weekday_percent' => max(0, (int)($_POST['overtime_weekday_percent'] ?? 50)),
-            'overtime_saturday_percent' => max(0, (int)($_POST['overtime_saturday_percent'] ?? 100)),
-            'overtime_sunday_percent' => max(0, (int)($_POST['overtime_sunday_percent'] ?? 100)),
-            'tolerance_minutes' => max(0, (int)($_POST['tolerance_minutes'] ?? 5)),
+        $userId = (int) authUser()['id'];
+        $userModel = new User();
+        $user = $userModel->find($userId);
+
+        $workdayStart = trim((string) ($_POST['workday_start'] ?? '08:00'));
+        $workdayEnd = trim((string) ($_POST['workday_end'] ?? '17:48'));
+        $lunchMinutes = max(0, min(240, (int) ($_POST['lunch_minutes'] ?? 60)));
+        $theme = (string) ($_POST['theme'] ?? 'light');
+        $notificationsEnabled = isset($_POST['notifications_enabled']) ? 1 : 0;
+        $browserNotifications = isset($_POST['browser_notifications']) ? 1 : 0;
+
+        if (
+            !preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $workdayStart)
+            || !preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $workdayEnd)
+        ) {
+            flash('error', 'Informe horários válidos.');
+            redirect('settings');
+        }
+
+        if (!in_array($theme, ['light', 'dark'], true)) {
+            $theme = 'light';
+        }
+
+        $start = strtotime('1970-01-01 ' . $workdayStart . ':00');
+        $end = strtotime('1970-01-01 ' . $workdayEnd . ':00');
+
+        if ($end <= $start) {
+            flash('error', 'O horário de saída precisa ser posterior ao horário de entrada.');
+            redirect('settings');
+        }
+
+        $totalMinutes = (int) floor(($end - $start) / 60);
+        $dailyMinutes = $totalMinutes - $lunchMinutes;
+
+        if ($dailyMinutes <= 0) {
+            flash('error', 'A duração do almoço não pode consumir toda a jornada.');
+            redirect('settings');
+        }
+
+        $userModel->updatePersonalSettings($userId, [
+            'workday_start' => $workdayStart . ':00',
+            'workday_end' => $workdayEnd . ':00',
+            'lunch_minutes' => $lunchMinutes,
+            'daily_minutes' => $dailyMinutes,
+            'theme' => $theme,
+            'notifications_enabled' => $notificationsEnabled,
+            'browser_notifications' => $browserNotifications,
         ]);
 
-        flash('success', 'Configurações salvas.');
+        $name = trim((string) ($_POST['name'] ?? $user['name']));
+        $email = strtolower(trim((string) ($_POST['email'] ?? $user['email'])));
+
+        if (mb_strlen($name) >= 3 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $userModel->updateProfile($userId, [
+                'name' => $name,
+                'email' => $email,
+                'salary' => (string) ($user['salary'] ?? ''),
+            ]);
+
+            $_SESSION['user']['name'] = $name;
+            $_SESSION['user']['email'] = $email;
+        }
+
+        if (
+            isset($_FILES['avatar'])
+            && is_array($_FILES['avatar'])
+            && ($_FILES['avatar']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE
+        ) {
+            $this->handleAvatarUpload($userId, $userModel);
+        }
+
+        if (isset($_POST['remove_avatar'])) {
+            $this->removeAvatar($userId, $userModel, $user['avatar_path'] ?? null);
+        }
+
+        flash('success', 'Configurações atualizadas com sucesso.');
         redirect('settings');
+    }
+
+    private function handleAvatarUpload(int $userId, User $userModel): void
+    {
+        $file = $_FILES['avatar'];
+
+        if (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+            flash('error', 'Não foi possível enviar a foto de perfil.');
+            return;
+        }
+
+        if (($file['size'] ?? 0) > 3 * 1024 * 1024) {
+            flash('error', 'A foto de perfil deve ter no máximo 3 MB.');
+            return;
+        }
+
+        $tmp = (string) ($file['tmp_name'] ?? '');
+        $mime = mime_content_type($tmp);
+
+        $extensions = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+        ];
+
+        if (!isset($extensions[$mime])) {
+            flash('error', 'Use uma imagem JPG, PNG ou WEBP.');
+            return;
+        }
+
+        $directory = BASE_PATH . '/public/assets/uploads/avatars';
+
+        if (!is_dir($directory)) {
+            mkdir($directory, 0775, true);
+        }
+
+        $filename = 'user-' . $userId . '-' . bin2hex(random_bytes(6))
+            . '.' . $extensions[$mime];
+
+        $destination = $directory . '/' . $filename;
+
+        if (!move_uploaded_file($tmp, $destination)) {
+            flash('error', 'Não foi possível salvar a foto de perfil.');
+            return;
+        }
+
+        $current = $userModel->find($userId);
+
+        if (!empty($current['avatar_path'])) {
+            $old = BASE_PATH . '/public/' . ltrim((string) $current['avatar_path'], '/');
+
+            if (is_file($old)) {
+                @unlink($old);
+            }
+        }
+
+        $userModel->updateAvatar(
+            $userId,
+            'assets/uploads/avatars/' . $filename
+        );
+    }
+
+    private function removeAvatar(
+        int $userId,
+        User $userModel,
+        ?string $avatarPath
+    ): void {
+        if ($avatarPath) {
+            $file = BASE_PATH . '/public/' . ltrim($avatarPath, '/');
+
+            if (is_file($file)) {
+                @unlink($file);
+            }
+        }
+
+        $userModel->updateAvatar($userId, null);
     }
 }

@@ -30,6 +30,13 @@ CREATE TABLE users (
     salary DECIMAL(10,2) NULL,
     daily_minutes SMALLINT UNSIGNED NOT NULL DEFAULT 528 COMMENT '8h48 = 528 minutos',
     monthly_hours SMALLINT UNSIGNED NOT NULL DEFAULT 220,
+    workday_start TIME NOT NULL DEFAULT '08:00:00',
+    workday_end TIME NOT NULL DEFAULT '17:48:00',
+    lunch_minutes SMALLINT UNSIGNED NOT NULL DEFAULT 60,
+    theme ENUM('light', 'dark') NOT NULL DEFAULT 'light',
+    notifications_enabled TINYINT(1) NOT NULL DEFAULT 1,
+    browser_notifications TINYINT(1) NOT NULL DEFAULT 0,
+    avatar_path VARCHAR(255) NULL,
     is_active TINYINT(1) NOT NULL DEFAULT 1,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

@@ -26,9 +26,4 @@
     <button class="primary-button" type="submit">Entrar</button>
 </form>
 
-<div class="auth-demo">
-    <strong>Acesso de demonstração</strong>
-    <span>admin@pitterpan.com • senha: 123456</span>
-</div>
-
 <p class="auth-switch">Ainda não tem conta? <a href="<?= url('register') ?>">Criar conta</a></p>

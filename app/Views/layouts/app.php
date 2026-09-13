@@ -1,5 +1,8 @@
 <?php
 $currentUser = authUser();
+$viewUser = $user ?? null;
+$avatarPath = $viewUser['avatar_path'] ?? null;
+$theme = $viewUser['theme'] ?? 'light';
 $initials = '';
 
 foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
@@ -20,7 +23,7 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
     <title><?= e($title ?? 'Dashboard') ?> • Pitter Ponto</title>
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
 </head>
-<body>
+<body class="<?= $theme === 'dark' ? 'theme-dark' : 'theme-light' ?>">
 <div class="app-shell">
     <aside class="sidebar" id="sidebar">
         <a href="<?= url('dashboard') ?>" class="brand">
@@ -57,11 +60,23 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
                 <i data-lucide="user-round" class="nav-icon"></i><span>Perfil</span>
             </a>
 
+            <a class="nav-item <?= ($active ?? '') === 'settings' ? 'active' : '' ?>" href="<?= url('settings') ?>">
+                <i data-lucide="settings" class="nav-icon"></i><span>Configurações</span>
+            </a>
+
         </nav>
 
         <div class="sidebar-footer">
             <a href="<?= url('profile') ?>" class="mini-profile">
-                <span class="avatar"><?= e($initials ?: 'U') ?></span>
+                <?php if ($avatarPath): ?>
+                    <img
+                        src="<?= config('app.url') . '/' . e($avatarPath) ?>"
+                        alt="Foto de perfil"
+                        class="avatar avatar-image"
+                    >
+                <?php else: ?>
+                    <span class="avatar"><?= e($initials ?: 'U') ?></span>
+                <?php endif; ?>
                 <span class="mini-profile-text">
                     <strong><?= e($currentUser['name'] ?? 'Usuário') ?></strong>
                     <small>Colaborador</small>
@@ -87,7 +102,13 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
             </div>
 
             <div class="topbar-right">
-                <button class="icon-button" type="button" title="Notificações" aria-label="Notificações">
+                <button
+                    class="icon-button"
+                    type="button"
+                    title="Notificações"
+                    aria-label="Notificações"
+                    data-notifications-enabled="<?= (int)($viewUser['notifications_enabled'] ?? 1) ?>"
+                >
                     <i data-lucide="bell"></i>
                 </button>
 

@@ -24,6 +24,30 @@
         setInterval(updateClock, 15000);
     }
 
+
+
+    const browserNotifications = document.getElementById('browser-notifications');
+
+    if (browserNotifications) {
+        browserNotifications.addEventListener('change', async () => {
+            if (!browserNotifications.checked) {
+                return;
+            }
+
+            if (!('Notification' in window)) {
+                browserNotifications.checked = false;
+                alert('Seu navegador não oferece suporte a notificações.');
+                return;
+            }
+
+            const permission = await Notification.requestPermission();
+
+            if (permission !== 'granted') {
+                browserNotifications.checked = false;
+            }
+        });
+    }
+
     if (window.lucide) {
         window.lucide.createIcons({
             attrs: {
