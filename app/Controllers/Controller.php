@@ -4,10 +4,23 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Models\User;
+use App\Services\NotificationService;
+
 class Controller
 {
     protected function view(string $view, array $data = []): void
     {
+        if (authUser()) {
+            $freshUser = (new User())->find((int)authUser()['id']);
+
+            if ($freshUser) {
+                $data['user'] ??= $freshUser;
+                $data['smartNotifications'] ??= (new NotificationService())
+                    ->forUser($freshUser);
+            }
+        }
+
         extract($data, EXTR_SKIP);
         $viewFile = BASE_PATH . '/app/Views/' . $view . '.php';
 

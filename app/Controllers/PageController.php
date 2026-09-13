@@ -25,10 +25,53 @@ class PageController extends Controller
         $holidayModel = new Holiday();
         $dayOffModel = new DayOff();
         $toleranceMinutes = (int)($settings['tolerance_minutes'] ?? 5);
-        $holidayModel->ensureYear((int)date('Y'));
 
-        $from = $_GET['from'] ?? date('Y-m-01');
-        $to = $_GET['to'] ?? date('Y-m-t');
+        $today = new DateTimeImmutable('today');
+        $allowedRanges = [1, 3, 5, 7];
+
+        $rangeDays = filter_input(INPUT_GET, 'days', FILTER_VALIDATE_INT);
+
+        if ($rangeDays !== false && $rangeDays !== null && in_array($rangeDays, $allowedRanges, true)) {
+            $toDate = $today;
+            $fromDate = $today->modify('-' . ($rangeDays - 1) . ' days');
+        } else {
+            $rawFrom = (string)($_GET['from'] ?? '');
+            $rawTo = (string)($_GET['to'] ?? '');
+
+            $fromDate = DateTimeImmutable::createFromFormat('!Y-m-d', $rawFrom) ?: null;
+            $toDate = DateTimeImmutable::createFromFormat('!Y-m-d', $rawTo) ?: null;
+
+            if (!$fromDate || !$toDate) {
+                $rangeDays = 7;
+                $toDate = $today;
+                $fromDate = $today->modify('-6 days');
+            } else {
+                if ($toDate > $today) {
+                    $toDate = $today;
+                }
+
+                if ($fromDate > $toDate) {
+                    [$fromDate, $toDate] = [$toDate, $fromDate];
+                }
+
+                // O filtro visual foi pensado para no máximo 7 dias.
+                $minimumFrom = $toDate->modify('-6 days');
+                if ($fromDate < $minimumFrom) {
+                    $fromDate = $minimumFrom;
+                }
+
+                $rangeDays = null;
+            }
+        }
+
+        $from = $fromDate->format('Y-m-d');
+        $to = $toDate->format('Y-m-d');
+
+        $holidayModel->ensureYear((int)$fromDate->format('Y'));
+        if ($fromDate->format('Y') !== $toDate->format('Y')) {
+            $holidayModel->ensureYear((int)$toDate->format('Y'));
+        }
+
         $entries = $entryModel->entriesBetween((int)$user['id'], $from, $to);
 
         $days = [];
@@ -48,6 +91,7 @@ class PageController extends Controller
                 $user['created_at'] ?? null
             );
         }
+        unset($day);
 
         $this->view('history/index', [
             'title' => 'Histórico',
@@ -56,6 +100,7 @@ class PageController extends Controller
             'days' => $days,
             'from' => $from,
             'to' => $to,
+            'rangeDays' => $rangeDays,
             'success' => flash('success'),
             'error' => flash('error'),
         ]);
@@ -210,14 +255,22 @@ class PageController extends Controller
 
         $workdayStart = trim((string) ($_POST['workday_start'] ?? '08:00'));
         $workdayEnd = trim((string) ($_POST['workday_end'] ?? '17:48'));
+        $lunchStartTime = trim((string)($_POST['lunch_start_time'] ?? '12:00'));
         $lunchMinutes = max(0, min(240, (int) ($_POST['lunch_minutes'] ?? 60)));
         $theme = (string) ($_POST['theme'] ?? 'light');
         $notificationsEnabled = isset($_POST['notifications_enabled']) ? 1 : 0;
         $browserNotifications = isset($_POST['browser_notifications']) ? 1 : 0;
+        $notificationBeforeMinutes = max(0, min(120, (int)($_POST['notification_before_minutes'] ?? 10)));
+        $notificationAfterMinutes = max(0, min(120, (int)($_POST['notification_after_minutes'] ?? 5)));
+        $notifyEntryEnabled = isset($_POST['notify_entry_enabled']) ? 1 : 0;
+        $notifyLunchStartEnabled = isset($_POST['notify_lunch_start_enabled']) ? 1 : 0;
+        $notifyLunchReturnEnabled = isset($_POST['notify_lunch_return_enabled']) ? 1 : 0;
+        $notifyClockOutEnabled = isset($_POST['notify_clock_out_enabled']) ? 1 : 0;
 
         if (
             !preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $workdayStart)
             || !preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $workdayEnd)
+            || !preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $lunchStartTime)
         ) {
             flash('error', 'Informe horários válidos.');
             redirect('settings');
@@ -246,11 +299,18 @@ class PageController extends Controller
         $userModel->updatePersonalSettings($userId, [
             'workday_start' => $workdayStart . ':00',
             'workday_end' => $workdayEnd . ':00',
+            'lunch_start_time' => $lunchStartTime . ':00',
             'lunch_minutes' => $lunchMinutes,
             'daily_minutes' => $dailyMinutes,
             'theme' => $theme,
             'notifications_enabled' => $notificationsEnabled,
             'browser_notifications' => $browserNotifications,
+            'notification_before_minutes' => $notificationBeforeMinutes,
+            'notification_after_minutes' => $notificationAfterMinutes,
+            'notify_entry_enabled' => $notifyEntryEnabled,
+            'notify_lunch_start_enabled' => $notifyLunchStartEnabled,
+            'notify_lunch_return_enabled' => $notifyLunchReturnEnabled,
+            'notify_clock_out_enabled' => $notifyClockOutEnabled,
         ]);
 
         $name = trim((string) ($_POST['name'] ?? $user['name']));

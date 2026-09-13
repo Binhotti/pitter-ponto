@@ -169,6 +169,18 @@ class ReportsController extends Controller
             $estimatedTotal = $estimated50 + $estimated100;
         }
 
+        $hourlyExtra50Value = $hourlyValue !== null
+            ? $hourlyValue * 1.5
+            : null;
+
+        $hourlyExtra100Value = $hourlyValue !== null
+            ? $hourlyValue * 2
+            : null;
+
+        $projectedGross = $salary > 0
+            ? $salary + ($estimatedTotal ?? 0)
+            : null;
+
         $averageWorked = $daysWorked > 0
             ? (int) round($totalWorked / $daysWorked)
             : 0;
@@ -201,6 +213,10 @@ class ReportsController extends Controller
             'estimated50' => $estimated50,
             'estimated100' => $estimated100,
             'estimatedTotal' => $estimatedTotal,
+            'salary' => $salary,
+            'hourlyExtra50Value' => $hourlyExtra50Value,
+            'hourlyExtra100Value' => $hourlyExtra100Value,
+            'projectedGross' => $projectedGross,
         ]);
     }
 }

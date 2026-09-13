@@ -357,3 +357,71 @@ Cada notificação do navegador é exibida apenas uma vez por sessão para evita
 - mantido o alinhamento corrigido dos botões "Adicionar marcação" e "Filtrar" no Histórico.
 
 Não é necessário importar SQL novo.
+
+
+## Notificações avançadas, financeiro, filtros e mobile — v2.5
+
+### Notificações inteligentes
+As notificações agora funcionam em todas as páginas autenticadas e podem avisar:
+- antes da entrada;
+- quando a entrada está atrasada;
+- antes do início do almoço;
+- quando o início do almoço está atrasado;
+- antes da volta do almoço;
+- quando a volta do almoço está atrasada;
+- antes da saída;
+- quando a saída ainda não foi registrada.
+
+Em Configurações o usuário pode:
+- ativar/desativar cada tipo de lembrete;
+- definir quantos minutos antes deseja ser avisado;
+- definir quantos minutos depois um evento passa a ser considerado atrasado;
+- definir o horário padrão de início do almoço.
+
+### Histórico
+- exibe automaticamente os últimos 7 dias;
+- atalhos rápidos para Hoje, 3 dias, 5 dias e 7 dias;
+- intervalo personalizado com no máximo 7 dias;
+- mantém edição de ponto e auditoria.
+
+### Resumo financeiro
+Relatórios agora mostram:
+- salário base;
+- valor da hora normal;
+- valor da hora extra 50%;
+- valor da hora extra 100%;
+- extras acumuladas no mês;
+- bruto estimado somando salário + extras.
+
+### Responsividade
+Foram revisados:
+- sidebar móvel com backdrop;
+- topbar;
+- dashboard;
+- cards de ponto;
+- histórico;
+- relatórios;
+- calendário;
+- configurações;
+- notificações;
+- grids financeiros.
+
+### Ajustes preservados
+- login sem “Acesso de demonstração”;
+- alinhamento corrigido dos botões do Histórico;
+- banco MySQL na porta 4406;
+- config/database.php usando \PDO e \PDOException.
+
+Se seu banco já existe, importe:
+
+`database/patch_004_notificacoes_avancadas.sql`
+
+
+## Navegação mensal mobile dos Relatórios — v2.6
+
+No celular, a navegação de mês dos Relatórios agora fica em uma única linha:
+- mês anterior à esquerda;
+- mês atual centralizado;
+- próximo mês à direita.
+
+O ajuste é responsivo e mantém o layout desktop inalterado.

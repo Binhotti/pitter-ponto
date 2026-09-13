@@ -135,6 +135,54 @@ foreach ($rows as $row) {
     </article>
 </div>
 
+
+<section class="panel financial-overview-panel">
+    <div class="panel-title-row">
+        <div>
+            <h3>Resumo financeiro</h3>
+            <p>Estimativas baseadas no salário e na carga mensal cadastrados no seu Perfil.</p>
+        </div>
+
+        <a href="<?= url('profile') ?>">Editar salário →</a>
+    </div>
+
+    <div class="financial-overview-grid">
+        <div>
+            <span>Salário base</span>
+            <strong><?= $salary > 0 ? e(reportCurrency($salary)) : 'Não informado' ?></strong>
+        </div>
+
+        <div>
+            <span>Valor da hora</span>
+            <strong><?= e(reportCurrency($hourlyValue)) ?></strong>
+        </div>
+
+        <div>
+            <span>Hora extra 50%</span>
+            <strong><?= e(reportCurrency($hourlyExtra50Value)) ?>/h</strong>
+        </div>
+
+        <div>
+            <span>Hora extra 100%</span>
+            <strong><?= e(reportCurrency($hourlyExtra100Value)) ?>/h</strong>
+        </div>
+
+        <div>
+            <span>Extras acumuladas</span>
+            <strong class="balance-positive"><?= e(reportCurrency($estimatedTotal)) ?></strong>
+        </div>
+
+        <div class="financial-highlight">
+            <span>Bruto estimado com extras</span>
+            <strong><?= e(reportCurrency($projectedGross)) ?></strong>
+        </div>
+    </div>
+
+    <small class="financial-disclaimer">
+        Valores estimados. O cálculo oficial da folha pode variar conforme regras da empresa, benefícios e descontos.
+    </small>
+</section>
+
 <div class="reports-main-grid">
     <section class="panel report-chart-panel">
         <div class="panel-title-row">

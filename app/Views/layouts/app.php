@@ -89,6 +89,7 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
             </a>
         </div>
     </aside>
+    <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Fechar menu"></button>
 
     <main class="main-content">
         <header class="topbar">

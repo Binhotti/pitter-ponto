@@ -47,10 +47,17 @@ class User
                 monthly_hours,
                 workday_start,
                 workday_end,
+                lunch_start_time,
                 lunch_minutes,
                 theme,
                 notifications_enabled,
-                browser_notifications
+                browser_notifications,
+                notification_before_minutes,
+                notification_after_minutes,
+                notify_entry_enabled,
+                notify_lunch_start_enabled,
+                notify_lunch_return_enabled,
+                notify_clock_out_enabled
              )
              VALUES (
                 :name,
@@ -61,10 +68,17 @@ class User
                 220,
                 "08:00:00",
                 "17:48:00",
+                "12:00:00",
                 60,
                 "light",
                 1,
-                0
+                0,
+                10,
+                5,
+                1,
+                1,
+                1,
+                1
              )'
         );
 
@@ -74,7 +88,7 @@ class User
             'password' => password_hash($password, PASSWORD_DEFAULT),
         ]);
 
-        return (int) $this->db->lastInsertId();
+        return (int)$this->db->lastInsertId();
     }
 
     public function all(): array
@@ -96,21 +110,19 @@ class User
 
     public function updateProfile(int $id, array $data): void
     {
-        $sql = 'UPDATE users
-                SET name = :name,
-                    email = :email,
-                    salary = :salary
-                WHERE id = :id';
-
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare(
+            'UPDATE users
+             SET name = :name,
+                 email = :email,
+                 salary = :salary
+             WHERE id = :id'
+        );
 
         $stmt->execute([
             'id' => $id,
             'name' => $data['name'],
             'email' => $data['email'],
-            'salary' => $data['salary'] !== ''
-                ? $data['salary']
-                : null,
+            'salary' => $data['salary'] !== '' ? $data['salary'] : null,
         ]);
     }
 
@@ -120,11 +132,18 @@ class User
             'UPDATE users
              SET workday_start = :workday_start,
                  workday_end = :workday_end,
+                 lunch_start_time = :lunch_start_time,
                  lunch_minutes = :lunch_minutes,
                  daily_minutes = :daily_minutes,
                  theme = :theme,
                  notifications_enabled = :notifications_enabled,
-                 browser_notifications = :browser_notifications
+                 browser_notifications = :browser_notifications,
+                 notification_before_minutes = :notification_before_minutes,
+                 notification_after_minutes = :notification_after_minutes,
+                 notify_entry_enabled = :notify_entry_enabled,
+                 notify_lunch_start_enabled = :notify_lunch_start_enabled,
+                 notify_lunch_return_enabled = :notify_lunch_return_enabled,
+                 notify_clock_out_enabled = :notify_clock_out_enabled
              WHERE id = :id'
         );
 
@@ -132,11 +151,18 @@ class User
             'id' => $id,
             'workday_start' => $data['workday_start'],
             'workday_end' => $data['workday_end'],
+            'lunch_start_time' => $data['lunch_start_time'],
             'lunch_minutes' => $data['lunch_minutes'],
             'daily_minutes' => $data['daily_minutes'],
             'theme' => $data['theme'],
             'notifications_enabled' => $data['notifications_enabled'],
             'browser_notifications' => $data['browser_notifications'],
+            'notification_before_minutes' => $data['notification_before_minutes'],
+            'notification_after_minutes' => $data['notification_after_minutes'],
+            'notify_entry_enabled' => $data['notify_entry_enabled'],
+            'notify_lunch_start_enabled' => $data['notify_lunch_start_enabled'],
+            'notify_lunch_return_enabled' => $data['notify_lunch_return_enabled'],
+            'notify_clock_out_enabled' => $data['notify_clock_out_enabled'],
         ]);
     }
 

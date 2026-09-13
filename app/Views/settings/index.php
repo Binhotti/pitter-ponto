@@ -1,6 +1,7 @@
 <?php
 $workdayStart = substr((string)($user['workday_start'] ?? '08:00:00'), 0, 5);
 $workdayEnd = substr((string)($user['workday_end'] ?? '17:48:00'), 0, 5);
+$lunchStartTime = substr((string)($user['lunch_start_time'] ?? '12:00:00'), 0, 5);
 $lunchMinutes = (int)($user['lunch_minutes'] ?? 60);
 $theme = $user['theme'] ?? 'light';
 $avatarPath = $user['avatar_path'] ?? null;
@@ -45,7 +46,7 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
             </div>
         </div>
 
-        <div class="settings-grid three">
+        <div class="settings-grid four">
             <label>
                 Horário padrão de entrada
                 <input type="time" name="workday_start" value="<?= e($workdayStart) ?>" required>
@@ -54,6 +55,11 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
             <label>
                 Horário padrão de saída
                 <input type="time" name="workday_end" value="<?= e($workdayEnd) ?>" required>
+            </label>
+
+            <label>
+                Início padrão do almoço
+                <input type="time" name="lunch_start_time" value="<?= e($lunchStartTime) ?>" required>
             </label>
 
             <label>
@@ -145,7 +151,7 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
             <label class="settings-toggle-row">
                 <div>
                     <strong>Avisos dentro do sistema</strong>
-                    <small>Exibe lembretes e alertas relacionados ao ponto.</small>
+                    <small>Exibe lembretes inteligentes relacionados ao seu ponto.</small>
                 </div>
                 <span class="switch">
                     <input
@@ -161,7 +167,7 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
             <label class="settings-toggle-row">
                 <div>
                     <strong>Notificações do navegador</strong>
-                    <small>Permite avisos enquanto o Pitter Ponto estiver aberto.</small>
+                    <small>Exibe os lembretes também como notificação do navegador.</small>
                 </div>
                 <span class="switch">
                     <input
@@ -174,6 +180,70 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
                     <span class="switch-slider"></span>
                 </span>
             </label>
+        </div>
+
+        <div class="notification-timing-grid">
+            <label>
+                Avisar quantos minutos antes
+                <div class="input-with-suffix">
+                    <input
+                        type="number"
+                        name="notification_before_minutes"
+                        min="0"
+                        max="120"
+                        value="<?= (int)($user['notification_before_minutes'] ?? 10) ?>"
+                    >
+                    <span>min</span>
+                </div>
+            </label>
+
+            <label>
+                Considerar atrasado após
+                <div class="input-with-suffix">
+                    <input
+                        type="number"
+                        name="notification_after_minutes"
+                        min="0"
+                        max="120"
+                        value="<?= (int)($user['notification_after_minutes'] ?? 5) ?>"
+                    >
+                    <span>min</span>
+                </div>
+            </label>
+        </div>
+
+        <div class="notification-events-grid">
+            <?php
+            $notificationOptions = [
+                ['notify_entry_enabled', 'log-in', 'Entrada', 'Lembrar de registrar a entrada.'],
+                ['notify_lunch_start_enabled', 'utensils', 'Início do almoço', 'Avisar quando o horário de almoço estiver próximo.'],
+                ['notify_lunch_return_enabled', 'coffee', 'Volta do almoço', 'Avisar com base no horário real em que o almoço foi iniciado.'],
+                ['notify_clock_out_enabled', 'log-out', 'Saída', 'Lembrar de finalizar o expediente.'],
+            ];
+            ?>
+
+            <?php foreach ($notificationOptions as [$field, $icon, $label, $description]): ?>
+                <label class="notification-event-card">
+                    <span class="notification-event-icon">
+                        <i data-lucide="<?= e($icon) ?>"></i>
+                    </span>
+
+                    <span>
+                        <strong><?= e($label) ?></strong>
+                        <small><?= e($description) ?></small>
+                    </span>
+
+                    <span class="switch">
+                        <input
+                            type="checkbox"
+                            name="<?= e($field) ?>"
+                            value="1"
+                            <?= (int)($user[$field] ?? 1) === 1 ? 'checked' : '' ?>
+                        >
+                        <span class="switch-slider"></span>
+                    </span>
+                </label>
+            <?php endforeach; ?>
         </div>
     </section>
 

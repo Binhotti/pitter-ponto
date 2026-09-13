@@ -84,89 +84,6 @@ class DashboardController extends Controller
 
 
         /*
-         * Notificações inteligentes de ponto esquecido.
-         * Respeitam a jornada pessoal e as preferências do usuário.
-         */
-        $smartNotifications = [];
-
-        if ((int)($user['notifications_enabled'] ?? 1) === 1) {
-            $now = new DateTimeImmutable('now');
-            $todayDateObject = new DateTimeImmutable($today);
-            $weekday = (int)$todayDateObject->format('N');
-            $isRequiredWorkday = $weekday <= 5
-                && $todayHoliday === null
-                && $todayDayOff === null;
-
-            $workdayStart = substr((string)($user['workday_start'] ?? '08:00:00'), 0, 5);
-            $workdayEnd = substr((string)($user['workday_end'] ?? '17:48:00'), 0, 5);
-            $lunchMinutes = (int)($user['lunch_minutes'] ?? 60);
-
-            $startLimit = new DateTimeImmutable($today . ' ' . $workdayStart);
-            $startLimit = $startLimit->modify("+{$toleranceMinutes} minutes");
-
-            $endLimit = new DateTimeImmutable($today . ' ' . $workdayEnd);
-            $endLimit = $endLimit->modify("+{$toleranceMinutes} minutes");
-
-            if (
-                $isRequiredWorkday
-                && $status['key'] === 'not_started'
-                && $now > $startLimit
-            ) {
-                $smartNotifications[] = [
-                    'key' => 'forgot-clock-in-' . $today,
-                    'type' => 'warning',
-                    'icon' => 'log-in',
-                    'title' => 'Entrada ainda não registrada',
-                    'message' => 'Seu horário padrão de entrada já passou. Não esqueça de registrar seu ponto.',
-                    'action' => url('dashboard') . '#meu-ponto',
-                ];
-            }
-
-            if ($status['key'] === 'lunch') {
-                $todayEntries = $entryModel->entriesForDate((int)$user['id'], $today);
-                $lunchStartedAt = null;
-
-                foreach (array_reverse($todayEntries) as $entry) {
-                    if ($entry['entry_type'] === 'lunch_start') {
-                        $lunchStartedAt = new DateTimeImmutable($entry['recorded_at']);
-                        break;
-                    }
-                }
-
-                if ($lunchStartedAt !== null) {
-                    $lunchLimit = $lunchStartedAt
-                        ->modify("+{$lunchMinutes} minutes")
-                        ->modify("+{$toleranceMinutes} minutes");
-
-                    if ($now > $lunchLimit) {
-                        $smartNotifications[] = [
-                            'key' => 'forgot-lunch-return-' . $today,
-                            'type' => 'warning',
-                            'icon' => 'coffee',
-                            'title' => 'Volta do almoço pendente',
-                            'message' => 'Seu intervalo já ultrapassou o tempo configurado. Registre a volta do almoço.',
-                            'action' => url('dashboard') . '#meu-ponto',
-                        ];
-                    }
-                }
-            }
-
-            if (
-                $status['key'] === 'working'
-                && $now > $endLimit
-            ) {
-                $smartNotifications[] = [
-                    'key' => 'forgot-clock-out-' . $today,
-                    'type' => 'danger',
-                    'icon' => 'log-out',
-                    'title' => 'Saída ainda não registrada',
-                    'message' => 'Seu horário padrão de saída já passou. Não esqueça de finalizar o expediente.',
-                    'action' => url('dashboard') . '#meu-ponto',
-                ];
-            }
-        }
-
-        /*
          * Navegação do gráfico semanal.
          * 0 = semana atual
          * -1 = semana passada
@@ -401,7 +318,6 @@ class DashboardController extends Controller
             'todaySummary' => $todaySummary,
             'yesterdaySummary' => $yesterdaySummary,
             'dailyChangePercent' => $dailyChangePercent,
-            'smartNotifications' => $smartNotifications,
             'todayHoliday' => $todayHoliday,
             'todayDayOff' => $todayDayOff,
             'week' => $week,

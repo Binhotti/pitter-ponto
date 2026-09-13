@@ -1,10 +1,27 @@
 (() => {
     const sidebar = document.getElementById('sidebar');
     const menuButton = document.getElementById('mobile-menu');
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+
+    const closeSidebar = () => {
+        sidebar?.classList.remove('open');
+        sidebarBackdrop?.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+    };
 
     if (sidebar && menuButton) {
         menuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
+            const willOpen = !sidebar.classList.contains('open');
+
+            sidebar.classList.toggle('open', willOpen);
+            sidebarBackdrop?.classList.toggle('open', willOpen);
+            document.body.classList.toggle('sidebar-open', willOpen);
+        });
+
+        sidebarBackdrop?.addEventListener('click', closeSidebar);
+
+        sidebar.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', closeSidebar);
         });
     }
 
@@ -166,6 +183,46 @@
                 closePointEditModal();
             }
         });
+    }
+
+
+    const historyRangeForm = document.querySelector('.history-range-custom');
+    if (historyRangeForm) {
+        const fromInput = historyRangeForm.querySelector('input[name="from"]');
+        const toInput = historyRangeForm.querySelector('input[name="to"]');
+
+        const clampRange = (changedInput) => {
+            if (!fromInput || !toInput || !fromInput.value || !toInput.value) {
+                return;
+            }
+
+            const from = new Date(fromInput.value + 'T00:00:00');
+            const to = new Date(toInput.value + 'T00:00:00');
+
+            if (from > to) {
+                if (changedInput === fromInput) {
+                    toInput.value = fromInput.value;
+                } else {
+                    fromInput.value = toInput.value;
+                }
+                return;
+            }
+
+            const maxSpanMs = 6 * 24 * 60 * 60 * 1000;
+
+            if ((to - from) > maxSpanMs) {
+                if (changedInput === fromInput) {
+                    const newTo = new Date(from.getTime() + maxSpanMs);
+                    toInput.value = newTo.toISOString().slice(0, 10);
+                } else {
+                    const newFrom = new Date(to.getTime() - maxSpanMs);
+                    fromInput.value = newFrom.toISOString().slice(0, 10);
+                }
+            }
+        };
+
+        fromInput?.addEventListener('change', () => clampRange(fromInput));
+        toInput?.addEventListener('change', () => clampRange(toInput));
     }
 
 

@@ -109,21 +109,57 @@ $weekdays = [
     </form>
 </section>
 
-<section class="panel">
-    <form class="filter-row" method="GET" action="<?= config('app.url') ?>">
+<section class="panel history-range-panel">
+    <div class="history-range-head">
+        <div>
+            <h3>Período</h3>
+            <p>Por padrão mostramos os últimos 7 dias. Você pode reduzir o intervalo.</p>
+        </div>
+
+        <div class="history-range-presets" aria-label="Intervalos rápidos">
+            <?php foreach ([1, 3, 5, 7] as $daysOption): ?>
+                <a
+                    href="<?= url('history') . '&days=' . $daysOption ?>"
+                    class="<?= $rangeDays === $daysOption ? 'active' : '' ?>"
+                >
+                    <?= $daysOption === 1 ? 'Hoje' : $daysOption . ' dias' ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <form class="history-range-custom" method="GET" action="<?= config('app.url') ?>">
         <input type="hidden" name="route" value="history">
 
         <label>
             De
-            <input type="date" name="from" value="<?= e($from) ?>">
+            <input
+                type="date"
+                name="from"
+                value="<?= e($from) ?>"
+                max="<?= date('Y-m-d') ?>"
+            >
         </label>
+
+        <span class="range-arrow"><i data-lucide="arrow-right"></i></span>
 
         <label>
             Até
-            <input type="date" name="to" value="<?= e($to) ?>">
+            <input
+                type="date"
+                name="to"
+                value="<?= e($to) ?>"
+                max="<?= date('Y-m-d') ?>"
+            >
         </label>
 
-        <button class="primary-button compact" type="submit">Filtrar</button>
+        <button class="primary-button compact" type="submit">
+            Aplicar período
+        </button>
+
+        <small class="history-range-hint">
+            Intervalo personalizado limitado a 7 dias.
+        </small>
     </form>
 </section>
 
