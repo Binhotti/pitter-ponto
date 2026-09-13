@@ -1,35 +1,143 @@
+<?php
+$avatarPath = $user['avatar_path'] ?? null;
+
+$initials = '';
+foreach (explode(' ', trim((string)$user['name'])) as $part) {
+    if ($part !== '') {
+        $initials .= mb_strtoupper(mb_substr($part, 0, 1));
+    }
+
+    if (mb_strlen($initials) >= 2) {
+        break;
+    }
+}
+?>
+
 <div class="page-heading">
-    <div><h1>Perfil</h1><p>Atualize seus dados pessoais e informações usadas nos cálculos.</p></div>
+    <div>
+        <h1>Perfil</h1>
+        <p>Atualize seus dados pessoais e sua foto de perfil.</p>
+    </div>
 </div>
 
-<?php if (!empty($success)): ?><div class="alert success"><?= e($success) ?></div><?php endif; ?>
-<?php if ($message = flash('error')): ?><div class="alert error"><?= e($message) ?></div><?php endif; ?>
+<?php if (!empty($success)): ?>
+    <div class="alert success"><?= e($success) ?></div>
+<?php endif; ?>
 
-<section class="panel profile-summary-card">
-    <div class="profile-summary-avatar">
-        <?php if (!empty($user['avatar_path'])): ?>
-            <img src="<?= config('app.url') . '/' . e($user['avatar_path']) ?>" alt="Foto de perfil">
-        <?php else: ?>
-            <span><?= e(mb_strtoupper(mb_substr($user['name'], 0, 1))) ?></span>
-        <?php endif; ?>
-    </div>
-    <div>
-        <strong><?= e($user['name']) ?></strong>
-        <span><?= e($user['email']) ?></span>
-        <a href="<?= url('settings') ?>">Alterar foto e preferências →</a>
-    </div>
-</section>
+<?php if ($message = flash('error')): ?>
+    <div class="alert error"><?= e($message) ?></div>
+<?php endif; ?>
 
-<section class="panel form-panel">
-    <form method="POST" action="<?= url('profile') ?>" class="settings-form">
-        <div class="form-grid">
-            <label>Nome completo<input type="text" name="name" value="<?= e($user['name']) ?>" required></label>
-            <label>E-mail<input type="email" name="email" value="<?= e($user['email']) ?>" required></label>
-            <label>Salário mensal (opcional)<input type="number" step="0.01" name="salary" value="<?= e((string)$user['salary']) ?>" placeholder="0,00"></label>
-            <label>Jornada diária<input type="text" value="<?= intdiv((int)$user['daily_minutes'], 60) ?>h <?= (int)$user['daily_minutes'] % 60 ?>min" disabled></label>
-            <label>Horas mensais<input type="text" value="<?= (int)$user['monthly_hours'] ?>h" disabled></label>
-            <label>Perfil<input type="text" value="<?= $user['role'] === 'admin' ? 'Administrador' : 'Colaborador' ?>" disabled></label>
+<form
+    method="POST"
+    action="<?= url('profile') ?>"
+    enctype="multipart/form-data"
+    class="profile-page-form"
+>
+    <section class="panel profile-main-card">
+        <div class="profile-card-head">
+            <span class="settings-section-icon red-soft-icon">
+                <i data-lucide="user-round"></i>
+            </span>
+
+            <div>
+                <h2>Perfil</h2>
+                <p>Atualize seus dados e escolha uma foto de perfil.</p>
+            </div>
         </div>
-        <button class="primary-button compact" type="submit">Salvar alterações</button>
-    </form>
-</section>
+
+        <div class="profile-edit-layout">
+            <div class="profile-avatar-column">
+                <?php if ($avatarPath): ?>
+                    <img
+                        src="<?= config('app.url') . '/' . e($avatarPath) ?>"
+                        alt="Foto de perfil"
+                        class="profile-large-avatar"
+                    >
+                <?php else: ?>
+                    <span class="profile-large-avatar profile-avatar-fallback">
+                        <?= e($initials ?: 'U') ?>
+                    </span>
+                <?php endif; ?>
+
+                <label class="avatar-upload-button">
+                    <i data-lucide="camera"></i>
+                    Escolher foto
+                    <input
+                        type="file"
+                        name="avatar"
+                        accept="image/jpeg,image/png,image/webp"
+                        hidden
+                    >
+                </label>
+
+                <?php if ($avatarPath): ?>
+                    <label class="remove-avatar-option">
+                        <input type="checkbox" name="remove_avatar" value="1">
+                        Remover foto atual
+                    </label>
+                <?php endif; ?>
+
+                <small>JPG, PNG ou WEBP • máximo 3 MB</small>
+            </div>
+
+            <div class="profile-fields-grid">
+                <label>
+                    Nome
+                    <input
+                        type="text"
+                        name="name"
+                        value="<?= e($user['name']) ?>"
+                        required
+                    >
+                </label>
+
+                <label>
+                    E-mail
+                    <input
+                        type="email"
+                        name="email"
+                        value="<?= e($user['email']) ?>"
+                        required
+                    >
+                </label>
+
+                <label>
+                    Salário mensal (opcional)
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="salary"
+                        value="<?= e((string)$user['salary']) ?>"
+                        placeholder="0,00"
+                    >
+                </label>
+
+                <label>
+                    Jornada diária
+                    <input
+                        type="text"
+                        value="<?= intdiv((int)$user['daily_minutes'], 60) ?>h <?= str_pad((string)((int)$user['daily_minutes'] % 60), 2, '0', STR_PAD_LEFT) ?>min"
+                        disabled
+                    >
+                </label>
+
+                <label>
+                    Horas mensais
+                    <input
+                        type="text"
+                        value="<?= (int)$user['monthly_hours'] ?>h"
+                        disabled
+                    >
+                </label>
+            </div>
+        </div>
+
+        <div class="profile-actions-row">
+            <button class="primary-button profile-save-button" type="submit">
+                <i data-lucide="save"></i>
+                Salvar alterações
+            </button>
+        </div>
+    </section>
+</form>

@@ -133,6 +133,10 @@ class PageController extends Controller
     {
         $this->requireAuth();
 
+        $userId = (int) authUser()['id'];
+        $userModel = new User();
+        $current = $userModel->find($userId);
+
         $name = trim((string)($_POST['name'] ?? ''));
         $email = strtolower(trim((string)($_POST['email'] ?? '')));
         $salary = str_replace(',', '.', trim((string)($_POST['salary'] ?? '')));
@@ -142,11 +146,27 @@ class PageController extends Controller
             redirect('profile');
         }
 
-        (new User())->updateProfile((int)authUser()['id'], [
+        $userModel->updateProfile($userId, [
             'name' => $name,
             'email' => $email,
             'salary' => $salary,
         ]);
+
+        if (
+            isset($_FILES['avatar'])
+            && is_array($_FILES['avatar'])
+            && ($_FILES['avatar']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE
+        ) {
+            $this->handleAvatarUpload($userId, $userModel);
+        }
+
+        if (isset($_POST['remove_avatar'])) {
+            $this->removeAvatar(
+                $userId,
+                $userModel,
+                $current['avatar_path'] ?? null
+            );
+        }
 
         $_SESSION['user']['name'] = $name;
         $_SESSION['user']['email'] = $email;

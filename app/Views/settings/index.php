@@ -177,64 +177,6 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
         </div>
     </section>
 
-    <section class="panel settings-section">
-        <div class="settings-section-head">
-            <span class="settings-section-icon red-soft-icon">
-                <i data-lucide="user-round"></i>
-            </span>
-            <div>
-                <h2>Perfil</h2>
-                <p>Atualize seus dados e escolha uma foto de perfil.</p>
-            </div>
-        </div>
-
-        <div class="profile-settings-layout">
-            <div class="avatar-settings">
-                <?php if ($avatarPath): ?>
-                    <img
-                        src="<?= config('app.url') . '/' . e($avatarPath) ?>"
-                        alt="Foto de perfil"
-                        class="settings-avatar-image"
-                    >
-                <?php else: ?>
-                    <span class="settings-avatar-fallback"><?= e($initials ?: 'U') ?></span>
-                <?php endif; ?>
-
-                <label class="avatar-upload-button">
-                    <i data-lucide="camera"></i>
-                    Escolher foto
-                    <input
-                        type="file"
-                        name="avatar"
-                        accept="image/jpeg,image/png,image/webp"
-                        hidden
-                    >
-                </label>
-
-                <?php if ($avatarPath): ?>
-                    <label class="remove-avatar-option">
-                        <input type="checkbox" name="remove_avatar" value="1">
-                        Remover foto atual
-                    </label>
-                <?php endif; ?>
-
-                <small>JPG, PNG ou WEBP • máximo 3 MB</small>
-            </div>
-
-            <div class="settings-grid profile-grid">
-                <label>
-                    Nome
-                    <input type="text" name="name" value="<?= e($user['name']) ?>" required>
-                </label>
-
-                <label>
-                    E-mail
-                    <input type="email" name="email" value="<?= e($user['email']) ?>" required>
-                </label>
-            </div>
-        </div>
-    </section>
-
     <div class="settings-save-bar">
         <span>
             <i data-lucide="info"></i>

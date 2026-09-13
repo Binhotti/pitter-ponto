@@ -235,3 +235,11 @@ Se o banco já existe, importe:
 As fotos são salvas em:
 
 `public/assets/uploads/avatars/`
+
+
+## Perfil consolidado — v1.8
+
+- A seção de Perfil foi removida de Configurações.
+- Foto de perfil, nome, e-mail e salário ficam agora apenas em Perfil.
+- O visual mais completo de edição de perfil foi movido para a página Perfil.
+- Configurações fica responsável somente por jornada, tema e notificações.
