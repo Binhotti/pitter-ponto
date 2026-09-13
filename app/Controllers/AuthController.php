@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\LoginAttempt;
+use App\Models\LoginHistory;
 use App\Models\User;
 use PDOException;
 
@@ -105,6 +106,16 @@ class AuthController extends Controller
 
         $_SESSION['login_at'] = time();
         $_SESSION['last_activity'] = time();
+
+        /*
+         * Histórico administrativo de acessos.
+         * Registramos apenas logins válidos, nunca senhas.
+         */
+        (new LoginHistory())->record(
+            (int)$user['id'],
+            $ip,
+            (string)($_SERVER['HTTP_USER_AGENT'] ?? '')
+        );
 
         redirect('dashboard');
     }

@@ -34,6 +34,43 @@ class DayOff
         return $stmt->fetch() ?: null;
     }
 
+    public function allForDate(string $date): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                d.*,
+                u.name,
+                u.email,
+                u.avatar_path
+             FROM day_offs d
+             INNER JOIN users u ON u.id = d.user_id
+             WHERE :date BETWEEN d.start_date AND d.end_date
+             ORDER BY u.name'
+        );
+
+        $stmt->execute(['date' => $date]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function upcoming(int $limit = 8): array
+    {
+        $limit = max(1, min($limit, 50));
+
+        return $this->db->query(
+            "SELECT
+                d.*,
+                u.name,
+                u.email,
+                u.avatar_path
+             FROM day_offs d
+             INNER JOIN users u ON u.id = d.user_id
+             WHERE d.end_date >= CURDATE()
+             ORDER BY d.start_date ASC, u.name ASC
+             LIMIT {$limit}"
+        )->fetchAll();
+    }
+
     public function findOwned(int $id, int $userId): ?array
     {
         $stmt = $this->db->prepare(

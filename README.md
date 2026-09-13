@@ -682,3 +682,25 @@ O botão Mais abre um bottom sheet com:
 - Sair
 
 Desktop permanece com a sidebar lateral normal. Nenhum SQL novo é necessário.
+
+
+## Área Administrativa — v4.0
+
+Admins continuam usando normalmente o próprio ponto e recebem uma opção extra
+**Administração**.
+
+O dashboard administrativo mostra usuários, pessoas trabalhando, almoço,
+finalizados, horas da equipe, extras, logins, ausências, pendências e últimos
+acessos. Também existe uma lista de usuários e uma página individual com
+jornada, status, horas mensais, extras, banco, registros, pendências e logins.
+
+A primeira versão é somente de consulta: o admin não altera o ponto ou senha
+de outro usuário.
+
+Para tornar uma conta admin, use diretamente no banco:
+
+`UPDATE users SET role = 'admin' WHERE email = 'email@empresa.com';`
+
+SQL:
+- `database/patch_006_area_administrativa_local.sql`
+- `database/patch_006_area_administrativa_infinityfree.sql`

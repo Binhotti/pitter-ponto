@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS time_adjustments;
 DROP TABLE IF EXISTS day_offs;
 DROP TABLE IF EXISTS time_entries;
 DROP TABLE IF EXISTS holidays;
+DROP TABLE IF EXISTS login_history;
 DROP TABLE IF EXISTS login_attempts;
 DROP TABLE IF EXISTS work_settings;
 DROP TABLE IF EXISTS users;
@@ -50,6 +51,20 @@ CREATE TABLE users (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
+
+CREATE TABLE login_history (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    user_agent VARCHAR(255) NULL,
+    logged_in_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_login_history_user_date (user_id, logged_in_at),
+    INDEX idx_login_history_date (logged_in_at),
+    CONSTRAINT fk_login_history_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+);
 
 CREATE TABLE login_attempts (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

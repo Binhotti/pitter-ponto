@@ -144,10 +144,40 @@ class User
                 daily_minutes,
                 monthly_hours,
                 salary,
-                created_at
+                workday_start,
+                workday_end,
+                lunch_minutes,
+                avatar_path,
+                is_active,
+                created_at,
+                updated_at
              FROM users
              ORDER BY name'
         )->fetchAll();
+    }
+
+    public function activeUsers(): array
+    {
+        return $this->db->query(
+            'SELECT *
+             FROM users
+             WHERE is_active = 1
+             ORDER BY name'
+        )->fetchAll();
+    }
+
+    public function countAll(): int
+    {
+        return (int)$this->db->query(
+            'SELECT COUNT(*) FROM users'
+        )->fetchColumn();
+    }
+
+    public function countActive(): int
+    {
+        return (int)$this->db->query(
+            'SELECT COUNT(*) FROM users WHERE is_active = 1'
+        )->fetchColumn();
     }
 
     public function updateProfile(int $id, array $data): void

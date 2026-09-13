@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controllers\AuthController;
+use App\Controllers\AdminController;
 use App\Controllers\AdjustmentController;
 use App\Controllers\AbsenceController;
 use App\Controllers\DashboardController;
@@ -15,6 +16,9 @@ return [
     'GET' => [
         '' => [DashboardController::class, 'index'],
         'dashboard' => [DashboardController::class, 'index'],
+        'admin' => [AdminController::class, 'dashboard'],
+        'admin-users' => [AdminController::class, 'users'],
+        'admin-user' => [AdminController::class, 'user'],
         'login' => [AuthController::class, 'showLogin'],
         'register' => [AuthController::class, 'showRegister'],
         'history' => [PageController::class, 'history'],
