@@ -50,6 +50,38 @@ class DashboardController extends Controller
             $user['created_at'] ?? null
         );
 
+        /*
+         * Comparação diária:
+         * compara as horas trabalhadas hoje com o dia anterior.
+         * Se ontem não teve nenhuma hora registrada, a porcentagem não é
+         * calculada para evitar divisão por zero e resultados enganosos.
+         */
+        $yesterdayDate = (new DateTimeImmutable('yesterday'))->format('Y-m-d');
+        $yesterdayHoliday = $holidayModel->findByDate($yesterdayDate);
+        $yesterdayDayOff = $dayOffModel->findForDate(
+            (int) $user['id'],
+            $yesterdayDate
+        );
+
+        $yesterdaySummary = $entryModel->summarizeDay(
+            (int) $user['id'],
+            $yesterdayDate,
+            $dailyMinutes,
+            $toleranceMinutes,
+            $yesterdayHoliday,
+            $yesterdayDayOff,
+            $user['created_at'] ?? null
+        );
+
+        $dailyChangePercent = null;
+
+        if ($yesterdaySummary['worked'] > 0) {
+            $dailyChangePercent = (
+                ($todaySummary['worked'] - $yesterdaySummary['worked'])
+                / $yesterdaySummary['worked']
+            ) * 100;
+        }
+
         $monday = (new DateTimeImmutable('monday this week'))->setTime(0, 0);
 
         $week = [];
@@ -166,6 +198,8 @@ class DashboardController extends Controller
             'greeting' => $greeting,
             'status' => $status,
             'todaySummary' => $todaySummary,
+            'yesterdaySummary' => $yesterdaySummary,
+            'dailyChangePercent' => $dailyChangePercent,
             'todayHoliday' => $todayHoliday,
             'todayDayOff' => $todayDayOff,
             'week' => $week,

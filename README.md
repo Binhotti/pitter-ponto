@@ -243,3 +243,19 @@ As fotos são salvas em:
 - Foto de perfil, nome, e-mail e salário ficam agora apenas em Perfil.
 - O visual mais completo de edição de perfil foi movido para a página Perfil.
 - Configurações fica responsável somente por jornada, tema e notificações.
+
+
+## Comparação diária — v1.9
+
+O card "Horas hoje" agora mostra a variação percentual em relação ao dia anterior.
+
+Fórmula:
+
+`((horas de hoje - horas de ontem) / horas de ontem) × 100`
+
+Regras:
+- valor positivo: seta para cima e porcentagem positiva;
+- valor negativo: seta para baixo;
+- mesmo total: 0%;
+- se ontem tiver 0 minutos trabalhados, o sistema mostra "Sem comparação com ontem" para evitar divisão por zero.
+- A comparação usa horas realmente registradas, não a jornada prevista.

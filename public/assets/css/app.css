@@ -1594,3 +1594,38 @@ body.theme-dark .outline-button {
         justify-content: center;
     }
 }
+
+
+/* ===== Pitter Ponto v1.9 - comparação diária ===== */
+.daily-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.daily-change svg {
+    width: 13px;
+    height: 13px;
+}
+
+.daily-change em {
+    font-style: normal;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.daily-change.positive {
+    color: var(--green);
+}
+
+.daily-change.negative {
+    color: var(--red);
+}
+
+.daily-change.neutral,
+.daily-change.unavailable {
+    color: var(--muted);
+}
