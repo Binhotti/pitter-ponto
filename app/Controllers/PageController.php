@@ -127,6 +127,14 @@ class PageController extends Controller
 
         $holidayModel->ensureYear((int)$first->format('Y'));
 
+        $calendarHourlyValue = null;
+        $calendarSalary = (float)($user['salary'] ?? 0);
+        $calendarMonthlyHours = (int)($user['monthly_hours'] ?? 0);
+
+        if ($calendarSalary > 0 && $calendarMonthlyHours > 0) {
+            $calendarHourlyValue = $calendarSalary / $calendarMonthlyHours;
+        }
+
         $calendar = [];
 
         for ($date = $first; $date <= $last; $date = $date->modify('+1 day')) {
@@ -134,21 +142,38 @@ class PageController extends Controller
             $holiday = $holidayModel->findByDate($dateString);
             $dayOff = $dayOffModel->findForDate((int)$user['id'], $dateString);
 
+            $summary = $entryModel->summarizeDay(
+                (int)$user['id'],
+                $dateString,
+                (int)$user['daily_minutes'],
+                $toleranceMinutes,
+                $holiday,
+                $dayOff,
+                $user['created_at'] ?? null
+            );
+
+            $entries = $entryModel->entriesForDate(
+                (int)$user['id'],
+                $dateString
+            );
+
+            $estimatedExtraValue = null;
+
+            if ($calendarHourlyValue !== null) {
+                $estimatedExtraValue =
+                    ($summary['overtime50'] / 60) * $calendarHourlyValue * 1.5
+                    + ($summary['overtime100'] / 60) * $calendarHourlyValue * 2;
+            }
+
             $calendar[] = [
                 'date' => $dateString,
                 'day' => (int)$date->format('j'),
                 'weekday' => (int)$date->format('N'),
                 'holiday' => $holiday,
                 'dayOff' => $dayOff,
-                'summary' => $entryModel->summarizeDay(
-                    (int)$user['id'],
-                    $dateString,
-                    (int)$user['daily_minutes'],
-                    $toleranceMinutes,
-                    $holiday,
-                    $dayOff,
-                    $user['created_at'] ?? null
-                ),
+                'entries' => $entries,
+                'estimatedExtraValue' => $estimatedExtraValue,
+                'summary' => $summary,
             ];
         }
 

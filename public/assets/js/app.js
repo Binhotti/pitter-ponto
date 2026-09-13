@@ -299,6 +299,149 @@
     }
 
 
+    const calendarModal = document.getElementById('calendar-detail-modal');
+
+    if (calendarModal) {
+        const dayButtons = document.querySelectorAll('[data-calendar-day]');
+        const closeButtons = calendarModal.querySelectorAll('[data-calendar-close]');
+        const subtitle = document.getElementById('calendar-detail-subtitle');
+        const status = document.getElementById('calendar-detail-status');
+        const entriesContainer = document.getElementById('calendar-detail-entries');
+        const worked = document.getElementById('cal-worked');
+        const extra50 = document.getElementById('cal-extra50');
+        const extra100 = document.getElementById('cal-extra100');
+        const bank = document.getElementById('cal-bank');
+        const money = document.getElementById('calendar-detail-money');
+        const estimated = document.getElementById('cal-estimated');
+        const historyLink = document.getElementById('calendar-history-link');
+
+        const closeCalendarModal = () => {
+            calendarModal.classList.remove('open');
+            calendarModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        };
+
+        const statusLabel = (detail) => {
+            if (detail.holiday) return ['Feriado', 'holiday'];
+            if (detail.dayOff) return [detail.dayOff, 'dayoff'];
+            if (detail.absence) return ['Ausência', 'absence'];
+            if (detail.completed) return ['Expediente finalizado', 'completed'];
+            if (detail.entries.length > 0) return ['Expediente em andamento', 'pending'];
+            return ['Sem registros', 'neutral'];
+        };
+
+        dayButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                let detail;
+
+                try {
+                    detail = JSON.parse(button.dataset.calendarDetail || '{}');
+                } catch {
+                    return;
+                }
+
+                if (subtitle) {
+                    subtitle.textContent = `${detail.weekday} • ${detail.dateLabel}`;
+                }
+
+                if (status) {
+                    const [label, statusClass] = statusLabel(detail);
+                    status.className = `calendar-detail-status ${statusClass}`;
+                    status.textContent = label;
+                }
+
+                if (entriesContainer) {
+                    entriesContainer.innerHTML = '';
+
+                    if (!detail.entries || detail.entries.length === 0) {
+                        const empty = document.createElement('div');
+                        empty.className = 'calendar-detail-empty';
+                        empty.textContent = 'Nenhuma marcação registrada neste dia.';
+                        entriesContainer.appendChild(empty);
+                    } else {
+                        detail.entries.forEach((entry) => {
+                            const row = document.createElement('div');
+                            row.className = 'calendar-detail-entry';
+
+                            const iconWrap = document.createElement('span');
+                            iconWrap.className = 'calendar-detail-entry-icon';
+
+                            const icon = document.createElement('i');
+                            icon.setAttribute('data-lucide', entry.icon || 'circle');
+                            iconWrap.appendChild(icon);
+
+                            const copy = document.createElement('span');
+                            copy.className = 'calendar-detail-entry-copy';
+
+                            const label = document.createElement('small');
+                            label.textContent = entry.label || 'Registro';
+
+                            const time = document.createElement('strong');
+                            time.textContent = entry.time || '--:--';
+
+                            copy.appendChild(label);
+                            copy.appendChild(time);
+
+                            if (entry.manual) {
+                                const badge = document.createElement('em');
+                                badge.textContent = 'Ajustado';
+                                copy.appendChild(badge);
+                            }
+
+                            row.appendChild(iconWrap);
+                            row.appendChild(copy);
+                            entriesContainer.appendChild(row);
+                        });
+                    }
+                }
+
+                if (worked) worked.textContent = detail.worked || '0h 00min';
+                if (extra50) extra50.textContent = detail.extra50 || '0h 00min';
+                if (extra100) extra100.textContent = detail.extra100 || '0h 00min';
+
+                if (bank) {
+                    bank.textContent = detail.bank || '0h 00min';
+                    bank.classList.toggle('balance-positive', Number(detail.bankRaw) > 0);
+                    bank.classList.toggle('balance-negative', Number(detail.bankRaw) < 0);
+                }
+
+                if (money && estimated) {
+                    if (detail.estimated) {
+                        estimated.textContent = detail.estimated;
+                        money.hidden = false;
+                    } else {
+                        money.hidden = true;
+                    }
+                }
+
+                if (historyLink && detail.historyUrl) {
+                    historyLink.href = detail.historyUrl;
+                }
+
+                calendarModal.classList.add('open');
+                calendarModal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+
+                if (window.lucide) {
+                    window.lucide.createIcons({
+                        attrs: {'stroke-width': 2},
+                    });
+                }
+            });
+        });
+
+        closeButtons.forEach((button) => {
+            button.addEventListener('click', closeCalendarModal);
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && calendarModal.classList.contains('open')) {
+                closeCalendarModal();
+            }
+        });
+    }
+
+
     if (window.lucide) {
         window.lucide.createIcons({
             attrs: {

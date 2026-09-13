@@ -80,6 +80,70 @@ class TimeEntry
         return $stmt->fetchAll();
     }
 
+    public function searchForUser(
+        int $userId,
+        string $query,
+        int $limit = 20
+    ): array {
+        $limit = max(1, min($limit, 50));
+
+        $typeMap = [
+            'entrada' => 'clock_in',
+            'almoço' => 'lunch_start',
+            'almoco' => 'lunch_start',
+            'início do almoço' => 'lunch_start',
+            'inicio do almoco' => 'lunch_start',
+            'volta do almoço' => 'lunch_end',
+            'volta do almoco' => 'lunch_end',
+            'retorno' => 'lunch_end',
+            'saída' => 'clock_out',
+            'saida' => 'clock_out',
+        ];
+
+        $normalized = mb_strtolower(trim($query));
+        $type = $typeMap[$normalized] ?? null;
+
+        if ($type !== null) {
+            $stmt = $this->db->prepare(
+                "SELECT *
+                 FROM time_entries
+                 WHERE user_id = :user_id
+                   AND entry_type = :entry_type
+                 ORDER BY recorded_at DESC
+                 LIMIT {$limit}"
+            );
+
+            $stmt->execute([
+                'user_id' => $userId,
+                'entry_type' => $type,
+            ]);
+
+            return $stmt->fetchAll();
+        }
+
+        $stmt = $this->db->prepare(
+            "SELECT *
+             FROM time_entries
+             WHERE user_id = :user_id
+               AND (
+                    note LIKE :query_note
+                    OR source LIKE :query_source
+               )
+             ORDER BY recorded_at DESC
+             LIMIT {$limit}"
+        );
+
+        $search = '%' . $query . '%';
+
+        $stmt->execute([
+            'user_id' => $userId,
+            'query_note' => $search,
+            'query_source' => $search,
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
     public function findOwned(int $id, int $userId): ?array
     {
         $stmt = $this->db->prepare(

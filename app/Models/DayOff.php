@@ -66,6 +66,36 @@ class DayOff
         return $stmt->fetchAll();
     }
 
+    public function searchForUser(
+        int $userId,
+        string $query,
+        int $limit = 20
+    ): array {
+        $limit = max(1, min($limit, 50));
+
+        $stmt = $this->db->prepare(
+            "SELECT *
+             FROM day_offs
+             WHERE user_id = :user_id
+               AND (
+                    type LIKE :query_type
+                    OR note LIKE :query_note
+               )
+             ORDER BY start_date DESC
+             LIMIT {$limit}"
+        );
+
+        $search = '%' . $query . '%';
+
+        $stmt->execute([
+            'user_id' => $userId,
+            'query_type' => $search,
+            'query_note' => $search,
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
     public function create(
         int $userId,
         string $type,

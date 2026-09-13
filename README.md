@@ -497,3 +497,64 @@ Agora:
 - o estado aberto/fechado continua salvo no navegador;
 - o botão de recolher fica na borda da sidebar e não cobre a logo;
 - mobile continua independente do modo compacto.
+
+
+## Pendências, calendário interativo e busca — v3.1
+
+### Detecção de inconsistências
+O Dashboard agora verifica os últimos 30 dias e sinaliza:
+- dia útil passado sem ponto ou justificativa;
+- expediente iniciado mas não finalizado;
+- sequência de marcações fora da ordem;
+- marcações duplicadas;
+- jornada superior a 16 horas;
+- intervalo de almoço superior a 3 horas.
+
+As pendências mostram a data e um atalho para corrigir no Histórico ou justificar.
+
+### Calendário interativo
+Os dias do Calendário agora são clicáveis.
+Ao clicar, abre um modal com:
+- entrada;
+- início do almoço;
+- volta do almoço;
+- saída;
+- horas trabalhadas;
+- extras 50%;
+- extras 100%;
+- banco de horas;
+- valor estimado das extras;
+- feriado, justificativa ou ausência;
+- atalho para abrir o dia no Histórico.
+
+### Busca global
+A barra "Buscar algo..." agora funciona de verdade.
+Ela permite buscar:
+- páginas do sistema;
+- entrada, saída, almoço e retorno;
+- registros manuais e observações;
+- datas como 12/09/2026;
+- ausências e justificativas;
+- feriados.
+
+### Correção preservada
+O `PageController.php` NÃO contém mais a validação antiga de `$lunchStartTime`.
+O horário do almoço continua sendo aprendido automaticamente pelo histórico.
+
+Nenhum SQL novo é necessário.
+
+
+## Correção da busca global — v3.1.1
+
+Corrigido `SQLSTATE[HY093]: Invalid parameter number` na busca global.
+
+A causa era a reutilização do mesmo placeholder nomeado (`:query`) mais de uma vez
+na mesma instrução preparada enquanto o PDO usa prepared statements nativos
+(`PDO::ATTR_EMULATE_PREPARES => false`).
+
+Agora cada comparação usa um placeholder próprio:
+- `:query_note`
+- `:query_source`
+- `:query_type`
+
+A correção foi aplicada em `TimeEntry::searchForUser()` e `DayOff::searchForUser()`.

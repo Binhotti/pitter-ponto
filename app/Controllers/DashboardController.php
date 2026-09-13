@@ -12,6 +12,7 @@ use App\Models\WorkSettings;
 use DateInterval;
 use DatePeriod;
 use DateTimeImmutable;
+use App\Services\InconsistencyService;
 
 class DashboardController extends Controller
 {
@@ -308,10 +309,14 @@ class DashboardController extends Controller
             default => 'Boa noite',
         };
 
+        $inconsistencies = (new InconsistencyService())
+            ->forUser($user, 30);
+
         $this->view('dashboard/index', [
             'title' => 'Dashboard',
             'active' => 'dashboard',
             'user' => $user,
+            'inconsistencies' => $inconsistencies,
             'settings' => $settings,
             'greeting' => $greeting,
             'status' => $status,

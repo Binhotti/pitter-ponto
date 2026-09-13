@@ -273,6 +273,46 @@ $monthNames = [
     </div>
 </section>
 
+
+<?php if (!empty($inconsistencies)): ?>
+    <section class="panel inconsistencies-panel">
+        <div class="panel-title-row">
+            <div>
+                <h3>Pendências encontradas</h3>
+                <p>O Pitter Ponto encontrou marcações que merecem sua atenção.</p>
+            </div>
+
+            <span class="inconsistency-count">
+                <?= count($inconsistencies) ?>
+                <?= count($inconsistencies) === 1 ? 'pendência' : 'pendências' ?>
+            </span>
+        </div>
+
+        <div class="inconsistency-list">
+            <?php foreach (array_slice($inconsistencies, 0, 4) as $issue): ?>
+                <a href="<?= e($issue['action']) ?>" class="inconsistency-item <?= e($issue['severity']) ?>">
+                    <span class="inconsistency-icon">
+                        <i data-lucide="<?= e($issue['icon']) ?>"></i>
+                    </span>
+
+                    <span class="inconsistency-copy">
+                        <strong><?= e($issue['title']) ?></strong>
+                        <small>
+                            <?= date('d/m/Y', strtotime($issue['date'])) ?>
+                            • <?= e($issue['message']) ?>
+                        </small>
+                    </span>
+
+                    <span class="inconsistency-action">
+                        Corrigir
+                        <i data-lucide="arrow-right"></i>
+                    </span>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </section>
+<?php endif; ?>
+
 <div class="dashboard-lower-grid">
     <section class="panel week-panel">
         <div class="panel-title-row">

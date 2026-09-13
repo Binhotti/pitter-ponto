@@ -8,6 +8,7 @@ use App\Controllers\AbsenceController;
 use App\Controllers\DashboardController;
 use App\Controllers\PageController;
 use App\Controllers\ReportsController;
+use App\Controllers\SearchController;
 use App\Controllers\TimeEntryController;
 
 return [
@@ -19,6 +20,7 @@ return [
         'history' => [PageController::class, 'history'],
         'calendar' => [PageController::class, 'calendar'],
         'reports' => [ReportsController::class, 'index'],
+        'search' => [SearchController::class, 'index'],
         'absences' => [AbsenceController::class, 'index'],
         'profile' => [PageController::class, 'profile'],
         'employees' => [PageController::class, 'employees'],

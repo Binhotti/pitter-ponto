@@ -66,6 +66,25 @@ class Holiday
         return $stmt->fetch() ?: null;
     }
 
+    public function searchByName(string $query, int $limit = 20): array
+    {
+        $limit = max(1, min($limit, 50));
+
+        $stmt = $this->db->prepare(
+            "SELECT *
+             FROM holidays
+             WHERE name LIKE :query
+             ORDER BY holiday_date DESC
+             LIMIT {$limit}"
+        );
+
+        $stmt->execute([
+            'query' => '%' . $query . '%',
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
     public function between(string $from, string $to): array
     {
         $stmt = $this->db->prepare(

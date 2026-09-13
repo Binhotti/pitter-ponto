@@ -100,10 +100,18 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
                 <i data-lucide="menu"></i>
             </button>
 
-            <div class="search-box">
+            <form class="search-box global-search-form" method="GET" action="<?= config('app.url') ?>">
+                <input type="hidden" name="route" value="search">
                 <i data-lucide="search"></i>
-                <input type="search" placeholder="Buscar algo..." aria-label="Buscar">
-            </div>
+                <input
+                    type="search"
+                    name="q"
+                    value="<?= ($active ?? '') === 'search' ? e((string)($_GET['q'] ?? '')) : '' ?>"
+                    placeholder="Buscar algo..."
+                    aria-label="Buscar"
+                    autocomplete="off"
+                >
+            </form>
 
             <div class="topbar-right">
                 <div class="notification-center">
