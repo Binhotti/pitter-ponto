@@ -609,3 +609,54 @@ Foram removidos diversos fundos brancos e textos de baixo contraste que aparecia
 O `PageController.php` continua sem a validação antiga de `$lunchStartTime`.
 
 Nenhum SQL novo é necessário.
+
+
+## Segurança de cadastro e login — v3.3
+
+### Cadastro
+- e-mail normalizado em minúsculas;
+- validação de formato;
+- validação do domínio por DNS (MX/A/AAAA);
+- e-mail único verificado no PHP e protegido também por `UNIQUE` no MySQL;
+- condição de corrida tratada com captura de erro `23000`;
+- nomes duplicados continuam permitidos, mas geram aviso;
+- nomes têm espaços repetidos normalizados;
+- senha com 8 a 128 caracteres;
+- senha exige pelo menos uma letra e um número;
+- confirmação de senha obrigatória.
+
+### Login
+- máximo padrão de 5 tentativas inválidas;
+- janela padrão de 15 minutos;
+- após atingir o limite, bloqueio padrão de 5 minutos;
+- tentativas armazenadas por e-mail normalizado + IP;
+- mensagem de credenciais inválidas não revela se a conta existe;
+- `session_regenerate_id(true)` após login válido;
+- timeout padrão de 30 minutos por inatividade;
+- cookie de sessão com `HttpOnly` e `SameSite=Lax`;
+- cookie `Secure` é ativado automaticamente quando o site estiver em HTTPS;
+- logout remove a sessão e o cookie.
+
+### Perfil
+A troca de e-mail também respeita:
+- formato válido;
+- domínio válido;
+- e-mail único;
+- aviso de nome duplicado.
+
+### Configuração
+Os valores podem ser personalizados no `.env`:
+
+`SECURITY_MAX_LOGIN_ATTEMPTS=5`
+`SECURITY_LOGIN_WINDOW_MINUTES=15`
+`SECURITY_LOGIN_LOCK_MINUTES=5`
+`SECURITY_SESSION_TIMEOUT_MINUTES=30`
+
+### Banco
+Para bancos existentes, importe:
+
+`database/patch_005_seguranca_auth.sql`
+
+A ideia de confirmação real do e-mail por link ficou reservada para uma versão futura.
+
+A correção antiga do `$lunchStartTime` no `PageController.php` permanece preservada.

@@ -12,15 +12,19 @@
     <div class="alert success"><?= e($success) ?></div>
 <?php endif; ?>
 
+<?php if (!empty($warning)): ?>
+    <div class="alert warning"><?= e($warning) ?></div>
+<?php endif; ?>
+
 <form method="POST" action="<?= url('login') ?>" class="auth-form">
     <label>
         E-mail
-        <input type="email" name="email" placeholder="voce@empresa.com" required>
+        <input type="email" name="email" placeholder="voce@empresa.com" autocomplete="email" maxlength="160" required>
     </label>
 
     <label>
         Senha
-        <input type="password" name="password" placeholder="••••••••" required>
+        <input type="password" name="password" placeholder="••••••••" autocomplete="current-password" maxlength="128" required>
     </label>
 
     <button class="primary-button" type="submit">Entrar</button>

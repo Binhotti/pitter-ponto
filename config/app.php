@@ -36,6 +36,12 @@ $GLOBALS['config'] = [
         'url' => rtrim($GLOBALS['env']['APP_URL'] ?? 'http://localhost/pitter-ponto/public', '/'),
         'timezone' => $GLOBALS['env']['APP_TIMEZONE'] ?? 'America/Sao_Paulo',
     ],
+    'security' => [
+        'max_login_attempts' => (int)($GLOBALS['env']['SECURITY_MAX_LOGIN_ATTEMPTS'] ?? 5),
+        'login_window_minutes' => (int)($GLOBALS['env']['SECURITY_LOGIN_WINDOW_MINUTES'] ?? 15),
+        'login_lock_minutes' => (int)($GLOBALS['env']['SECURITY_LOGIN_LOCK_MINUTES'] ?? 5),
+        'session_timeout_minutes' => (int)($GLOBALS['env']['SECURITY_SESSION_TIMEOUT_MINUTES'] ?? 30),
+    ],
     'database' => [
         'host' => $GLOBALS['env']['DB_HOST'] ?? '127.0.0.1',
         'port' => $GLOBALS['env']['DB_PORT'] ?? '4406',

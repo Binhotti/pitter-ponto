@@ -216,11 +216,51 @@ class PageController extends Controller
             redirect('profile');
         }
 
-        $userModel->updateProfile($userId, [
+        $emailDomain = substr(
+            $email,
+            (int)strrpos($email, '@') + 1
+        );
+
+        if (
+            $emailDomain === ''
+            || !(
+                checkdnsrr($emailDomain, 'MX')
+                || checkdnsrr($emailDomain, 'A')
+                || checkdnsrr($emailDomain, 'AAAA')
+            )
+        ) {
+            flash('error', 'O domínio deste e-mail não pôde ser validado.');
+            redirect('profile');
+        }
+
+        if ($userModel->emailExistsForOtherUser($email, $userId)) {
+            flash('error', 'Este e-mail já está sendo usado por outra conta.');
+            redirect('profile');
+        }
+
+        $duplicateName = $userModel->nameExists($name, $userId);
+
+        try {
+            $userModel->updateProfile($userId, [
             'name' => $name,
             'email' => $email,
             'salary' => $salary,
-        ]);
+            ]);
+        } catch (\PDOException $exception) {
+            if ($exception->getCode() === '23000') {
+                flash('error', 'Este e-mail já está sendo usado por outra conta.');
+                redirect('profile');
+            }
+
+            throw $exception;
+        }
+
+        if ($duplicateName) {
+            flash(
+                'warning',
+                'Aviso: já existe outra pessoa cadastrada com esse mesmo nome.'
+            );
+        }
 
         if (
             isset($_FILES['avatar'])

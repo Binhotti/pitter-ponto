@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS time_adjustments;
 DROP TABLE IF EXISTS day_offs;
 DROP TABLE IF EXISTS time_entries;
 DROP TABLE IF EXISTS holidays;
+DROP TABLE IF EXISTS login_attempts;
 DROP TABLE IF EXISTS work_settings;
 DROP TABLE IF EXISTS users;
 
@@ -47,6 +48,20 @@ CREATE TABLE users (
     is_active TINYINT(1) NOT NULL DEFAULT 1,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE login_attempts (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(160) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    attempts SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    first_attempt_at DATETIME NOT NULL,
+    last_attempt_at DATETIME NOT NULL,
+    locked_until DATETIME NULL,
+    UNIQUE KEY uq_login_attempt_email_ip (email, ip_address),
+    INDEX idx_login_attempt_locked_until (locked_until),
+    INDEX idx_login_attempt_last_attempt (last_attempt_at)
 );
 
 CREATE TABLE time_entries (

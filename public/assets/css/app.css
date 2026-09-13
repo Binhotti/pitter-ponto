@@ -4763,3 +4763,42 @@ body.theme-dark input[type="month"],
 body.theme-dark input[type="number"] {
     color-scheme: dark;
 }
+
+
+/* ===== Pitter Ponto v3.3 - segurança de cadastro e login ===== */
+.alert.warning {
+    background: #fff6d9;
+    border: 1px solid #ead38b;
+    color: #7d5c00;
+}
+
+.auth-password-rules {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 11px;
+    border: 1px solid #dbe6f7;
+    border-radius: 10px;
+    background: #f7faff;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+.auth-password-rules svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    color: var(--blue);
+}
+
+body.theme-dark .alert.warning {
+    background: #372f17;
+    border-color: #5b4d20;
+    color: #ffe594;
+}
+
+body.theme-dark .auth-password-rules {
+    background: #111b2f;
+    border-color: var(--line);
+}

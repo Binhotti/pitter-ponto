@@ -25,6 +25,48 @@ class User
         return $stmt->fetch() ?: null;
     }
 
+
+    public function emailExistsForOtherUser(string $email, int $userId): bool
+    {
+        $stmt = $this->db->prepare(
+            'SELECT 1
+             FROM users
+             WHERE email = :email
+               AND id <> :user_id
+             LIMIT 1'
+        );
+
+        $stmt->execute([
+            'email' => $email,
+            'user_id' => $userId,
+        ]);
+
+        return (bool)$stmt->fetchColumn();
+    }
+
+    public function nameExists(string $name, ?int $exceptUserId = null): bool
+    {
+        $sql = '
+            SELECT 1
+            FROM users
+            WHERE LOWER(TRIM(name)) = LOWER(TRIM(:name))
+        ';
+
+        $params = ['name' => $name];
+
+        if ($exceptUserId !== null) {
+            $sql .= ' AND id <> :except_user_id';
+            $params['except_user_id'] = $exceptUserId;
+        }
+
+        $sql .= ' LIMIT 1';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return (bool)$stmt->fetchColumn();
+    }
+
     public function find(int $id): ?array
     {
         $stmt = $this->db->prepare(

@@ -28,6 +28,10 @@ foreach (explode(' ', trim((string)$user['name'])) as $part) {
     <div class="alert error"><?= e($message) ?></div>
 <?php endif; ?>
 
+<?php if ($message = flash('warning')): ?>
+    <div class="alert warning"><?= e($message) ?></div>
+<?php endif; ?>
+
 <form
     method="POST"
     action="<?= url('profile') ?>"
