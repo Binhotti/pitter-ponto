@@ -47,7 +47,7 @@
     };
 
     if (sidebar && desktopSidebarToggle) {
-        const isDesktopSidebar = () => window.innerWidth > 860;
+        const isDesktopSidebar = () => window.innerWidth > 680;
 
         const restoreSidebarState = () => {
             if (!isDesktopSidebar()) {
@@ -177,7 +177,7 @@
         };
 
         updateClock();
-        setInterval(updateClock, 15000);
+        setInterval(updateClock, 1000);
     }
 
 
@@ -374,7 +374,7 @@
         const status = document.getElementById('calendar-detail-status');
         const entriesContainer = document.getElementById('calendar-detail-entries');
         const worked = document.getElementById('cal-worked');
-        const extra50 = document.getElementById('cal-extra50');
+        const extra65 = document.getElementById('cal-extra65');
         const extra100 = document.getElementById('cal-extra100');
         const bank = document.getElementById('cal-bank');
         const money = document.getElementById('calendar-detail-money');
@@ -462,7 +462,7 @@
                 }
 
                 if (worked) worked.textContent = detail.worked || '0h 00min';
-                if (extra50) extra50.textContent = detail.extra50 || '0h 00min';
+                if (extra65) extra65.textContent = detail.extra65 || '0h 00min';
                 if (extra100) extra100.textContent = detail.extra100 || '0h 00min';
 
                 if (bank) {

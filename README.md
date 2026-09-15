@@ -145,7 +145,7 @@ A versão atual usa estas regras:
 - O banco de horas só é consolidado quando o usuário registra a **saída do expediente**.
 - Se a diferença para 8h48 estiver dentro da tolerância, o saldo do dia fica zerado.
 - Acima da jornada, a diferença entra como:
-  - **hora extra 50%** em dias úteis;
+  - **hora extra 65%** em dias úteis;
   - **hora extra 100%** aos sábados e domingos.
 - Abaixo da jornada, a diferença entra como **saldo negativo** no banco de horas.
 - Sábado e domingo possuem jornada esperada de zero; portanto, todas as horas trabalhadas entram positivamente no banco.
@@ -156,7 +156,7 @@ A versão atual usa estas regras:
 Exemplos:
 
 - 08h48 trabalhadas em um dia útil → banco `0h00`.
-- 09h18 trabalhadas → banco `+0h30` e 30 min de extra 50%.
+- 09h18 trabalhadas → banco `+0h30` e 30 min de extra 65%.
 - 08h18 trabalhadas → banco `-0h30`.
 - 04h00 em um sábado → banco `+4h00` e 4h de extra 100%.
 
@@ -264,7 +264,7 @@ Regras:
 ## Comparação mensal de horas extras — v2.0
 
 O card "Horas extras" agora:
-- soma horas extras de 50% e 100%;
+- soma horas extras de 65% e 100%;
 - compara o total do mês atual com o mês anterior;
 - mostra variação positiva, negativa ou zero;
 - quando o mês anterior não possui horas extras, exibe "Sem comparação com o mês passado" para evitar divisão por zero.
@@ -294,9 +294,9 @@ O dashboard agora mostra uma estimativa financeira das horas extras acumuladas n
 
 Cálculo:
 - valor da hora = salário mensal / horas mensais;
-- hora extra 50% = valor da hora × 1,5;
+- hora extra 65% = valor da hora × 1,65;
 - hora extra 100% = valor da hora × 2;
-- total estimado = soma dos valores de extras 50% e 100%.
+- total estimado = soma dos valores de extras 65% e 100%.
 
 O Perfil também mostra o valor estimado da hora.
 
@@ -331,7 +331,7 @@ Não é necessário importar SQL novo.
 A aba Relatórios agora é funcional e possui:
 - seleção de mês;
 - total de horas trabalhadas;
-- horas extras 50% e 100%;
+- horas extras 65% e 100%;
 - banco de horas;
 - valor estimado das horas extras;
 - média de horas por dia trabalhado;
@@ -388,7 +388,7 @@ Em Configurações o usuário pode:
 Relatórios agora mostram:
 - salário base;
 - valor da hora normal;
-- valor da hora extra 50%;
+- valor da hora extra 65%;
 - valor da hora extra 100%;
 - extras acumuladas no mês;
 - bruto estimado somando salário + extras.
@@ -520,7 +520,7 @@ Ao clicar, abre um modal com:
 - volta do almoço;
 - saída;
 - horas trabalhadas;
-- extras 50%;
+- extras 65%;
 - extras 100%;
 - banco de horas;
 - valor estimado das extras;
@@ -726,3 +726,19 @@ Proteções:
   o sistema orienta a desativar a conta em vez de quebrar a integridade dos dados.
 
 Não há alteração de estrutura no banco nesta versão.
+
+
+## Ajustes de jornada e notebook — v4.3
+
+- marcações de ponto usam o horário da aplicação (`America/Sao_Paulo`) em vez de `NOW()` do MySQL;
+- o relógio do Dashboard atualiza a cada segundo;
+- o horário exibido após bater ponto é exatamente o horário persistido;
+- histórico de login também passa a gravar data/hora pela aplicação;
+- hora extra em dia útil mudou de 65% para 65%;
+- estimativa financeira usa multiplicador 1,65;
+- sábado, domingo e feriados permanecem em 100%;
+- layout ganhou modo compacto para notebooks entre aproximadamente 861px e 1440px.
+
+Bancos existentes:
+- local: `database/patch_007_hora_extra_65_local.sql`
+- InfinityFree: `database/patch_007_hora_extra_65_infinityfree.sql`

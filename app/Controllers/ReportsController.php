@@ -38,6 +38,10 @@ class ReportsController extends Controller
 
         $dailyMinutes = (int) ($user['daily_minutes'] ?? 528);
         $toleranceMinutes = (int) ($settings['tolerance_minutes'] ?? 5);
+        $weekdayOvertimePercent = (int) (
+            $settings['overtime_weekday_percent'] ?? 65
+        );
+        $weekdayOvertimeMultiplier = 1 + ($weekdayOvertimePercent / 100);
 
         $accountCreatedDate = !empty($user['created_at'])
             ? (new DateTimeImmutable((string)$user['created_at']))->setTime(0, 0, 0)
@@ -52,7 +56,7 @@ class ReportsController extends Controller
         $rows = [];
         $totalWorked = 0;
         $totalExpected = 0;
-        $totalExtra50 = 0;
+        $totalExtra65 = 0;
         $totalExtra100 = 0;
         $totalBank = 0;
         $daysWorked = 0;
@@ -93,7 +97,7 @@ class ReportsController extends Controller
 
             $totalWorked += $summary['worked'];
             $totalExpected += $expectedForReport;
-            $totalExtra50 += $summary['overtime50'];
+            $totalExtra65 += $summary['overtime65'];
             $totalExtra100 += $summary['overtime100'];
             $totalBank += $summary['bankBalance'];
 
@@ -146,7 +150,7 @@ class ReportsController extends Controller
                 'weekday' => (int)$date->format('N'),
                 'worked' => $summary['worked'],
                 'expected' => $expectedForReport,
-                'extra50' => $summary['overtime50'],
+                'extra65' => $summary['overtime65'],
                 'extra100' => $summary['overtime100'],
                 'bank' => $summary['bankBalance'],
                 'status' => $status,
@@ -158,19 +162,19 @@ class ReportsController extends Controller
         $monthlyHours = (int) ($user['monthly_hours'] ?? 0);
 
         $hourlyValue = null;
-        $estimated50 = null;
+        $estimated65 = null;
         $estimated100 = null;
         $estimatedTotal = null;
 
         if ($salary > 0 && $monthlyHours > 0) {
             $hourlyValue = $salary / $monthlyHours;
-            $estimated50 = ($totalExtra50 / 60) * $hourlyValue * 1.5;
+            $estimated65 = ($totalExtra65 / 60) * $hourlyValue * $weekdayOvertimeMultiplier;
             $estimated100 = ($totalExtra100 / 60) * $hourlyValue * 2;
-            $estimatedTotal = $estimated50 + $estimated100;
+            $estimatedTotal = $estimated65 + $estimated100;
         }
 
-        $hourlyExtra50Value = $hourlyValue !== null
-            ? $hourlyValue * 1.5
+        $hourlyExtra65Value = $hourlyValue !== null
+            ? $hourlyValue * $weekdayOvertimeMultiplier
             : null;
 
         $hourlyExtra100Value = $hourlyValue !== null
@@ -200,7 +204,7 @@ class ReportsController extends Controller
             'rows' => $rows,
             'totalWorked' => $totalWorked,
             'totalExpected' => $totalExpected,
-            'totalExtra50' => $totalExtra50,
+            'totalExtra65' => $totalExtra65,
             'totalExtra100' => $totalExtra100,
             'totalBank' => $totalBank,
             'daysWorked' => $daysWorked,
@@ -210,11 +214,11 @@ class ReportsController extends Controller
             'completedDays' => $completedDays,
             'averageWorked' => $averageWorked,
             'hourlyValue' => $hourlyValue,
-            'estimated50' => $estimated50,
+            'estimated65' => $estimated65,
             'estimated100' => $estimated100,
             'estimatedTotal' => $estimatedTotal,
             'salary' => $salary,
-            'hourlyExtra50Value' => $hourlyExtra50Value,
+            'hourlyExtra65Value' => $hourlyExtra65Value,
             'hourlyExtra100Value' => $hourlyExtra100Value,
             'projectedGross' => $projectedGross,
         ]);

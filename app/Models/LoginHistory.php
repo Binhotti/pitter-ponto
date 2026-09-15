@@ -31,7 +31,7 @@ class LoginHistory
                 :user_id,
                 :ip_address,
                 :user_agent,
-                NOW()
+                :logged_in_at
              )'
         );
 
@@ -41,25 +41,34 @@ class LoginHistory
             'user_agent' => $userAgent !== null
                 ? mb_substr($userAgent, 0, 255)
                 : null,
+            'logged_in_at' => date('Y-m-d H:i:s'),
         ]);
     }
 
     public function countToday(): int
     {
-        return (int)$this->db->query(
+        $stmt = $this->db->prepare(
             'SELECT COUNT(*)
              FROM login_history
-             WHERE DATE(logged_in_at) = CURDATE()'
-        )->fetchColumn();
+             WHERE DATE(logged_in_at) = :today'
+        );
+
+        $stmt->execute(['today' => date('Y-m-d')]);
+
+        return (int)$stmt->fetchColumn();
     }
 
     public function uniqueUsersToday(): int
     {
-        return (int)$this->db->query(
+        $stmt = $this->db->prepare(
             'SELECT COUNT(DISTINCT user_id)
              FROM login_history
-             WHERE DATE(logged_in_at) = CURDATE()'
-        )->fetchColumn();
+             WHERE DATE(logged_in_at) = :today'
+        );
+
+        $stmt->execute(['today' => date('Y-m-d')]);
+
+        return (int)$stmt->fetchColumn();
     }
 
     public function recent(int $limit = 10): array
@@ -119,18 +128,24 @@ class LoginHistory
     public function dailyCounts(int $days = 7): array
     {
         $days = max(1, min($days, 31));
+        $fromDate = date(
+            'Y-m-d',
+            strtotime('-' . $days . ' days')
+        );
 
-        $sql = "
-            SELECT
+        $stmt = $this->db->prepare(
+            'SELECT
                 DATE(logged_in_at) AS login_date,
                 COUNT(*) AS total,
                 COUNT(DISTINCT user_id) AS unique_users
-            FROM login_history
-            WHERE logged_in_at >= (CURDATE() - INTERVAL {$days} DAY)
-            GROUP BY DATE(logged_in_at)
-            ORDER BY login_date ASC
-        ";
+             FROM login_history
+             WHERE DATE(logged_in_at) >= :from_date
+             GROUP BY DATE(logged_in_at)
+             ORDER BY login_date ASC'
+        );
 
-        return $this->db->query($sql)->fetchAll();
+        $stmt->execute(['from_date' => $fromDate]);
+
+        return $stmt->fetchAll();
     }
 }

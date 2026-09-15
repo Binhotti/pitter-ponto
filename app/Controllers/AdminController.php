@@ -67,7 +67,7 @@ class AdminController extends Controller
             };
 
             $workedToday += $summary['worked'];
-            $extraToday += $summary['overtime50'] + $summary['overtime100'];
+            $extraToday += $summary['overtime65'] + $summary['overtime100'];
 
             $entries = $entryModel->entriesForDate((int)$user['id'], $today);
             $clockIn = null;
@@ -225,7 +225,7 @@ class AdminController extends Controller
         $tolerance = (int)($settings['tolerance_minutes'] ?? 5);
         $totals = [
             'worked' => 0,
-            'extra50' => 0,
+            'extra65' => 0,
             'extra100' => 0,
             'bank' => 0,
             'absences' => 0,
@@ -266,7 +266,7 @@ class AdminController extends Controller
 
             if ($date <= new DateTimeImmutable('today')) {
                 $totals['worked'] += $summary['worked'];
-                $totals['extra50'] += $summary['overtime50'];
+                $totals['extra65'] += $summary['overtime65'];
                 $totals['extra100'] += $summary['overtime100'];
                 $totals['bank'] += $summary['bankBalance'];
                 $totals['absences'] += $summary['absence'] ? 1 : 0;

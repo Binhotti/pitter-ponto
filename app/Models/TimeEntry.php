@@ -16,17 +16,38 @@ class TimeEntry
         $this->db = require BASE_PATH . '/config/database.php';
     }
 
-    public function create(int $userId, string $type): void
+    public function create(int $userId, string $type): string
     {
+        /*
+         * Usa o horário da aplicação (America/Sao_Paulo por padrão)
+         * em vez de NOW() do MySQL. Isso evita diferença de fuso entre
+         * XAMPP e hospedagens como o InfinityFree.
+         */
+        $recordedAt = (new DateTimeImmutable('now'))
+            ->format('Y-m-d H:i:s');
+
         $stmt = $this->db->prepare(
-            'INSERT INTO time_entries (user_id, entry_type, recorded_at, source)
-             VALUES (:user_id, :entry_type, NOW(), "web")'
+            'INSERT INTO time_entries (
+                user_id,
+                entry_type,
+                recorded_at,
+                source
+             )
+             VALUES (
+                :user_id,
+                :entry_type,
+                :recorded_at,
+                "web"
+             )'
         );
 
         $stmt->execute([
             'user_id' => $userId,
             'entry_type' => $type,
+            'recorded_at' => $recordedAt,
         ]);
+
+        return $recordedAt;
     }
 
     public function entriesForDate(int $userId, string $date): array
@@ -537,7 +558,7 @@ class TimeEntry
             ? min($worked, $dailyMinutes)
             : 0;
 
-        $overtime50 = 0;
+        $overtime65 = 0;
         $overtime100 = 0;
         $deficit = 0;
         $bankBalance = 0;
@@ -594,7 +615,7 @@ class TimeEntry
                 }
 
                 if ($difference > 0) {
-                    $overtime50 = $difference;
+                    $overtime65 = $difference;
                 } elseif ($difference < 0) {
                     $deficit = abs($difference);
                 }
@@ -607,7 +628,7 @@ class TimeEntry
             'worked' => $worked,
             'expected' => $expected,
             'regular' => $regular,
-            'overtime50' => $overtime50,
+            'overtime65' => $overtime65,
             'overtime100' => $overtime100,
             'deficit' => $deficit,
             'bankBalance' => $bankBalance,

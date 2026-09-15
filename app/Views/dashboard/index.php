@@ -157,7 +157,7 @@ $monthNames = [
         <span class="stat-icon red"><i data-lucide="flame"></i></span>
         <div>
             <small>Horas extras</small>
-            <strong><?= formatMinutes($monthExtra50 + $monthExtra100) ?></strong>
+            <strong><?= formatMinutes($monthExtra65 + $monthExtra100) ?></strong>
 
             <?php if ($extraMonthChangePercent !== null): ?>
                 <?php

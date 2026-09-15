@@ -186,8 +186,8 @@ $weekdays = [
                         </span>
 
                         <span>
-                            <small>Extra 50%</small>
-                            <b><?= fm($day['summary']['overtime50']) ?></b>
+                            <small>Extra 65%</small>
+                            <b><?= fm($day['summary']['overtime65']) ?></b>
                         </span>
 
                         <span>

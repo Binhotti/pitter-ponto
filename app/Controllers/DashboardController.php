@@ -32,6 +32,10 @@ class DashboardController extends Controller
         $today = date('Y-m-d');
         $dailyMinutes = (int) ($user['daily_minutes'] ?? 528);
         $toleranceMinutes = (int) ($settings['tolerance_minutes'] ?? 5);
+        $weekdayOvertimePercent = (int) (
+            $settings['overtime_weekday_percent'] ?? 65
+        );
+        $weekdayOvertimeMultiplier = 1 + ($weekdayOvertimePercent / 100);
 
         $holidayModel->ensureYear((int) date('Y'));
         $holidayModel->ensureYear((int) date('Y') + 1);
@@ -164,7 +168,7 @@ class DashboardController extends Controller
         );
 
         $monthWorked = 0;
-        $monthExtra50 = 0;
+        $monthExtra65 = 0;
         $monthExtra100 = 0;
         $monthDeficit = 0;
         $monthBankBalance = 0;
@@ -192,7 +196,7 @@ class DashboardController extends Controller
 
             if ($date <= $todayDate) {
                 $monthWorked += $summary['worked'];
-                $monthExtra50 += $summary['overtime50'];
+                $monthExtra65 += $summary['overtime65'];
                 $monthExtra100 += $summary['overtime100'];
                 $monthDeficit += $summary['deficit'];
                 $monthBankBalance += $summary['bankBalance'];
@@ -213,7 +217,7 @@ class DashboardController extends Controller
             $monthCalendar[(int) $date->format('j')] = [
                 'worked' => $summary['worked'],
                 'extra' => (
-                    $summary['overtime50']
+                    $summary['overtime65']
                     + $summary['overtime100']
                 ) > 0,
                 'deficit' => $summary['deficit'] > 0,
@@ -227,7 +231,7 @@ class DashboardController extends Controller
 
         /*
          * Comparação de horas extras com o mês anterior.
-         * Soma horas extras 50% + 100% em ambos os períodos.
+         * Soma horas extras 65% + 100% em ambos os períodos.
          */
         $previousMonthStart = $monthStartDate->modify('-1 month');
         $previousMonthEnd = $previousMonthStart->modify('last day of this month');
@@ -259,37 +263,37 @@ class DashboardController extends Controller
             );
 
             $previousMonthExtra +=
-                $summary['overtime50']
+                $summary['overtime65']
                 + $summary['overtime100'];
         }
 
-        $currentMonthExtra = $monthExtra50 + $monthExtra100;
+        $currentMonthExtra = $monthExtra65 + $monthExtra100;
 
         /*
          * Estimativa financeira das horas extras.
          * Valor hora = salário mensal / horas mensais.
-         * Extra 50% = valor hora × 1,5.
+         * Extra 65% = valor hora × 1,65.
          * Extra 100% = valor hora × 2.
          */
         $salary = (float) ($user['salary'] ?? 0);
         $monthlyHours = (int) ($user['monthly_hours'] ?? 0);
 
         $hourlyValue = null;
-        $estimatedExtra50Value = null;
+        $estimatedExtra65Value = null;
         $estimatedExtra100Value = null;
         $estimatedExtraTotalValue = null;
 
         if ($salary > 0 && $monthlyHours > 0) {
             $hourlyValue = $salary / $monthlyHours;
 
-            $estimatedExtra50Value =
-                ($monthExtra50 / 60) * $hourlyValue * 1.5;
+            $estimatedExtra65Value =
+                ($monthExtra65 / 60) * $hourlyValue * $weekdayOvertimeMultiplier;
 
             $estimatedExtra100Value =
                 ($monthExtra100 / 60) * $hourlyValue * 2;
 
             $estimatedExtraTotalValue =
-                $estimatedExtra50Value + $estimatedExtra100Value;
+                $estimatedExtra65Value + $estimatedExtra100Value;
         }
 
         $extraMonthChangePercent = null;
@@ -332,12 +336,12 @@ class DashboardController extends Controller
             'weekStart' => $monday->format('Y-m-d'),
             'weekEnd' => $weekEnd->format('Y-m-d'),
             'monthWorked' => $monthWorked,
-            'monthExtra50' => $monthExtra50,
+            'monthExtra65' => $monthExtra65,
             'monthExtra100' => $monthExtra100,
             'previousMonthExtra' => $previousMonthExtra,
             'extraMonthChangePercent' => $extraMonthChangePercent,
             'hourlyValue' => $hourlyValue,
-            'estimatedExtra50Value' => $estimatedExtra50Value,
+            'estimatedExtra65Value' => $estimatedExtra65Value,
             'estimatedExtra100Value' => $estimatedExtra100Value,
             'estimatedExtraTotalValue' => $estimatedExtraTotalValue,
             'monthDeficit' => $monthDeficit,

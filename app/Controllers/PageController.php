@@ -117,6 +117,10 @@ class PageController extends Controller
         $dayOffModel = new DayOff();
 
         $toleranceMinutes = (int)($settings['tolerance_minutes'] ?? 5);
+        $weekdayOvertimePercent = (int)(
+            $settings['overtime_weekday_percent'] ?? 65
+        );
+        $weekdayOvertimeMultiplier = 1 + ($weekdayOvertimePercent / 100);
 
         $month = preg_match('/^\d{4}-\d{2}$/', (string)($_GET['month'] ?? ''))
             ? (string)$_GET['month']
@@ -161,7 +165,7 @@ class PageController extends Controller
 
             if ($calendarHourlyValue !== null) {
                 $estimatedExtraValue =
-                    ($summary['overtime50'] / 60) * $calendarHourlyValue * 1.5
+                    ($summary['overtime65'] / 60) * $calendarHourlyValue * $weekdayOvertimeMultiplier
                     + ($summary['overtime100'] / 60) * $calendarHourlyValue * 2;
             }
 

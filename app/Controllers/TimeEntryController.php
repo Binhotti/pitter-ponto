@@ -23,8 +23,17 @@ class TimeEntryController extends Controller
             redirect('dashboard');
         }
 
-        $timeEntry->create((int)authUser()['id'], $type);
-        flash('success', 'Ponto registrado às ' . date('H:i') . '.');
+        $recordedAt = $timeEntry->create(
+            (int)authUser()['id'],
+            $type
+        );
+
+        flash(
+            'success',
+            'Ponto registrado às '
+            . date('H:i', strtotime($recordedAt))
+            . '.'
+        );
 
         redirect('dashboard');
     }

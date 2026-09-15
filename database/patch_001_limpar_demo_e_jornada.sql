@@ -21,7 +21,7 @@ setting_value = VALUES(setting_value);
 
 -- Mantém as regras já definidas de horas extras.
 INSERT INTO work_settings (setting_key, setting_value) VALUES
-('overtime_weekday_percent', '50'),
+('overtime_weekday_percent', '65'),
 ('overtime_saturday_percent', '100'),
 ('overtime_sunday_percent', '100'),
 ('tolerance_minutes', '5')

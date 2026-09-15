@@ -93,7 +93,7 @@ $statusMeta = $statusLabels[$status['key']] ?? $statusLabels['not_started'];
 
 <div class="admin-user-summary-grid">
     <article><span>Trabalhado</span><strong><?= e(adminDetailMinutes($totals['worked'])) ?></strong></article>
-    <article><span>Extra 50%</span><strong><?= e(adminDetailMinutes($totals['extra50'])) ?></strong></article>
+    <article><span>Extra 65%</span><strong><?= e(adminDetailMinutes($totals['extra65'])) ?></strong></article>
     <article><span>Extra 100%</span><strong><?= e(adminDetailMinutes($totals['extra100'])) ?></strong></article>
     <article class="<?= $totals['bank'] >= 0 ? 'positive' : 'negative' ?>">
         <span>Banco</span><strong><?= $totals['bank'] > 0 ? '+' : '' ?><?= e(adminDetailMinutes($totals['bank'])) ?></strong>

@@ -106,9 +106,9 @@ foreach ($rows as $row) {
         <span class="stat-icon red"><i data-lucide="flame"></i></span>
         <div>
             <small>Horas extras</small>
-            <strong><?= reportMinutes($totalExtra50 + $totalExtra100) ?></strong>
+            <strong><?= reportMinutes($totalExtra65 + $totalExtra100) ?></strong>
             <span class="muted">
-                50%: <?= reportMinutes($totalExtra50) ?> •
+                65%: <?= reportMinutes($totalExtra65) ?> •
                 100%: <?= reportMinutes($totalExtra100) ?>
             </span>
         </div>
@@ -158,8 +158,8 @@ foreach ($rows as $row) {
         </div>
 
         <div>
-            <span>Hora extra 50%</span>
-            <strong><?= e(reportCurrency($hourlyExtra50Value)) ?>/h</strong>
+            <span>Hora extra 65%</span>
+            <strong><?= e(reportCurrency($hourlyExtra65Value)) ?>/h</strong>
         </div>
 
         <div>
@@ -256,8 +256,8 @@ foreach ($rows as $row) {
                 <strong><?= e(reportCurrency($hourlyValue)) ?></strong>
             </div>
             <div>
-                <span><i data-lucide="circle-dollar-sign"></i> Extra 50% estimada</span>
-                <strong><?= e(reportCurrency($estimated50)) ?></strong>
+                <span><i data-lucide="circle-dollar-sign"></i> Extra 65% estimada</span>
+                <strong><?= e(reportCurrency($estimated65)) ?></strong>
             </div>
             <div>
                 <span><i data-lucide="circle-dollar-sign"></i> Extra 100% estimada</span>
@@ -286,7 +286,7 @@ foreach ($rows as $row) {
                         <th>Status</th>
                         <th>Trabalhado</th>
                         <th>Previsto</th>
-                        <th>Extra 50%</th>
+                        <th>Extra 65%</th>
                         <th>Extra 100%</th>
                         <th>Banco</th>
                     </tr>
@@ -305,7 +305,7 @@ foreach ($rows as $row) {
                             </td>
                             <td><?= reportMinutes($row['worked']) ?></td>
                             <td><?= reportMinutes($row['expected']) ?></td>
-                            <td><?= reportMinutes($row['extra50']) ?></td>
+                            <td><?= reportMinutes($row['extra65']) ?></td>
                             <td><?= reportMinutes($row['extra100']) ?></td>
                             <td class="<?= $row['bank'] > 0 ? 'balance-positive' : ($row['bank'] < 0 ? 'balance-negative' : '') ?>">
                                 <?= reportSignedMinutes($row['bank']) ?>

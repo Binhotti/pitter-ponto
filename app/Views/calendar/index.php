@@ -70,7 +70,7 @@ function calendarSigned(int $minutes): string
 
         <?php foreach ($calendar as $day):
             $worked = $day['summary']['worked'];
-            $hasExtra = ($day['summary']['overtime50'] + $day['summary']['overtime100']) > 0;
+            $hasExtra = ($day['summary']['overtime65'] + $day['summary']['overtime100']) > 0;
             $class = $worked > 0 ? 'worked-day' : '';
 
             if ($hasExtra) $class .= ' extra-day';
@@ -94,7 +94,7 @@ function calendarSigned(int $minutes): string
                 'weekday' => $weekdayNames[$day['weekday']] ?? '',
                 'entries' => $entries,
                 'worked' => calendarMinutes($worked),
-                'extra50' => calendarMinutes($day['summary']['overtime50']),
+                'extra65' => calendarMinutes($day['summary']['overtime65']),
                 'extra100' => calendarMinutes($day['summary']['overtime100']),
                 'bank' => calendarSigned($day['summary']['bankBalance']),
                 'bankRaw' => $day['summary']['bankBalance'],
@@ -177,7 +177,7 @@ function calendarSigned(int $minutes): string
 
         <div class="calendar-detail-summary">
             <div><span>Trabalhado</span><strong id="cal-worked">0h 00min</strong></div>
-            <div><span>Extra 50%</span><strong id="cal-extra50">0h 00min</strong></div>
+            <div><span>Extra 65%</span><strong id="cal-extra65">0h 00min</strong></div>
             <div><span>Extra 100%</span><strong id="cal-extra100">0h 00min</strong></div>
             <div><span>Banco</span><strong id="cal-bank">0h 00min</strong></div>
         </div>
