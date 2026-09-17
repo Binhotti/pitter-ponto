@@ -8112,3 +8112,299 @@ body.theme-dark .admin-delete-disabled {
         background: transparent;
     }
 }
+
+/* ===== Pitter Ponto v4.5 - Início = Meu Ponto / UX mobile ===== */
+.mobile-point-focus {
+    display: none;
+}
+
+@media (max-width: 680px) {
+    .dashboard-header {
+        display: none;
+    }
+
+    .mobile-point-focus {
+        display: block;
+        margin-bottom: 14px;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--card);
+        box-shadow: var(--shadow);
+    }
+
+    .mobile-point-focus-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .mobile-point-kicker {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--blue);
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+    }
+
+    .mobile-point-focus-head h2 {
+        margin: 0;
+        color: var(--navy);
+        font-size: 19px;
+        line-height: 1.15;
+    }
+
+    .mobile-point-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 30px;
+        padding: 0 9px;
+        border-radius: 999px;
+        font-size: 8px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .mobile-point-status i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .mobile-point-status.not-started {
+        background: #eef2f7;
+        color: #6f7d95;
+    }
+
+    .mobile-point-status.working {
+        background: #e1f6eb;
+        color: #138c57;
+    }
+
+    .mobile-point-status.lunch {
+        background: #fff3c7;
+        color: #9a7000;
+    }
+
+    .mobile-point-status.finished {
+        background: #e7efff;
+        color: #315fae;
+    }
+
+    .mobile-point-hero {
+        display: grid;
+        justify-items: center;
+        padding: 10px 0 14px;
+        text-align: center;
+    }
+
+    .mobile-point-status-icon {
+        width: 82px;
+        height: 82px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 10px;
+        border: 8px solid #edf3ff;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--blue);
+        box-shadow: 0 8px 24px rgba(38, 95, 195, .10);
+    }
+
+    .mobile-point-status-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .mobile-point-hero.working .mobile-point-status-icon {
+        border-color: #dcf3e8;
+        color: #15935d;
+    }
+
+    .mobile-point-hero.lunch .mobile-point-status-icon {
+        border-color: #fff0b9;
+        color: #b07f00;
+    }
+
+    .mobile-point-hero.finished .mobile-point-status-icon {
+        border-color: #e5edff;
+        color: #315fae;
+    }
+
+    .mobile-point-hero > small {
+        color: var(--muted);
+        font-size: 10px;
+    }
+
+    .mobile-point-hero > strong {
+        margin-top: 2px;
+        color: var(--navy);
+        font-size: 34px;
+        line-height: 1.05;
+        letter-spacing: -.03em;
+    }
+
+    .mobile-point-change {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 6px;
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+    .mobile-point-change svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .mobile-point-change.positive { color: var(--green); }
+    .mobile-point-change.negative { color: var(--red); }
+
+    .mobile-point-schedule {
+        display: grid;
+        gap: 9px;
+        margin-bottom: 12px;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fbfcff;
+    }
+
+    .mobile-point-schedule h3 {
+        margin: 0 0 2px;
+        color: var(--navy);
+        font-size: 12px;
+    }
+
+    .mobile-point-schedule > div {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #496089;
+        font-size: 10px;
+        font-weight: 650;
+    }
+
+    .mobile-point-schedule svg {
+        width: 16px;
+        height: 16px;
+        color: var(--blue);
+    }
+
+    .mobile-point-schedule > small {
+        padding-top: 7px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 8px;
+        line-height: 1.45;
+    }
+
+    .mobile-point-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .mobile-point-actions form {
+        min-width: 0;
+    }
+
+    .mobile-point-action {
+        width: 100%;
+        min-height: 88px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 10px;
+        border: 0;
+        border-radius: 14px;
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .mobile-point-action svg {
+        width: 23px;
+        height: 23px;
+    }
+
+    .mobile-point-action strong {
+        max-width: 100px;
+        font-size: 10px;
+        line-height: 1.25;
+        text-align: center;
+    }
+
+    .mobile-point-action.green { background: #2bb06f; color: #fff; }
+    .mobile-point-action.yellow { background: #fff0b6; color: #9b6d00; }
+    .mobile-point-action.blue { background: #dce8fb; color: #174f9c; }
+    .mobile-point-action.red { background: #ffd9dd; color: #b92d3b; }
+
+    .mobile-point-action:disabled {
+        opacity: .45;
+        cursor: not-allowed;
+    }
+
+    .mobile-point-tip {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-top: 11px;
+        padding: 10px;
+        border-radius: 11px;
+        background: #eef5ff;
+        color: #55709e;
+        font-size: 8px;
+        line-height: 1.45;
+    }
+
+    .mobile-point-tip svg {
+        width: 15px;
+        height: 15px;
+        flex: 0 0 auto;
+        color: var(--blue);
+    }
+
+    /* A tela inicial já contém o ponto principal no mobile. */
+    .stats-grid,
+    .punch-card {
+        display: none;
+    }
+
+    .dashboard-lower-grid {
+        margin-top: 0;
+    }
+
+    body.theme-dark .mobile-point-focus,
+    body.theme-dark .mobile-point-schedule {
+        background: var(--card);
+    }
+
+    body.theme-dark .mobile-point-focus-head h2,
+    body.theme-dark .mobile-point-hero > strong,
+    body.theme-dark .mobile-point-schedule h3 {
+        color: var(--text);
+    }
+
+    body.theme-dark .mobile-point-status-icon {
+        background: #101a2d;
+        box-shadow: none;
+    }
+
+    body.theme-dark .mobile-point-schedule > div {
+        color: #c2cee5;
+    }
+
+    body.theme-dark .mobile-point-tip {
+        background: #17263e;
+        color: #aebed9;
+    }
+}

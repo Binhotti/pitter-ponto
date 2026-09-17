@@ -34,12 +34,8 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
         </a>
 
         <nav class="nav-menu">
-            <a class="nav-item <?= ($active ?? '') === 'dashboard' ? 'active' : '' ?>" data-tooltip="Dashboard" href="<?= url('dashboard') ?>">
-                <i data-lucide="house" class="nav-icon"></i><span>Dashboard</span>
-            </a>
-
-            <a class="nav-item <?= ($active ?? '') === 'point' ? 'active' : '' ?>" data-tooltip="Meu Ponto" href="<?= url('dashboard') ?>#meu-ponto">
-                <i data-lucide="clock-3" class="nav-icon"></i><span>Meu Ponto</span>
+            <a class="nav-item <?= ($active ?? '') === 'dashboard' ? 'active' : '' ?>" data-tooltip="Início" href="<?= url('dashboard') ?>">
+                <i data-lucide="house" class="nav-icon"></i><span>Início</span>
             </a>
 
             <a class="nav-item <?= ($active ?? '') === 'history' ? 'active' : '' ?>" data-tooltip="Histórico" href="<?= url('history') ?>">
@@ -194,16 +190,16 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
         <a href="<?= url('dashboard') ?>" class="mobile-bottom-item <?= ($active ?? '') === 'dashboard' ? 'active' : '' ?>" data-mobile-nav="dashboard">
             <i data-lucide="house"></i><span>Início</span>
         </a>
-        <a href="<?= url('dashboard') ?>#meu-ponto" class="mobile-bottom-item" data-mobile-nav="point">
-            <i data-lucide="clock-3"></i><span>Meu Ponto</span>
-        </a>
         <a href="<?= url('history') ?>" class="mobile-bottom-item <?= ($active ?? '') === 'history' ? 'active' : '' ?>" data-mobile-nav="history">
             <i data-lucide="notebook-tabs"></i><span>Histórico</span>
         </a>
         <a href="<?= url('calendar') ?>" class="mobile-bottom-item <?= ($active ?? '') === 'calendar' ? 'active' : '' ?>" data-mobile-nav="calendar">
             <i data-lucide="calendar-days"></i><span>Calendário</span>
         </a>
-        <button type="button" class="mobile-bottom-item mobile-more-toggle <?= in_array(($active ?? ''), ['absences','reports','profile','settings','search','admin'], true) ? 'active' : '' ?>" id="mobile-more-toggle" aria-label="Mais opções" aria-expanded="false">
+        <a href="<?= url('reports') ?>" class="mobile-bottom-item <?= ($active ?? '') === 'reports' ? 'active' : '' ?>" data-mobile-nav="reports">
+            <i data-lucide="chart-no-axes-column-increasing"></i><span>Relatórios</span>
+        </a>
+        <button type="button" class="mobile-bottom-item mobile-more-toggle <?= in_array(($active ?? ''), ['absences','profile','settings','search','admin'], true) ? 'active' : '' ?>" id="mobile-more-toggle" aria-label="Mais opções" aria-expanded="false">
             <i data-lucide="ellipsis"></i><span>Mais</span>
         </button>
     </nav>
@@ -245,9 +241,6 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
                 <?php endif; ?>
                 <a href="<?= url('absences') ?>" class="<?= ($active ?? '') === 'absences' ? 'active' : '' ?>">
                     <span><i data-lucide="calendar-off"></i></span><strong>Ausências</strong><small>Justificativas, folgas e férias</small>
-                </a>
-                <a href="<?= url('reports') ?>" class="<?= ($active ?? '') === 'reports' ? 'active' : '' ?>">
-                    <span><i data-lucide="chart-no-axes-column-increasing"></i></span><strong>Relatórios</strong><small>Horas, banco e valores</small>
                 </a>
                 <a href="<?= url('profile') ?>" class="<?= ($active ?? '') === 'profile' ? 'active' : '' ?>">
                     <span><i data-lucide="user-round"></i></span><strong>Perfil</strong><small>Dados pessoais e foto</small>

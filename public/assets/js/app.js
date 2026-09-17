@@ -143,25 +143,8 @@
         }
     });
 
-    const syncMobileBottomNav = () => {
-        const homeItem = document.querySelector('[data-mobile-nav="dashboard"]');
-        const pointItem = document.querySelector('[data-mobile-nav="point"]');
+    // A tela inicial agora já é a experiência principal de ponto no mobile.
 
-        if (!homeItem || !pointItem) return;
-
-        const isDashboardRoute =
-            window.location.search.includes('route=dashboard')
-            || !window.location.search.includes('route=');
-
-        if (!isDashboardRoute) return;
-
-        const isPoint = window.location.hash === '#meu-ponto';
-        homeItem.classList.toggle('active', !isPoint);
-        pointItem.classList.toggle('active', isPoint);
-    };
-
-    syncMobileBottomNav();
-    window.addEventListener('hashchange', syncMobileBottomNav);
 
 
     const clock = document.getElementById('live-clock');

@@ -317,7 +317,7 @@ class DashboardController extends Controller
             ->forUser($user, 30);
 
         $this->view('dashboard/index', [
-            'title' => 'Dashboard',
+            'title' => 'Início',
             'active' => 'dashboard',
             'user' => $user,
             'inconsistencies' => $inconsistencies,

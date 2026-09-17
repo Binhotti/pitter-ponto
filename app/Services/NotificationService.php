@@ -215,7 +215,7 @@ class NotificationService
             'icon' => $icon,
             'title' => $title,
             'message' => $message,
-            'action' => url($route) . '#meu-ponto',
+            'action' => url($route),
         ];
     }
 }

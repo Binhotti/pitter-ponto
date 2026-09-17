@@ -756,3 +756,36 @@ Bancos existentes:
 - Detalhes do dia continuam disponíveis ao tocar.
 - Modal de detalhes vira bottom sheet no celular.
 - Compatível com tema claro e escuro.
+
+## v4.5 — Início focado no ponto + UX mobile
+
+- O item separado **Meu Ponto** foi removido da navegação desktop e mobile.
+- **Início** passa a ser a tela principal para bater ponto.
+- No celular, a tela inicial agora prioriza:
+  - status atual;
+  - ícone dinâmico conforme o estado;
+  - horas de hoje;
+  - jornada configurada;
+  - quatro ações de ponto em grade 2x2;
+  - orientação sobre correções pelo Histórico.
+- Ícone/status do topo muda entre:
+  - não iniciado;
+  - trabalhando;
+  - almoço;
+  - expediente finalizado.
+- A barra inferior mobile agora usa: Início, Histórico, Calendário, Relatórios e Mais.
+- Relatórios foi removido do menu Mais para evitar duplicidade.
+- Notificações e busca que levavam ao `#meu-ponto` agora abrem diretamente o Início.
+
+### Verificação do almoço
+
+O cálculo atual já desconta corretamente o período parado no almoço. O método
+`TimeEntry::workedMinutesForDate()` soma apenas:
+
+1. entrada → início do almoço;
+2. volta do almoço → saída.
+
+Exemplo: 07:39 → 13:01 + 13:45 → 17:49 = 9h26 trabalhadas. Os 44 minutos de
+almoço não entram no total.
+
+Não há alteração de banco de dados nesta versão.

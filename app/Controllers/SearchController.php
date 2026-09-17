@@ -69,7 +69,7 @@ class SearchController extends Controller
     {
         $items = [
             ['label' => 'Dashboard', 'keywords' => 'dashboard início inicio home', 'icon' => 'house', 'url' => url('dashboard')],
-            ['label' => 'Meu Ponto', 'keywords' => 'meu ponto bater ponto entrada saída saida almoço almoco', 'icon' => 'clock-3', 'url' => url('dashboard') . '#meu-ponto'],
+            ['label' => 'Meu Ponto', 'keywords' => 'meu ponto bater ponto entrada saída saida almoço almoco', 'icon' => 'clock-3', 'url' => url('dashboard')],
             ['label' => 'Histórico', 'keywords' => 'histórico historico registros pontos', 'icon' => 'notebook-tabs', 'url' => url('history')],
             ['label' => 'Calendário', 'keywords' => 'calendário calendario mês mes dias', 'icon' => 'calendar-days', 'url' => url('calendar')],
             ['label' => 'Ausências e Justificativas', 'keywords' => 'ausência ausencia justificativa atestado folga férias ferias', 'icon' => 'calendar-off', 'url' => url('absences')],

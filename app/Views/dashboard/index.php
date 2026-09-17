@@ -37,6 +37,20 @@ $statusClass = match ($status['key']) {
     default => 'not-started',
 };
 
+$mobileStatusIcon = match ($status['key']) {
+    'working' => 'timer',
+    'lunch' => 'utensils',
+    'finished' => 'circle-check-big',
+    default => 'log-in',
+};
+
+$mobileStatusTitle = match ($status['key']) {
+    'working' => 'Expediente em andamento',
+    'lunch' => 'Você está em horário de almoço',
+    'finished' => 'Expediente finalizado',
+    default => 'Pronto para começar?',
+};
+
 $typeLabels = [
     'clock_in' => ['Entrada', 'entry', 'log-in'],
     'lunch_start' => ['Início do almoço', 'lunch-start', 'utensils'],
@@ -120,6 +134,75 @@ $monthNames = [
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
+
+
+<section class="mobile-point-focus" aria-label="Meu ponto de hoje">
+    <div class="mobile-point-focus-head">
+        <div>
+            <span class="mobile-point-kicker">Meu Ponto</span>
+            <h2><?= e($mobileStatusTitle) ?></h2>
+        </div>
+
+        <span class="mobile-point-status <?= e($statusClass) ?>">
+            <i></i><?= e($status['label']) ?>
+        </span>
+    </div>
+
+    <div class="mobile-point-hero <?= e($statusClass) ?>">
+        <span class="mobile-point-status-icon">
+            <i data-lucide="<?= e($mobileStatusIcon) ?>"></i>
+        </span>
+        <small>Seu expediente de hoje</small>
+        <strong><?= formatMinutes($todaySummary['worked']) ?></strong>
+
+        <?php if ($dailyChangePercent !== null): ?>
+            <?php $mobileDailyChange = (int) round($dailyChangePercent); ?>
+            <span class="mobile-point-change <?= $mobileDailyChange >= 0 ? 'positive' : 'negative' ?>">
+                <i data-lucide="<?= $mobileDailyChange >= 0 ? 'arrow-up' : 'arrow-down' ?>"></i>
+                <?= $mobileDailyChange > 0 ? '+' : '' ?><?= $mobileDailyChange ?>% em relação a ontem
+            </span>
+        <?php endif; ?>
+    </div>
+
+    <div class="mobile-point-schedule">
+        <h3>Jornada de hoje</h3>
+        <div><i data-lucide="clock-3"></i><span><?= e($workdayStart) ?> às <?= e($workdayEnd) ?></span></div>
+        <div><i data-lucide="utensils"></i><span><?= $lunchMinutes ?> min de almoço</span></div>
+        <div><i data-lucide="shield-check"></i><span>Tolerância de <?= (int)($settings['tolerance_minutes'] ?? 5) ?> min</span></div>
+        <small>O período entre início e volta do almoço é descontado automaticamente das horas trabalhadas.</small>
+    </div>
+
+    <div class="mobile-point-actions">
+        <?php
+        $mobileActions = [
+            'clock_in' => ['Registrar entrada', 'green', 'log-in'],
+            'lunch_start' => ['Iniciar almoço', 'yellow', 'utensils'],
+            'lunch_end' => ['Voltar do almoço', 'blue', 'coffee'],
+            'clock_out' => ['Finalizar expediente', 'red', 'log-out'],
+        ];
+
+        foreach ($mobileActions as $key => [$label, $class, $icon]):
+            $enabled = $status['next'] === $key;
+        ?>
+            <form method="POST" action="<?= url('clock') ?>">
+                <input type="hidden" name="type" value="<?= e($key) ?>">
+                <button
+                    class="mobile-point-action <?= e($class) ?>"
+                    type="submit"
+                    <?= !$enabled ? 'disabled' : '' ?>
+                >
+                    <i data-lucide="<?= e($icon) ?>"></i>
+                    <strong><?= e($label) ?></strong>
+                </button>
+            </form>
+        <?php endforeach; ?>
+    </div>
+
+    <div class="mobile-point-tip">
+        <i data-lucide="info"></i>
+        <span>Registre seus horários normalmente. Se algo sair errado, você pode corrigir pelo Histórico.</span>
+    </div>
+</section>
 
 <div class="stats-grid">
     <article class="stat-card">
