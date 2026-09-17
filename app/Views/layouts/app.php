@@ -208,53 +208,98 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
         <button class="mobile-more-backdrop" id="mobile-more-backdrop" type="button" aria-label="Fechar mais opções"></button>
 
         <section class="mobile-more-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-more-title">
-            <div class="mobile-more-handle" aria-hidden="true"></div>
+            <div class="mobile-more-top">
+                <a href="<?= url('dashboard') ?>" class="mobile-more-brand" aria-label="Voltar ao início">
+                    <img src="<?= asset('images/pitterpan-logo.png') ?>" alt="Pitter Pan Festas">
+                </a>
 
-            <div class="mobile-more-head">
-                <div>
-                    <h2 id="mobile-more-title">Mais opções</h2>
-                    <p>Acesse as outras áreas do Pitter Ponto.</p>
+                <div class="mobile-more-top-actions">
+                    <span class="mobile-more-bell" aria-hidden="true">
+                        <i data-lucide="bell"></i>
+                        <?php if (!empty($smartNotifications)): ?>
+                            <b><?= count($smartNotifications) ?></b>
+                        <?php endif; ?>
+                    </span>
+
+                    <?php if ($avatarPath): ?>
+                        <img
+                            src="<?= config('app.url') . '/' . e($avatarPath) ?>"
+                            alt="Foto de perfil"
+                            class="mobile-more-top-avatar"
+                        >
+                    <?php else: ?>
+                        <span class="mobile-more-top-avatar mobile-more-avatar-fallback"><?= e($initials ?: 'U') ?></span>
+                    <?php endif; ?>
+
+                    <button type="button" class="mobile-more-close" id="mobile-more-close" aria-label="Fechar">
+                        <i data-lucide="x"></i>
+                    </button>
                 </div>
-                <button type="button" class="mobile-more-close" id="mobile-more-close" aria-label="Fechar">
-                    <i data-lucide="x"></i>
-                </button>
             </div>
 
-            <div class="mobile-more-profile">
+            <a href="<?= url('profile') ?>" class="mobile-more-profile-card">
                 <?php if ($avatarPath): ?>
-                    <img src="<?= config('app.url') . '/' . e($avatarPath) ?>" alt="Foto de perfil" class="mobile-more-avatar">
+                    <img src="<?= config('app.url') . '/' . e($avatarPath) ?>" alt="Foto de perfil" class="mobile-more-profile-avatar">
                 <?php else: ?>
-                    <span class="mobile-more-avatar mobile-more-avatar-fallback"><?= e($initials ?: 'U') ?></span>
+                    <span class="mobile-more-profile-avatar mobile-more-avatar-fallback"><?= e($initials ?: 'U') ?></span>
                 <?php endif; ?>
-                <span>
+
+                <span class="mobile-more-profile-copy">
                     <strong><?= e($currentUser['name'] ?? 'Usuário') ?></strong>
-                    <small><?= e($currentUser['email'] ?? '') ?></small>
+                    <small><?= isAdmin() ? 'Administrador' : 'Colaborador' ?></small>
                 </span>
+
+                <i data-lucide="chevron-right"></i>
+            </a>
+
+            <div class="mobile-more-menu" aria-labelledby="mobile-more-title">
+                <h2 id="mobile-more-title" class="sr-only">Mais opções</h2>
+
+                <a href="<?= url('profile') ?>" class="<?= ($active ?? '') === 'profile' ? 'active' : '' ?>">
+                    <span><i data-lucide="user-round"></i></span>
+                    <strong>Meu perfil</strong>
+                    <i data-lucide="chevron-right"></i>
+                </a>
+
+                <a href="<?= url('settings') ?>" class="<?= ($active ?? '') === 'settings' ? 'active' : '' ?>">
+                    <span><i data-lucide="settings"></i></span>
+                    <strong>Configurações</strong>
+                    <i data-lucide="chevron-right"></i>
+                </a>
+
+                <a href="<?= url('absences') ?>" class="<?= ($active ?? '') === 'absences' ? 'active' : '' ?>">
+                    <span><i data-lucide="calendar-off"></i></span>
+                    <strong>Ausências e Justificativas</strong>
+                    <i data-lucide="chevron-right"></i>
+                </a>
+
+                <a href="<?= url('reports') ?>" class="<?= ($active ?? '') === 'reports' ? 'active' : '' ?>">
+                    <span><i data-lucide="chart-no-axes-column-increasing"></i></span>
+                    <strong>Relatórios</strong>
+                    <i data-lucide="chevron-right"></i>
+                </a>
             </div>
 
-            <div class="mobile-more-grid">
-
+            <div class="mobile-more-menu mobile-more-menu-secondary">
                 <?php if (isAdmin()): ?>
                     <a href="<?= url('admin') ?>" class="<?= ($active ?? '') === 'admin' ? 'active' : '' ?>">
-                        <span><i data-lucide="shield-check"></i></span><strong>Administração</strong><small>Equipe, usuários e acessos</small>
+                        <span><i data-lucide="shield-check"></i></span>
+                        <strong>Administração</strong>
+                        <i data-lucide="chevron-right"></i>
                     </a>
                 <?php endif; ?>
-                <a href="<?= url('absences') ?>" class="<?= ($active ?? '') === 'absences' ? 'active' : '' ?>">
-                    <span><i data-lucide="calendar-off"></i></span><strong>Ausências</strong><small>Justificativas, folgas e férias</small>
-                </a>
-                <a href="<?= url('profile') ?>" class="<?= ($active ?? '') === 'profile' ? 'active' : '' ?>">
-                    <span><i data-lucide="user-round"></i></span><strong>Perfil</strong><small>Dados pessoais e foto</small>
-                </a>
-                <a href="<?= url('settings') ?>" class="<?= ($active ?? '') === 'settings' ? 'active' : '' ?>">
-                    <span><i data-lucide="settings"></i></span><strong>Configurações</strong><small>Jornada, tema e notificações</small>
-                </a>
+
                 <a href="<?= url('search') ?>" class="<?= ($active ?? '') === 'search' ? 'active' : '' ?>">
-                    <span><i data-lucide="search"></i></span><strong>Busca</strong><small>Encontre telas e registros</small>
-                </a>
-                <a href="<?= url('logout') ?>" class="danger">
-                    <span><i data-lucide="log-out"></i></span><strong>Sair</strong><small>Encerrar sua sessão</small>
+                    <span><i data-lucide="search"></i></span>
+                    <strong>Busca</strong>
+                    <i data-lucide="chevron-right"></i>
                 </a>
             </div>
+
+            <a href="<?= url('logout') ?>" class="mobile-more-logout">
+                <i data-lucide="log-out"></i>
+                <strong>Sair</strong>
+            </a>
         </section>
     </div>
 

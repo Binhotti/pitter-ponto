@@ -789,3 +789,17 @@ Exemplo: 07:39 → 13:01 + 13:45 → 17:49 = 9h26 trabalhadas. Os 44 minutos de
 almoço não entram no total.
 
 Não há alteração de banco de dados nesta versão.
+
+
+## v4.6 — Tela “Mais” mobile
+
+- Área “Mais” redesenhada para ficar próxima do mockup aprovado.
+- Logo e ações rápidas no topo.
+- Card de perfil maior com nome e função.
+- Menu em lista com ícones e setas.
+- Administração disponível somente para admins.
+- Busca disponível pelo menu secundário.
+- Botão Sair destacado no rodapé.
+- Bottom navigation permanece visível.
+- Tema claro e escuro suportados.
+- Nenhuma alteração de banco nesta versão.

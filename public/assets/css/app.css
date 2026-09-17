@@ -8408,3 +8408,316 @@ body.theme-dark .admin-delete-disabled {
         color: #aebed9;
     }
 }
+
+
+/* ===== Pitter Ponto v4.6 - tela Mais mobile ===== */
+@media (max-width: 680px) {
+    .mobile-bottom-nav {
+        z-index: 1000;
+    }
+
+    .mobile-more-layer {
+        z-index: 980;
+    }
+
+    .mobile-more-backdrop {
+        background: rgba(7, 17, 39, .36);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+    }
+
+    .mobile-more-sheet {
+        left: 8px;
+        right: 8px;
+        bottom: calc(82px + env(safe-area-inset-bottom));
+        max-height: calc(100vh - 94px - env(safe-area-inset-bottom));
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background:
+            radial-gradient(circle at 78% 0%, rgba(76, 132, 235, .09), transparent 31%),
+            var(--card);
+        box-shadow: 0 20px 55px rgba(7, 22, 58, .25);
+    }
+
+    .mobile-more-handle,
+    .mobile-more-head,
+    .mobile-more-profile,
+    .mobile-more-grid {
+        display: none;
+    }
+
+    .mobile-more-top {
+        min-height: 54px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .mobile-more-brand {
+        width: 64px;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    .mobile-more-brand img {
+        width: 58px;
+        max-height: 54px;
+        object-fit: contain;
+    }
+
+    .mobile-more-top-actions {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    .mobile-more-bell,
+    .mobile-more-close {
+        position: relative;
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .82);
+        color: var(--navy);
+    }
+
+    .mobile-more-bell svg,
+    .mobile-more-close svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .mobile-more-bell b {
+        position: absolute;
+        top: -3px;
+        right: -2px;
+        min-width: 16px;
+        height: 16px;
+        display: grid;
+        place-items: center;
+        padding: 0 4px;
+        border: 2px solid var(--card);
+        border-radius: 999px;
+        background: var(--red);
+        color: #fff;
+        font-size: 7px;
+        line-height: 1;
+    }
+
+    .mobile-more-top-avatar {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 4px 12px rgba(23, 54, 112, .14);
+    }
+
+    .mobile-more-profile-card {
+        min-height: 92px;
+        display: grid;
+        grid-template-columns: 58px minmax(0, 1fr) 22px;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        margin-bottom: 12px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, .84);
+        color: var(--text);
+        text-decoration: none;
+        box-shadow: 0 6px 18px rgba(23, 54, 112, .06);
+    }
+
+    .mobile-more-profile-avatar {
+        width: 58px;
+        height: 58px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #e7effd;
+        color: var(--navy);
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+    .mobile-more-profile-copy {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .mobile-more-profile-copy strong {
+        overflow: hidden;
+        color: var(--navy);
+        font-size: 14px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .mobile-more-profile-copy small {
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .mobile-more-profile-card > svg {
+        width: 17px;
+        height: 17px;
+        color: var(--blue);
+    }
+
+    .mobile-more-menu {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        background: rgba(255, 255, 255, .78);
+    }
+
+    .mobile-more-menu-secondary {
+        margin-top: 11px;
+    }
+
+    .mobile-more-menu > a {
+        min-height: 50px;
+        display: grid;
+        grid-template-columns: 30px minmax(0, 1fr) 18px;
+        align-items: center;
+        gap: 9px;
+        padding: 8px 13px;
+        border-bottom: 1px solid var(--line);
+        color: var(--text);
+        text-decoration: none;
+        transition: background .15s ease;
+    }
+
+    .mobile-more-menu > a:last-child {
+        border-bottom: 0;
+    }
+
+    .mobile-more-menu > a:hover,
+    .mobile-more-menu > a.active {
+        background: #f1f6ff;
+    }
+
+    .mobile-more-menu > a > span {
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        color: var(--blue);
+    }
+
+    .mobile-more-menu > a > span svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .mobile-more-menu > a strong {
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .mobile-more-menu > a > svg {
+        width: 15px;
+        height: 15px;
+        color: #7b8cab;
+    }
+
+    .mobile-more-logout {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 14px;
+        border: 1px solid #ef9aa3;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, .45);
+        color: var(--red);
+        text-decoration: none;
+    }
+
+    .mobile-more-logout svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .mobile-more-logout strong {
+        font-size: 11px;
+    }
+
+    body.theme-dark .mobile-more-sheet {
+        background:
+            radial-gradient(circle at 78% 0%, rgba(72, 121, 216, .13), transparent 31%),
+            #101a2e;
+    }
+
+    body.theme-dark .mobile-more-bell,
+    body.theme-dark .mobile-more-close,
+    body.theme-dark .mobile-more-profile-card,
+    body.theme-dark .mobile-more-menu {
+        background: #152139;
+        border-color: #273750;
+    }
+
+    body.theme-dark .mobile-more-top-avatar {
+        border-color: #152139;
+    }
+
+    body.theme-dark .mobile-more-profile-copy strong {
+        color: #f1f6ff;
+    }
+
+    body.theme-dark .mobile-more-menu > a {
+        border-color: #273750;
+    }
+
+    body.theme-dark .mobile-more-menu > a:hover,
+    body.theme-dark .mobile-more-menu > a.active {
+        background: #1a2c4a;
+    }
+
+    body.theme-dark .mobile-more-logout {
+        border-color: #70434a;
+        background: #2b2028;
+        color: #ff9da7;
+    }
+}
+
+@media (max-width: 380px) {
+    .mobile-more-sheet {
+        left: 6px;
+        right: 6px;
+        padding: 11px;
+    }
+
+    .mobile-more-profile-card {
+        min-height: 82px;
+        grid-template-columns: 50px minmax(0, 1fr) 18px;
+        padding: 11px;
+    }
+
+    .mobile-more-profile-avatar {
+        width: 50px;
+        height: 50px;
+    }
+
+    .mobile-more-menu > a {
+        min-height: 46px;
+        padding-inline: 10px;
+    }
+}
