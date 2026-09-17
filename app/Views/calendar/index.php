@@ -44,7 +44,7 @@ function calendarSigned(int $minutes): string
     return ($minutes > 0 ? '+' : '-') . calendarMinutes($minutes);
 }
 ?>
-<div class="page-heading">
+<div class="page-heading calendar-page-heading">
     <div>
         <h1>Calendário</h1>
         <p>Clique em um dia para ver todos os detalhes da sua jornada.</p>
@@ -72,11 +72,13 @@ function calendarSigned(int $minutes): string
             $worked = $day['summary']['worked'];
             $hasExtra = ($day['summary']['overtime65'] + $day['summary']['overtime100']) > 0;
             $class = $worked > 0 ? 'worked-day' : '';
+            $isToday = $day['date'] === date('Y-m-d');
 
             if ($hasExtra) $class .= ' extra-day';
             if ($day['summary']['absence']) $class .= ' absence-day';
             if (!empty($day['holiday'])) $class .= ' holiday-cell';
             if (!empty($day['dayOff'])) $class .= ' dayoff-cell';
+            if ($isToday) $class .= ' today-cell';
 
             $entries = [];
             foreach ($day['entries'] as $entry) {
@@ -147,6 +149,24 @@ function calendarSigned(int $minutes): string
                     <small><?= e(calendarMinutes($worked)) ?></small>
                     <i></i>
                 <?php endif; ?>
+
+                <span class="calendar-mobile-markers" aria-hidden="true">
+                    <?php if ($worked > 0): ?>
+                        <b class="<?= $hasExtra ? 'extra' : 'worked' ?>"></b>
+                    <?php endif; ?>
+
+                    <?php if ($day['summary']['absence']): ?>
+                        <b class="absence"></b>
+                    <?php endif; ?>
+
+                    <?php if (!empty($day['holiday'])): ?>
+                        <b class="holiday"></b>
+                    <?php endif; ?>
+
+                    <?php if (!empty($day['dayOff'])): ?>
+                        <b class="dayoff"></b>
+                    <?php endif; ?>
+                </span>
             </button>
         <?php endforeach; ?>
     </div>

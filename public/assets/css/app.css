@@ -7840,3 +7840,275 @@ body.theme-dark .admin-delete-disabled {
         width: calc(100% - 82px);
     }
 }
+
+/* ===== Pitter Ponto v4.4 - calendário mobile + sessão longa ===== */
+
+.calendar-mobile-markers {
+    display: none;
+}
+
+@media (max-width: 680px) {
+    .calendar-page-heading {
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+    .calendar-page-heading > div:first-child {
+        width: 100%;
+    }
+
+    .calendar-page-heading .month-nav {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr) 40px;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .calendar-page-heading .month-nav strong {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: center;
+        font-size: 16px;
+        color: var(--navy);
+    }
+
+    .calendar-page-heading .month-nav a {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .calendar-page-heading .month-nav a:first-child {
+        grid-column: 1;
+    }
+
+    .calendar-page-heading .month-nav a:last-child {
+        grid-column: 3;
+    }
+
+    .full-calendar {
+        width: 100%;
+        overflow: hidden;
+        padding: 12px 8px 10px;
+        border-radius: 18px;
+    }
+
+    .full-weekdays,
+    .full-days {
+        min-width: 0 !important;
+        width: 100%;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .full-weekdays {
+        margin-bottom: 4px;
+    }
+
+    .full-weekdays span {
+        min-width: 0;
+        padding: 7px 0 9px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .calendar-cell {
+        min-width: 0;
+        min-height: 58px;
+        aspect-ratio: 1 / 1.08;
+        margin: 0;
+        padding: 5px 2px;
+        border: 0;
+        border-radius: 12px;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 3px;
+        background: transparent;
+    }
+
+    .calendar-day-button {
+        text-align: center;
+        box-shadow: none;
+        transform: none;
+    }
+
+    .calendar-day-button:hover {
+        transform: none;
+        border-color: transparent;
+        box-shadow: none;
+        background: #f4f7fc;
+    }
+
+    .calendar-cell strong {
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        font-size: 12px;
+        font-weight: 750;
+        color: var(--navy);
+    }
+
+    .calendar-cell.today-cell strong {
+        background: var(--blue);
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(32, 75, 166, .22);
+    }
+
+    .calendar-cell > small,
+    .calendar-cell > i,
+    .calendar-cell > .calendar-tag {
+        display: none;
+    }
+
+    .calendar-mobile-markers {
+        min-height: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+    }
+
+    .calendar-mobile-markers b {
+        width: 5px;
+        height: 5px;
+        display: block;
+        border-radius: 50%;
+    }
+
+    .calendar-mobile-markers .worked { background: var(--green); }
+    .calendar-mobile-markers .extra { background: var(--yellow); }
+    .calendar-mobile-markers .absence { background: var(--red); }
+    .calendar-mobile-markers .holiday { background: #d4a900; }
+    .calendar-mobile-markers .dayoff { background: var(--blue); }
+
+    .calendar-cell.holiday-cell,
+    .calendar-cell.dayoff-cell,
+    .calendar-cell.absence-day {
+        background: transparent;
+    }
+
+    .calendar-cell.holiday-cell strong {
+        color: #8b6900;
+        background: #fff4bf;
+    }
+
+    .calendar-cell.dayoff-cell strong {
+        color: #2d62ad;
+        background: #e9f2ff;
+    }
+
+    .calendar-cell.absence-day strong {
+        color: #b93844;
+        background: #ffe8eb;
+    }
+
+    .calendar-cell.today-cell.holiday-cell strong,
+    .calendar-cell.today-cell.dayoff-cell strong,
+    .calendar-cell.today-cell.absence-day strong {
+        background: var(--blue);
+        color: #fff;
+    }
+
+    .muted-cell {
+        min-height: 58px;
+        aspect-ratio: 1 / 1.08;
+        background: transparent;
+        pointer-events: none;
+    }
+
+    .calendar-detail-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .calendar-detail-dialog {
+        width: 100%;
+        max-width: none;
+        max-height: 84vh;
+        margin: 0;
+        overflow-y: auto;
+        border-radius: 24px 24px 0 0;
+        padding-bottom: calc(18px + env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 390px) {
+    .full-calendar {
+        padding-inline: 5px;
+    }
+
+    .calendar-cell,
+    .muted-cell {
+        min-height: 52px;
+    }
+
+    .calendar-cell strong {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+    }
+
+    .full-weekdays span {
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 680px) {
+    body.theme-dark .calendar-page-heading .month-nav strong {
+        color: var(--text);
+    }
+
+    body.theme-dark .calendar-day-button,
+    body.theme-dark .calendar-cell {
+        background: transparent;
+        border-color: transparent;
+    }
+
+    body.theme-dark .calendar-day-button:hover {
+        background: #18243a;
+        border-color: transparent;
+    }
+
+    body.theme-dark .calendar-cell strong {
+        color: #eaf1ff;
+    }
+
+    body.theme-dark .calendar-cell.today-cell strong {
+        background: #3b73de;
+        color: #fff;
+    }
+
+    body.theme-dark .calendar-cell.holiday-cell strong {
+        background: #4a3c12;
+        color: #ffe17a;
+    }
+
+    body.theme-dark .calendar-cell.dayoff-cell strong {
+        background: #193451;
+        color: #b8d7ff;
+    }
+
+    body.theme-dark .calendar-cell.absence-day strong {
+        background: #442229;
+        color: #ffb4bd;
+    }
+
+    body.theme-dark .calendar-cell.today-cell.holiday-cell strong,
+    body.theme-dark .calendar-cell.today-cell.dayoff-cell strong,
+    body.theme-dark .calendar-cell.today-cell.absence-day strong {
+        background: #3b73de;
+        color: #fff;
+    }
+
+    body.theme-dark .muted-cell {
+        background: transparent;
+    }
+}

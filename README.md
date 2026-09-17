@@ -650,7 +650,7 @@ Os valores podem ser personalizados no `.env`:
 `SECURITY_MAX_LOGIN_ATTEMPTS=5`
 `SECURITY_LOGIN_WINDOW_MINUTES=15`
 `SECURITY_LOGIN_LOCK_MINUTES=5`
-`SECURITY_SESSION_TIMEOUT_MINUTES=30`
+`SECURITY_SESSION_TIMEOUT_MINUTES=480`
 
 ### Banco
 Para bancos existentes, importe:
@@ -742,3 +742,17 @@ Não há alteração de estrutura no banco nesta versão.
 Bancos existentes:
 - local: `database/patch_007_hora_extra_65_local.sql`
 - InfinityFree: `database/patch_007_hora_extra_65_infinityfree.sql`
+
+
+## v4.4 — Sessão de 8 horas e calendário mobile
+
+- Timeout padrão de inatividade: 480 minutos (8 horas).
+- Em instalações existentes, altere também o `.env` para:
+  `SECURITY_SESSION_TIMEOUT_MINUTES=480`
+- Calendário mobile sem rolagem horizontal.
+- Grade mensal responsiva com 7 colunas.
+- Dia atual destacado.
+- Marcadores coloridos para trabalho, extra, ausência, feriado e folga.
+- Detalhes do dia continuam disponíveis ao tocar.
+- Modal de detalhes vira bottom sheet no celular.
+- Compatível com tema claro e escuro.

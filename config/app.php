@@ -40,7 +40,7 @@ $GLOBALS['config'] = [
         'max_login_attempts' => (int)($GLOBALS['env']['SECURITY_MAX_LOGIN_ATTEMPTS'] ?? 5),
         'login_window_minutes' => (int)($GLOBALS['env']['SECURITY_LOGIN_WINDOW_MINUTES'] ?? 15),
         'login_lock_minutes' => (int)($GLOBALS['env']['SECURITY_LOGIN_LOCK_MINUTES'] ?? 5),
-        'session_timeout_minutes' => (int)($GLOBALS['env']['SECURITY_SESSION_TIMEOUT_MINUTES'] ?? 30),
+        'session_timeout_minutes' => (int)($GLOBALS['env']['SECURITY_SESSION_TIMEOUT_MINUTES'] ?? 480),
     ],
     'database' => [
         'host' => $GLOBALS['env']['DB_HOST'] ?? '127.0.0.1',
