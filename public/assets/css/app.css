@@ -8721,3 +8721,95 @@ body.theme-dark .admin-delete-disabled {
         padding-inline: 10px;
     }
 }
+
+
+/* ===== Pitter Ponto v4.6.1 - estabilidade CSS mobile ===== */
+/*
+ * Este bloco reforça a nova tela "Mais" e evita que regras antigas
+ * do bottom sheet sobrescrevam o layout novo em navegadores móveis.
+ */
+@media (max-width: 680px) {
+    .mobile-more-layer {
+        display: block !important;
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 1100 !important;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .mobile-more-layer.open {
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    .mobile-more-backdrop {
+        position: absolute !important;
+        inset: 0 !important;
+        display: block !important;
+        background: rgba(7, 17, 39, .38) !important;
+        opacity: 0;
+        border: 0;
+    }
+
+    .mobile-more-layer.open .mobile-more-backdrop {
+        opacity: 1 !important;
+    }
+
+    .mobile-more-sheet {
+        position: absolute !important;
+        left: 8px !important;
+        right: 8px !important;
+        bottom: calc(82px + env(safe-area-inset-bottom)) !important;
+        width: auto !important;
+        max-width: none !important;
+        max-height: calc(100dvh - 102px - env(safe-area-inset-bottom)) !important;
+        display: block !important;
+        overflow-y: auto !important;
+        padding: 14px !important;
+        border: 1px solid var(--line) !important;
+        border-radius: 24px !important;
+        background:
+            radial-gradient(circle at 78% 0%, rgba(76, 132, 235, .09), transparent 31%),
+            var(--card) !important;
+        color: var(--text) !important;
+        box-shadow: 0 20px 55px rgba(7, 22, 58, .25) !important;
+        transform: translateY(calc(100% + 100px));
+        transition: transform .24s ease;
+    }
+
+    .mobile-more-layer.open .mobile-more-sheet {
+        transform: translateY(0) !important;
+    }
+
+    .mobile-more-top {
+        display: flex !important;
+    }
+
+    .mobile-more-profile-card,
+    .mobile-more-menu,
+    .mobile-more-logout {
+        display: grid;
+    }
+
+    .mobile-more-logout {
+        display: flex !important;
+    }
+
+    .mobile-more-handle,
+    .mobile-more-head,
+    .mobile-more-profile,
+    .mobile-more-grid {
+        display: none !important;
+    }
+
+    .mobile-bottom-nav {
+        z-index: 1200 !important;
+    }
+
+    body.theme-dark .mobile-more-sheet {
+        background:
+            radial-gradient(circle at 78% 0%, rgba(72, 121, 216, .13), transparent 31%),
+            #101a2e !important;
+    }
+}

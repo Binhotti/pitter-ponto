@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($title ?? 'Pitter Ponto') ?> • Pitter Pan</title>
-    <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
+    <link rel="icon" type="image/png" href="<?= asset('images/pitterpan-logo.png') ?>">
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=4.6.1">
 </head>
 <body class="guest-body">
     <main class="guest-shell">

@@ -21,7 +21,8 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($title ?? 'Dashboard') ?> • Pitter Ponto</title>
-    <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
+    <link rel="icon" type="image/png" href="<?= asset('images/pitterpan-logo.png') ?>">
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=4.6.1">
 </head>
 <body class="<?= $theme === 'dark' ? 'theme-dark' : 'theme-light' ?>">
 <div class="app-shell">
@@ -306,6 +307,6 @@ foreach (explode(' ', trim((string)($currentUser['name'] ?? 'U'))) as $part) {
 </div>
 
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
-<script src="<?= asset('js/app.js') ?>"></script>
+<script src="<?= asset('js/app.js') ?>?v=4.6.1"></script>
 </body>
 </html>
